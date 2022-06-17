@@ -13,16 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fotos', function (Blueprint $table) {
-            $table->id();
+        Schema::create('foto_palabclv', function (Blueprint $table) {
             $table->timestamps();
-            $table->string('title');
-            $table->string('originalName');
-            $table->string('filename');
-            $table->string('format');
-            //$table->json('keywords');
-            $table->string('desc');
-            $table->foreignIdFor(\App\Models\User::class);
+            $table->foreignIdFor(\App\Models\Foto::class);
+            $table->foreignIdFor(\App\Models\Palabclv::class);
         });
     }
 
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fotos');
+        Schema::dropIfExists('foto_palabclv');
     }
 };

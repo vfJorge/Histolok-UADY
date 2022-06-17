@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Grupo;
 use Illuminate\Http\Request;
-use App\Models\Foto;
-use App\Models\Palabclv;
 
-use Illuminate\Support\Facades\Auth;
-
-class FotoController extends Controller
+class GrupoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +14,8 @@ class FotoController extends Controller
      */
     public function index()
     {
-        $fotos = Foto::all();
-        return $fotos;
+        $grupo = Grupo::all();
+        return $grupo;
     }
 
     /**
@@ -39,22 +36,7 @@ class FotoController extends Controller
      */
     public function store(Request $request)
     {
-        $foto = new Foto();
-        $foto->title = $request->title;
-        $foto->originalName = $request->originalName;
-        $foto->filename = 'fotoDeCelula';//$request->filename;
-        $foto->format = $request->format;//filtrar
-        $foto->desc = $request->desc;
-        $foto->user_id = auth()->user()->id;
-        $foto->save();
-        
-        $array = json_decode($request->keywords);
-        print_r($array);
-                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); chucha la wea me costo
-        foreach($array as $keyword){
-            $palabraclv = Palabclv::firstOrCreate(['keyword'=>strtolower($keyword)]);
-            $foto->palabclvs()->attach($palabraclv);
-        }
+        //
     }
 
     /**

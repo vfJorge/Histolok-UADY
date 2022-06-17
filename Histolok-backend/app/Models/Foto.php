@@ -21,4 +21,14 @@ class Foto extends Model
         'keywords',
         'desc'
     ];
+
+    //protected $casts = ['keywords'=>'array'];
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class);
+    }
+
+    public function palabclvs(){
+        return $this->belongsToMany(\App\Models\Palabclv::class)->withTimestamps();
+    }
 }

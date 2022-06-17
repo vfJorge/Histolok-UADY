@@ -1,7 +1,8 @@
 <?php
 
 namespace Database\Seeders;
-
+use App\Models\User;
+use App\Models\Palabclv;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,11 +15,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+             'name' => 'Test User',
+             'email' => 'test@example.com',
+        ]);
+
+        $keyword1 = new Palabclv();
+        $keyword1->keyword = "celula";
+        $keyword1->save();
+
+        $keyword2 = new Palabclv();
+        $keyword2->keyword = "epitelio";
+        $keyword2->save();
+
+        $keyword3 = new Palabclv();
+        $keyword3->keyword = "mitosis";
+        $keyword3->save();
     }
 }

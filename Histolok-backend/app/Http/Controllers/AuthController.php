@@ -40,7 +40,7 @@ class AuthController extends Controller
         if(!$user || !Hash::check($validator['password'],$user->password)){
             return response()->json(['message'=>'Bad credentials'],401);
         }
-        $token = $user->createToken('myapptoken')->plainTextToken;//cambiar name
+        $token = $user->createToken('PAT')->plainTextToken;//cambiar name
 
         return response()->json([
             'user'=>$user,
@@ -55,7 +55,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(['id'=>auth()->user()->id]);
     }
     public function type()
     {
@@ -111,7 +111,7 @@ class AuthController extends Controller
             ['password'=>bcrypt($request->password)]
         ));
 
-        $token = $user->createToken('myapptoken')->plainTextToken;//cambiar name
+        $token = $user->createToken('PAT')->plainTextToken;//cambiar name
 
         return response()->json([
             'message'=>'¡Usuario registrado exitosamente!',//borrar pq pa eso esta el status code
