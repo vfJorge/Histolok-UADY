@@ -24,6 +24,8 @@ Route::group([
 ], function () {
     Route::get('grupos', 'App\Http\Controllers\GrupoController@index');
     Route::post('fotos', 'App\Http\Controllers\FotoController@store');
+    Route::get('fotos/{id}', 'App\Http\Controllers\FotoController@show');
+    Route::get('imagenes/{id}', 'App\Http\Controllers\FotoController@image');
     
 });
 

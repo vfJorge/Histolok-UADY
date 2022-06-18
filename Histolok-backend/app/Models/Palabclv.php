@@ -11,6 +11,14 @@ class Palabclv extends Model
     protected $fillable = [
         'keyword'
     ];
+
+    protected $hidden = [
+        'id',
+        'timestamps',
+        'pivot',
+        'created_at',
+        'updated_at'
+    ];
     public function fotos(){
         return $this->belongsToMany(\App\Models\Foto::class);
     }

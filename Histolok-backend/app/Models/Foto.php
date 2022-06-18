@@ -15,13 +15,14 @@ class Foto extends Model
      */
     protected $fillable = [
         'title',
-        'photo',
-        'filename',
-        'format',
-        'keywords',
-        'desc'
+        'desc',
+        'imagen'
     ];
-
+    
+    protected $hidden = [
+        'filename',
+        'pivot'
+    ];
     //protected $casts = ['keywords'=>'array'];
 
     public function user(){

@@ -7,6 +7,8 @@ use App\Models\Foto;
 use App\Models\Palabclv;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class FotoController extends Controller
 {
@@ -39,22 +41,42 @@ class FotoController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'title'=>'required|string',
+            'desc'=>'required|string'
+        ]);
+
+
         $foto = new Foto();
         $foto->title = $request->title;
-        $foto->originalName = $request->originalName;
-        $foto->filename = 'fotoDeCelula';//$request->filename;
-        $foto->format = $request->format;//filtrar
         $foto->desc = $request->desc;
         $foto->user_id = auth()->user()->id;
+
+        if(!$request->hasfile('image')){
+            return response()->json(['error'=>"file 'image' not given"],400);
+        }
+        $extension = $request->file('image')->extension();
+
+        if(!$extension=='jpg'){
+            return response()->json(['errors'=>'image is not in jpg format'],400);
+        }
+        $foto->filename = $request->file('image')->store('imagenes');
+        $foto->originalName = $request->file('image')->getClientOriginalName();
+        $foto->format = $extension;
         $foto->save();
         
+        //refactorear en otra funcion XD
         $array = json_decode($request->keywords);
-        print_r($array);
-                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); chucha la wea me costo
+                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
         foreach($array as $keyword){
-            $palabraclv = Palabclv::firstOrCreate(['keyword'=>strtolower($keyword)]);
+            $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
             $foto->palabclvs()->attach($palabraclv);
         }
+
+        $photo=Foto::with('palabclvs')->find($foto->id);
+        //print_r($photo);
+        return response($photo,201);
     }
 
     /**
@@ -63,10 +85,26 @@ class FotoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function show(Grupo $grupo)
+    public function show(Request $request)
     {
-        //
+        $foto = Foto::with('palabclvs')->findOrFail($request->id);
+
+        return response($foto,200);
     }
+
+    /**
+     * Display the specified image.
+     *
+     * @param  \App\Models\Grupo  $grupo
+     * @return \Illuminate\Http\Response
+     */
+    public function image(Request $request)
+    {
+        $foto = Foto::findOrFail($request->id);
+        //cambiar a la direccion
+        $path = "D:/Users/rodri/OneDrive - Universidad Autonoma de Yucatan/UNIVERSIDAD/Practicas/Histolok-UADY/Histolok-backend/storage/app/";
+        return response()->file($path.$foto->filename,['Content-type'=>'image/jpg']);
+    }    
 
     /**
      * Show the form for editing the specified resource.
