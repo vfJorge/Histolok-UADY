@@ -20,7 +20,7 @@ class Foto extends Model
     ];
     
     protected $hidden = [
-        'filename',
+        //'filename',
         'pivot'
     ];
     //protected $casts = ['keywords'=>'array'];

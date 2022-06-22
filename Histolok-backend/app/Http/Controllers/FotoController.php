@@ -19,18 +19,8 @@ class FotoController extends Controller
      */
     public function index()
     {
-        $fotos = Foto::all();
+        $fotos = Foto::with('palabclvs')->get();
         return $fotos;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -58,12 +48,13 @@ class FotoController extends Controller
         }
         $extension = $request->file('image')->extension();
 
-        if(!$extension=='jpg'){
+        if($extension!='jpg'){
             return response()->json(['errors'=>'image is not in jpg format'],400);
         }
-        $foto->filename = $request->file('image')->store('imagenes');
+        $foto->filename = $request->file('image')->store('imagenes','public');
         $foto->originalName = $request->file('image')->getClientOriginalName();
         $foto->format = $extension;
+
         $foto->save();
         
         //refactorear en otra funcion XD
@@ -75,7 +66,6 @@ class FotoController extends Controller
         }
 
         $photo=Foto::with('palabclvs')->find($foto->id);
-        //print_r($photo);
         return response($photo,201);
     }
 
@@ -92,31 +82,7 @@ class FotoController extends Controller
         return response($foto,200);
     }
 
-    /**
-     * Display the specified image.
-     *
-     * @param  \App\Models\Grupo  $grupo
-     * @return \Illuminate\Http\Response
-     */
-    public function image(Request $request)
-    {
-        $foto = Foto::findOrFail($request->id);
-        //cambiar a la direccion
-        $path = "D:/Users/rodri/OneDrive - Universidad Autonoma de Yucatan/UNIVERSIDAD/Practicas/Histolok-UADY/Histolok-backend/storage/app/";
-        return response()->file($path.$foto->filename,['Content-type'=>'image/jpg']);
-    }    
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Grupo  $grupo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Grupo $grupo)
-    {
-        //
-    }
-
+   
     /**
      * Update the specified resource in storage.
      *
@@ -124,9 +90,40 @@ class FotoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Grupo $grupo)
+    public function update(Request $request)
     {
-        //
+        $foto = Foto::with('palabclvs')->findOrFail($request->id);
+
+        $request->validate([
+            'title'=>'required|string',
+            'desc'=>'required|string',
+            'keywords'=>'required'
+        ]);
+        $foto->title = $request->title;
+        $foto->desc = $request->desc;
+
+        $keywords = json_decode($request->keywords);
+        $array = array();
+                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
+        foreach($keywords as $keyword){
+            $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
+            array_push($array,$palabraclv->id);
+        }
+        $foto->palabclvs()->sync($array);
+
+        if($request->hasfile('image')){
+            $extension = $request->file('image')->getClientOriginalExtension();
+            if($extension!='jpg'){
+                return response()->json(['errors'=>'image is not in jpg format'],400);
+            }
+            echo $foto->filename;
+            Storage::delete('public/'.$foto->filename);
+            $foto->filename = $request->file('image')->store('imagenes','public');
+            $foto->originalName = $request->file('image')->getClientOriginalName();
+        }
+        $foto->save();
+        $foto->refresh();
+        return response($foto,200);
     }
 
     /**
@@ -135,8 +132,11 @@ class FotoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Grupo $grupo)
-    {
-        //
+    public function destroy(Request $request)
+    {   
+        $foto = Foto::findOrFail($request->id);
+        $foto->palabclvs()->detach();
+        Storage::delete('public/'.$foto->filename);
+        $foto->delete();
     }
 }

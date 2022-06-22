@@ -23,9 +23,18 @@ Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
     Route::get('grupos', 'App\Http\Controllers\GrupoController@index');
+
+
+    Route::get('fotos', 'App\Http\Controllers\FotoController@index');
     Route::post('fotos', 'App\Http\Controllers\FotoController@store');
     Route::get('fotos/{id}', 'App\Http\Controllers\FotoController@show');
-    Route::get('imagenes/{id}', 'App\Http\Controllers\FotoController@image');
+    Route::put('fotos/{id}', 'App\Http\Controllers\FotoController@update');
+    Route::delete('fotos/{id}', 'App\Http\Controllers\FotoController@destroy');
+
+    Route::post('logout','App\Http\Controllers\AuthController@logout');
+    Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
+    Route::get('me', 'App\Http\Controllers\AuthController@me');
+    Route::get('type', 'App\Http\Controllers\AuthController@type');
     
 });
 
@@ -35,9 +44,4 @@ Route::group([
 ], function () {
     Route::post('register','App\Http\Controllers\AuthController@register');
     Route::post('login', 'App\Http\Controllers\AuthController@login');
-    Route::post('logout','App\Http\Controllers\AuthController@logout');
-    Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
-    Route::get('me', 'App\Http\Controllers\AuthController@me');
-    Route::get('type', 'App\Http\Controllers\AuthController@type');
-    
 });
