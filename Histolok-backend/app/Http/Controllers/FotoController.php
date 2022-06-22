@@ -19,7 +19,7 @@ class FotoController extends Controller
      */
     public function index()
     {
-        $fotos = Foto::with('palabclvs')->get();
+        $fotos = Foto::with(['palabclvs','user:id,name'])->get();
         return $fotos;
     }
 
@@ -65,7 +65,7 @@ class FotoController extends Controller
             $foto->palabclvs()->attach($palabraclv);
         }
 
-        $photo=Foto::with('palabclvs')->find($foto->id);
+        $photo=Foto::with(['palabclvs','user:id,name'])->find($foto->id);
         return response($photo,201);
     }
 
@@ -76,10 +76,24 @@ class FotoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
-    {
-        $foto = Foto::with('palabclvs')->findOrFail($request->id);
+    {   
+        
+        $foto = Foto::with(['palabclvs','user:id,name'])->findOrFail($request->id);
 
         return response($foto,200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Grupo  $grupo
+     * @return \Illuminate\Http\Response
+     */
+    public function owned(Request $request)
+    {
+        $fotos = Foto::with('palabclvs')->where('user_id',auth()->user()->id)->get();
+
+        return response($fotos,200);
     }
 
    
@@ -93,6 +107,8 @@ class FotoController extends Controller
     public function update(Request $request)
     {
         $foto = Foto::with('palabclvs')->findOrFail($request->id);
+
+        $this->authorize('author', $foto);
 
         $request->validate([
             'title'=>'required|string',
@@ -135,6 +151,8 @@ class FotoController extends Controller
     public function destroy(Request $request)
     {   
         $foto = Foto::findOrFail($request->id);
+        $this->authorize('author', $foto);
+
         $foto->palabclvs()->detach();
         Storage::delete('public/'.$foto->filename);
         $foto->delete();
