@@ -7,6 +7,9 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="text-center">
+            <p>placeholder para el logo</p>
+        </div>
         <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
             <div class="modal-body">
                 <div class="form-group">
@@ -16,12 +19,15 @@
                 <br>
                 <div class="form-group">
                     <label><b>Contraseña</b></label>
-                    <input type="text" class="form-control" placeholder="Escribe tu contraseña" formControlName="password">
+                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" formControlName="password">
                 </div>
             </div>
+            <div class="botonRegistrarse text-center">
+                <a data-bs-target="#registrarUsuario" data-bs-toggle="modal" data-bs-dismiss="modal" href="" >¡Regístrate ahora!</a>
+            </div>
+            <br>
             <div class="modal-footer">
-                <button type="button" data-bs-target="#registrarUsuario" data-bs-toggle="modal" data-bs-dismiss="modal" >regístrate ahora!</button>
-                <button type="button" class="btn btn-primary" [disabled]="!validateForm.valid">Iniciar sesión</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!validateForm.valid">Iniciar sesión</button>
             </div>
         </form>
         </div>

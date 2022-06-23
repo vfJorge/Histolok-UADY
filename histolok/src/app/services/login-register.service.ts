@@ -10,7 +10,7 @@ export class LoginRegisterService {
 
   postCrearCuenta(cuenta: any){
     var _url = 'http://localhost:8000/api/auth/register';
-    let header= new HttpHeaders().set('Content-Type', 'application/json')
+    let header= new HttpHeaders({'Content-Type': 'application/json', observe: 'response'})
     return this.http.post(_url, cuenta, {
       headers: header
     })
@@ -18,7 +18,7 @@ export class LoginRegisterService {
 
   postIniciarSesion(cuenta: any){
     var _url = 'http://localhost:8000/api/auth/login';
-    let header= new HttpHeaders().set('Content-Type', 'application/json')
+    let header= new HttpHeaders({'Content-Type': 'application/json', observe: 'response'})
     return this.http.post(_url, cuenta, {
       headers: header
     })

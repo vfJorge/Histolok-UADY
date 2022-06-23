@@ -12,4 +12,9 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  cerrarSesion(){
+    localStorage.setItem('bearerToken','');
+    window.location.reload();
+  }
 }

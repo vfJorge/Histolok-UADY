@@ -15,8 +15,8 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label><b>Usuario</b></label>
-                    <input type="text" class="form-control" placeholder="Introduce tu nombre de usuario" formControlName="name">
+                    <label><b>Nombre</b></label>
+                    <input type="text" class="form-control" placeholder="Introduce tu nombre y apellido" formControlName="name">
                 </div>
                 <br>
                 <div class="form-group">
@@ -26,15 +26,15 @@
                 <br>
                 <div class="form-group">
                     <label><b>Confirmar contraseña</b></label>
-                    <input type="password" class="form-control" placeholder="Confirma tu contraseña" formControlName="checkPassword">
-                    <p *ngIf="validateForm.controls['checkPassword'].errors['required']">¡Por favor confirma tu contraseña!</p>
-            <p *ngIf="validateForm.controls['checkPassword'].errors['confirm']">
-              ¡Las contraseñas no coinciden!
-            </p>
+                    <input type="password" class="form-control" placeholder="Confirma tu contraseña" formControlName="password_confirmation">
+                    <ng-template #errorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">¡Por favor confirma tu contraseña!</ng-container>
+                        <ng-container *ngIf="control.hasError('confirm')">¡Las contraseñas no coinciden!</ng-container>
+                    </ng-template>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" [disabled]="!validateForm.valid">Registrarse</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!validateForm.valid">Registrarse</button>
             </div>
         </form>
         </div>

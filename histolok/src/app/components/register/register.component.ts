@@ -15,23 +15,22 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.email, Validators.required]),
+      name: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
-      checkPassword: new FormControl('', [Validators.required, this.confirmationValidator]),
+      password_confirmation: new FormControl('', [Validators.required, this.confirmationValidator]),
     });
   }
 
-  submitForm(cuenta: any): boolean {
+  submitForm(cuenta: any){
     if (this.validateForm.valid) {
-      this.LoginRegisterService.postCrearCuenta(cuenta).subscribe((resp: any) => {
-        if(resp.message == '¡Usuario registrado exitosamente!')
-        alert("Te has registrado exitosamente");
-        this.LoginRegisterService.postIniciarSesion(cuenta).subscribe((resp: any) => {
-          this.LoginRegisterService.guardarToken(resp.access_token);
+      this.LoginRegisterService.postCrearCuenta(cuenta).subscribe((response: any) => {
+          alert("Te has registrado exitosamente");
+          this.LoginRegisterService.guardarToken(response.token);
           window.location.reload();
-          return true;
-        })
+      }, error => {
+        console.log(error);
+        alert("Credenciales inválidas, inténtalo de nuevo");
       })
       
     } else {
@@ -42,17 +41,16 @@ export class RegisterComponent implements OnInit {
         }
       });
     }
-    return false;
   }
 
   updateConfirmValidator(): void {
-    Promise.resolve().then(() => this.validateForm.controls['checkPassword'].updateValueAndValidity());
+    Promise.resolve().then(() => this.validateForm.controls.password_confirmation.updateValueAndValidity());
   }
 
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
-    } else if (control.value !== this.validateForm.controls['password'].value) {
+    } else if (control.value !== this.validateForm.controls.password.value) {
       return { confirm: true, error: true };
     }
     return {};
