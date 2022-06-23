@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
 
   validateForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private LoginRegisterService: LoginRegisterService) { }
+  constructor(private fb: FormBuilder, private loginRegisterService: LoginRegisterService) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
@@ -22,10 +22,12 @@ export class LoginComponent implements OnInit {
 
   submitForm(cuenta: any){
     if (this.validateForm.valid) {
-      this.LoginRegisterService.postIniciarSesion(cuenta).subscribe((resp: any) => {
-        alert("Has iniciado sesión exitosamente");
-        this.LoginRegisterService.guardarToken(resp.token);
-        window.location.reload();
+      this.loginRegisterService.postIniciarSesion(cuenta).subscribe((resp: any) => {
+        if(resp.status == 201){
+          alert("Has iniciado sesión exitosamente");
+          this.loginRegisterService.guardarToken(resp.body.token);
+          window.location.reload();
+        }
       }, error => {
         console.log(error);
         alert("Credenciales inválidas, inténtalo de nuevo");

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginRegisterService } from 'src/app/services/login-register.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,13 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private loginRegisterService: LoginRegisterService) { }
 
   ngOnInit(): void {
   }
 
 
   cerrarSesion(){
+    this.loginRegisterService.postCerrarSesion().subscribe((response: any) => {
+    }, error => {
+      console.log(error);
+    })
     localStorage.setItem('bearerToken','');
     window.location.reload();
   }
