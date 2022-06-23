@@ -1,0 +1,42 @@
+<div class="modal fade" id="registrarUsuario">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Registrarte</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Correo electrónico</b></label>
+                    <input type="mail" class="form-control" placeholder="juansena@example.com" formControlName="email">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Usuario</b></label>
+                    <input type="text" class="form-control" placeholder="Introduce tu nombre de usuario" formControlName="name">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Contraseña</b></label>
+                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Confirmar contraseña</b></label>
+                    <input type="password" class="form-control" placeholder="Confirma tu contraseña" formControlName="checkPassword">
+                    <p *ngIf="validateForm.controls['checkPassword'].errors['required']">¡Por favor confirma tu contraseña!</p>
+            <p *ngIf="validateForm.controls['checkPassword'].errors['confirm']">
+              ¡Las contraseñas no coinciden!
+            </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" [disabled]="!validateForm.valid">Registrarse</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>

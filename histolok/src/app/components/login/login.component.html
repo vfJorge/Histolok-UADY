@@ -1,0 +1,31 @@
+<div id="iniciarSesion" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="inicioSesionLabel">Inicio de sesión</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Correo electrónico</b></label>
+                    <input type="mail" class="form-control" placeholder="juansena@example.com" formControlName="email">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Contraseña</b></label>
+                    <input type="text" class="form-control" placeholder="Escribe tu contraseña" formControlName="password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-bs-target="#registrarUsuario" data-bs-toggle="modal" data-bs-dismiss="modal" >regístrate ahora!</button>
+                <button type="button" class="btn btn-primary" [disabled]="!validateForm.valid">Iniciar sesión</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<app-register></app-register>
