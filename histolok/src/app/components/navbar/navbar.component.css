@@ -11,7 +11,7 @@ ul{
 }
 
 .navbar{
-    position: sticky;
+    position: static;
     top: 0;
     padding: 3rem 2rem;
     height: 0rem;
