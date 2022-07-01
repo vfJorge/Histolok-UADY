@@ -1,0 +1,42 @@
+<div class="modal fade" id="agregarImagen">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Agregar una imagen</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Título</b></label>
+                    <input type="text" class="form-control" placeholder="Mitocondria ejemplo 2" formControlName="title">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Descripción</b></label>
+                    <input type="text" class="form-control" placeholder="Describe a la imagen" formControlName="desc">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Palabras clave</b></label>
+                    <input type="text" class="form-control" placeholder='["corazon", "celula"]' formControlName="keywords">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Subir imagen (*.jpg)</b></label>
+                    <input type="file" class="form-control" formControlName="image">
+                    <ng-template #errorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">¡Por favor confirma tu contraseña!</ng-container>
+                        <ng-container *ngIf="control.hasError('confirm')">¡Las contraseñas no coinciden!</ng-container>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="!validateForm.valid">Agregar imagen</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>

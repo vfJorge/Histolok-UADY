@@ -12,6 +12,8 @@ import { PreguntaComponent } from './components/pregunta/pregunta.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { ImagesComponent } from './components/images/images.component';
+import { AgregarImgComponent } from './components/agregar-img/agregar-img.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { UserListComponent } from './components/user-list/user-list.component';
     PreguntaComponent,
     LoginComponent,
     RegisterComponent,
-    UserListComponent
+    UserListComponent,
+    ImagesComponent,
+    AgregarImgComponent
   ],
   imports: [
     BrowserModule,
