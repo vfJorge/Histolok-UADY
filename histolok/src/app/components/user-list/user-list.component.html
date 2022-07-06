@@ -1,10 +1,12 @@
 <ol class="container container-small list-group">
-    <li class="list-group-item d-flex justify-content-between align-items-start"  *ngFor="let usuario of listaUsuarios">
+  <div *ngFor="let usuario of listaUsuarios">
+    <li class="list-group-item d-flex justify-content-between align-items-start"  *ngIf="usuario.type != 'A'">
       <div class="ms-2 me-auto">
         <div class="fw-bold">{{usuario.name}}</div>
         {{usuario.email}}
       </div>
       <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'S'">Profesor</span>
-      <span class="badge bg-primary rounded-pill" *ngIf="usuario.type != 'S'">Estudiante</span>
+      <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'E'">Estudiante</span>
     </li>
-  </ol>
+  </div>
+</ol>

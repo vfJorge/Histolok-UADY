@@ -2,4 +2,16 @@
     <a class="btn btn-primary" data-bs-target="#agregarImagen" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir nuevo producto</span></a>
 </div>
 
+<div class="row">
+    <div class="col-sm-2" *ngFor="let Imagen of misImagenes">
+        <div class="card">
+          <img src= {{imagenesURL}}{{Imagen.filename}}>
+          <div class="card-body" id="cardInfo">
+            <h5 class="card-title text-center">{{Imagen.title}}</h5>
+          </div>
+      </div>
+      <br>
+    </div>
+  </div>
+
 <app-agregar-img></app-agregar-img>

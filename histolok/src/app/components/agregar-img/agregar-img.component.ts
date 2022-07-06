@@ -8,20 +8,22 @@ import { AdminImagesService } from 'src/app/services/admin-images.service';
   styleUrls: ['./agregar-img.component.css']
 })
 export class AgregarImgComponent implements OnInit {
-  validateForm!: FormGroup;
+  imageForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
-    this.validateForm = this.fb.group({
-      email: new FormControl('', [Validators.email, Validators.required]),
-      password: new FormControl('', [Validators.required])
+    this.imageForm = this.fb.group({
+      title: new FormControl('', [Validators.required]),
+      desc: new FormControl('', [Validators.required]),
+      keywords: new FormControl('', [Validators.required]),
+      image: new FormControl('', [Validators.required])
     });
   }
 
-  submitForm(cuenta: any){
-    if (this.validateForm.valid) {
-      this.adminImagesService.postAgregarImagen(cuenta).subscribe((resp: any) => {
+  submitForm(fotoAdd: any){
+    if (this.imageForm.valid) {
+      this.adminImagesService.postAgregarImagen(fotoAdd).subscribe((resp: any) => {
         if(resp.status == 201){
           alert("Imagen agregada de manera exitosa");
           window.location.reload();
@@ -31,7 +33,7 @@ export class AgregarImgComponent implements OnInit {
         alert("No se pudo agregar la imagen, inténtalo de nuevo");
       })
     } else {
-      Object.values(this.validateForm.controls).forEach(control => {
+      Object.values(this.imageForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });

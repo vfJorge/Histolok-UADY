@@ -7,7 +7,7 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+        <form [formGroup] = "imageForm" class="login-form" (ngSubmit)="submitForm(imageForm.value)">
             <div class="modal-body">
                 <div class="form-group">
                     <label><b>Título</b></label>
@@ -27,14 +27,10 @@
                 <div class="form-group">
                     <label><b>Subir imagen (*.jpg)</b></label>
                     <input type="file" class="form-control" formControlName="image">
-                    <ng-template #errorTpl let-control>
-                        <ng-container *ngIf="control.hasError('required')">¡Por favor confirma tu contraseña!</ng-container>
-                        <ng-container *ngIf="control.hasError('confirm')">¡Las contraseñas no coinciden!</ng-container>
-                    </ng-template>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" [disabled]="!validateForm.valid">Agregar imagen</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!imageForm.valid">Agregar imagen</button>
             </div>
         </form>
         </div>
