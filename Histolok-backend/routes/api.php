@@ -27,7 +27,7 @@ Route::group([
         'middleware'=>'is_superuser'
     ], function () {
         Route::get('', 'App\Http\Controllers\GrupoController@index')->middleware('is_admin');//ver todos los grupos (solo admin)
-        Route::get('me', 'App\Http\Controllers\GrupoController@me');                      //ver los grupos a los que pertenezco 
+        Route::get('me', 'App\Http\Controllers\GrupoController@me');                         //ver los grupos a los que pertenezco 
         Route::post('', 'App\Http\Controllers\GrupoController@store');                       //crear nuevo grupo   
         Route::get('{id}', 'App\Http\Controllers\GrupoController@show');                     //ver informacion de un grupo   
         Route::put('{id}', 'App\Http\Controllers\GrupoController@update');                   //actualizar info e integrantes de grupo   
@@ -58,8 +58,8 @@ Route::group([
     
 
     Route::post('logout','App\Http\Controllers\AuthController@logout');
-    Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::get('type', 'App\Http\Controllers\AuthController@type');
+    Route::get('storage/images/{id}');
     
 });
 

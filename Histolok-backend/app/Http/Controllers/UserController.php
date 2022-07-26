@@ -6,14 +6,27 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
-
+/**
+* @OA\Info(title="API Usuarios", version="1.0")
+*
+* @OA\Server(url="http://swagger.local")
+*/
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * @OA\Get(
+    *     path="/api/users",
+    *     summary="Mostrar usuarios",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Mostrar todos los usuarios."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     public function index()
     {   
         Gate::allows('crudAll-users')

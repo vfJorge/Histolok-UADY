@@ -10,6 +10,13 @@ class Grupo extends Model
     use HasFactory;
     
     public function users(){
-        return $this->belongsToMany(\App\Models\User::class);
+        return $this->belongsToMany(\App\Models\User::class)->withTimestamps();;
+    }
+    protected $hidden = [
+        //'filename',
+        'pivot'
+    ];
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class);
     }
 }

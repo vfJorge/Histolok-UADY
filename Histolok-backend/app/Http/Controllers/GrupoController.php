@@ -14,19 +14,10 @@ class GrupoController extends Controller
      */
     public function index()
     {
-        $grupo = Grupo::all();
-        return $grupo;
+        $grupos = Grupos::with(['users','users:id,name'])->get();
+        return $grupos;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +27,19 @@ class GrupoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $grupo = new Grupo();
+        $grupo->name = $request->name;
+        $grupo->desc= $request->desc;
+        $grupo->user_id = auth()->user()->id;
+
+        $grupo->save();
+
+        $array = json_decode($request->users);
+        $grupo->users()->attach($array);
+
+
+        $group=Grupo::with(['users','users:id,name'])->find($grupo->id);
+        return response($group,201);
     }
 
     /**
@@ -51,14 +54,16 @@ class GrupoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Grupo $grupo)
+    public function me(Request $request)
     {
-        //
+        $grupos = Grupo::with('users','users:id')->where('user_id',auth()->user()->id)->get();
+
+        return response($grupos,200);
     }
 
     /**
@@ -68,9 +73,19 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Grupo $grupo)
+    public function update(Request $request, $id)
     {
-        //
+        $grupo = Grupo::find($id);
+
+        $grupo->name = $request->get('name');
+        $grupo->description= $request->get('description');
+        $grupo->creator=1;
+        $grupo->update_at;
+        $grupo->create_at;
+
+        $grupo->save();
+
+        return redirect('/grupos');
     }
 
     /**
@@ -79,8 +94,11 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Grupo $grupo)
+    public function destroy($id)
     {
-        //
+        $grupo = Grupo::find($id);
+
+        $grupo->delete();
+        return redirect('/grupos');
     }
 }

@@ -60,6 +60,10 @@ class FotoController extends Controller
         //refactorear en otra funcion XD
         $array = json_decode($request->keywords);
                                                         //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
+        if(!is_array($array)){
+            $foto->delete();
+            return response(["message"=>"Error en las palabras clave"],400);
+        } 
         foreach($array as $keyword){
             $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
             $foto->palabclvs()->attach($palabraclv);
@@ -111,28 +115,30 @@ class FotoController extends Controller
         $this->authorize('author', $foto);
 
         $request->validate([
-            'title'=>'required|string',
-            'desc'=>'required|string',
-            'keywords'=>'required'
+            'title'=>'string',
+            'desc'=>'string'
         ]);
-        $foto->title = $request->title;
-        $foto->desc = $request->desc;
-
-        $keywords = json_decode($request->keywords);
-        $array = array();
-                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
-        foreach($keywords as $keyword){
-            $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
-            array_push($array,$palabraclv->id);
+        if($request->has('title')) $foto->title = $request->title;
+        if($request->has('title')) $foto->desc = $request->desc;
+        if($request->has('keywords')){
+            $keywords = json_decode($request->keywords);
+            if(!is_array($keywords)){
+                return response(["message"=>"Error en las palabras clave"],400);
+            }
+            $array = array();
+            foreach($keywords as $keyword){
+                $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
+                array_push($array,$palabraclv->id);
+            }
+            $foto->palabclvs()->sync($array);
         }
-        $foto->palabclvs()->sync($array);
+        
 
         if($request->hasfile('image')){
             $extension = $request->file('image')->getClientOriginalExtension();
             if($extension!='jpg'){
                 return response()->json(['errors'=>'image is not in jpg format'],400);
             }
-            echo $foto->filename;
             Storage::delete('public/'.$foto->filename);
             $foto->filename = $request->file('image')->store('imagenes','public');
             $foto->originalName = $request->file('image')->getClientOriginalName();

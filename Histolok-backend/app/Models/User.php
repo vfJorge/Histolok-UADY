@@ -32,7 +32,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'pivot',
     ];
 
     /**
@@ -52,6 +53,8 @@ class User extends Authenticatable
         return $this->belongsToMany(\App\Models\Grupo::class);
     }
 
-    
+    public function grupo(){
+        return $this->hasMany(\App\Models\Grupo::class);
+    }
 
 }
