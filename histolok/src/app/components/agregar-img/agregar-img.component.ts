@@ -8,22 +8,39 @@ import { AdminImagesService } from 'src/app/services/admin-images.service';
   styleUrls: ['./agregar-img.component.css']
 })
 export class AgregarImgComponent implements OnInit {
-  imageForm!: FormGroup;
+  archivoCapturado: any;
+  imgTitle: string = "";
+  imgDesc: string = "";
+  imgKeywords: string = "";
 
   constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
-    this.imageForm = this.fb.group({
-      title: new FormControl('', [Validators.required]),
-      desc: new FormControl('', [Validators.required]),
-      keywords: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required])
-    });
   }
 
-  submitForm(fotoAdd: any){
-    if (this.imageForm.valid) {
-      this.adminImagesService.postAgregarImagen(fotoAdd).subscribe((resp: any) => {
+  getTitle(title: string){
+    this.imgTitle = title;
+  }
+
+  getDesc(desc: string){
+    this.imgDesc = desc;
+  }
+
+  getKeywords(keywords: string){
+    this.imgKeywords = keywords;
+  }
+
+  capturarFile(event: any): any{
+    this.archivoCapturado = event.target.files[0]
+  }
+
+  submitForm(){
+    const formularioDatos = new FormData();
+    formularioDatos.append('title', this.imgTitle)
+    formularioDatos.append('desc', this.imgDesc)
+    formularioDatos.append('keywords', this.imgKeywords)
+    formularioDatos.append('image', this.archivoCapturado)
+      this.adminImagesService.postAgregarImagen(formularioDatos).subscribe((resp: any) => {
         if(resp.status == 201){
           alert("Imagen agregada de manera exitosa");
           window.location.reload();
@@ -32,13 +49,5 @@ export class AgregarImgComponent implements OnInit {
         console.log(error);
         alert("No se pudo agregar la imagen, inténtalo de nuevo");
       })
-    } else {
-      Object.values(this.imageForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
-    }
   }
 }

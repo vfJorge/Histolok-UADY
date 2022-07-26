@@ -11,8 +11,8 @@ export class AdminImagesService {
   postAgregarImagen(imagenDatos: any){
     var _url = 'http://127.0.0.1:8000/api/fotos';
     var bearerToken = localStorage.getItem('bearerToken');
-    let header= new HttpHeaders({'Content-Type': 'multipart/form-data'}).set('Accept','application/json').set('Authorization','Bearer '+bearerToken);
-    return this.http.post(_url, {imagenDatos}, {headers: header, observe:'response'})
+    let header= new HttpHeaders().set('Accept','application/json').set('Authorization','Bearer '+bearerToken);
+    return this.http.post(_url, imagenDatos, {headers: header, observe:'response'})
   }
 
   getMisImagenes(){
