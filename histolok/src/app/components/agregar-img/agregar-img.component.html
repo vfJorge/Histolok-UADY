@@ -7,30 +7,30 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form [formGroup] = "imageForm" class="login-form" (ngSubmit)="submitForm(imageForm.value)">
+        <form class="login-form" (ngSubmit)="submitForm()">
             <div class="modal-body">
                 <div class="form-group">
                     <label><b>Título</b></label>
-                    <input type="text" class="form-control" placeholder="Mitocondria ejemplo 2" formControlName="title">
+                    <input type="text" (change)="getTitle(title.value)" class="form-control" placeholder="Mitocondria ejemplo 2" #title>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Descripción</b></label>
-                    <input type="text" class="form-control" placeholder="Describe a la imagen" formControlName="desc">
+                    <input type="text" (change)="getDesc(desc.value)" class="form-control" placeholder="Describe a la imagen" #desc>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Palabras clave</b></label>
-                    <input type="text" class="form-control" placeholder='["corazon", "celula"]' formControlName="keywords">
+                    <input type="text" (change)="getKeywords(keywords.value)" class="form-control" placeholder='["corazon", "celula"]' #keywords>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Subir imagen (*.jpg)</b></label>
-                    <input type="file" class="form-control" formControlName="image">
+                    <input type="file" (change)="capturarFile($event)" class="form-control">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" [disabled]="!imageForm.valid">Agregar imagen</button>
+                <button type="submit" class="btn btn-primary">Agregar imagen</button>
             </div>
         </form>
         </div>
