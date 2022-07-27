@@ -1,0 +1,42 @@
+<div class="modal fade" id="registrarUsuario">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Registrarte</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Correo electrónico</b></label>
+                    <input type="mail" class="form-control" placeholder="juansena@example.com" formControlName="email">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Nombre</b></label>
+                    <input type="text" class="form-control" placeholder="Introduce tu nombre y apellido" formControlName="name">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Contraseña</b></label>
+                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Confirmar contraseña</b></label>
+                    <input type="password" class="form-control" placeholder="Confirma tu contraseña" formControlName="password_confirmation">
+                    <ng-template #errorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">¡Por favor confirma tu contraseña!</ng-container>
+                        <ng-container *ngIf="control.hasError('confirm')">¡Las contraseñas no coinciden!</ng-container>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="!validateForm.valid">Registrarse</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
