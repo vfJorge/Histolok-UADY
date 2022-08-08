@@ -1,7 +1,21 @@
 <div class="container" id="tarjetasImag">
-    <a class="btn btn-primary" data-bs-target="#agregarImagen" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir imagen</span></a>
+    
+    <div class="btn-toolbar d-flex" role="toolbar">
+        <a class="btn btn-primary me-auto my-2" data-bs-target="#agregarImagen" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir imagen</span></a>
 
+        <div class="btn-group my-2" role="group">
+            <input type="text" class="form-control me-3" placeholder="Buscar" aria-label="Buscar" >
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+            </button>
+            <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
 
+        
+    </div>
+</div>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-3 mt-4" *ngFor="let Imagen of misImagenes">
             <div class="card">
