@@ -1,12 +1,36 @@
-<ol class="container container-small list-group">
-  <div *ngFor="let usuario of listaUsuarios">
-    <li class="list-group-item d-flex justify-content-between align-items-start"  *ngIf="usuario.type != 'A'">
-      <div class="ms-2 me-auto">
-        <div class="fw-bold">{{usuario.name}}</div>
-        {{usuario.email}}
-      </div>
-      <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'S'">Profesor</span>
-      <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'E'">Estudiante</span>
-    </li>
+<div class="container">
+  <div class="row mt-2 d-flex">
+    <div class="col-12 col-sm-5 col-lg-3 mb-2 ms-auto" >
+        <input type="text" class="form-control" 
+        [(ngModel)]="busqueda" 
+        (input)="buscarImagen()"
+        placeholder="Buscar" 
+        aria-label="Buscar" >
+    </div>
+    <div class="col-12 col-sm-4 col-lg-2 mb-3 btn-group">
+        <button type="button" class="btn btn-outline-primary dropdown-toggle px-4" data-bs-toggle="dropdown" aria-expanded="false">
+            Ordenar por
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" (click)="ordenar('masReciente')">Creación (más reciente)</a></li>
+            <li><a class="dropdown-item" (click)="ordenar('masAntiguo')">Creación (más antiguo)</a></li>
+            <li><a class="dropdown-item" (click)="ordenar('alfabet_AZ')">Nombre (A-Z)</a></li>
+            <li><a class="dropdown-item" (click)="ordenar('alfabet_ZA')">Nombre (Z-A)</a></li>
+            <li><a class="dropdown-item" (click)="ordenar('tipoUsuario')">Tipo de usuario (Z-A)</a></li>
+        </ul>
+    </div>          
   </div>
-</ol>
+
+  <ol class="container container-small list-group">
+    <div *ngFor="let usuario of listaUsuarios">
+      <li class="list-group-item d-flex justify-content-between align-items-start"  *ngIf="usuario.type != 'A'">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">{{usuario.name}}</div>
+          {{usuario.email}}
+        </div>
+        <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'S'">Profesor</span>
+        <span class="badge bg-primary rounded-pill" *ngIf="usuario.type == 'E'">Estudiante</span>
+      </li>
+    </div>
+  </ol>
+</div>

@@ -100,8 +100,6 @@ export class ImagesComponent implements OnInit {
       imagen.palabclvs.some(({keyword}: any) => 
         keyword.toLowerCase().includes(search)
       )
-    
-    
     )
   }
 

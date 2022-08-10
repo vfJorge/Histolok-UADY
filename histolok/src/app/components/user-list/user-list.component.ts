@@ -8,7 +8,7 @@ import { UserListService } from 'src/app/services/user-list.service';
 })
 export class UserListComponent implements OnInit {
   public listaUsuarios: Array<any> = [];
-
+  busqueda: string = "";
   constructor(private userlistService: UserListService) {
     this.userlistService.getPerfilesUsuarios().subscribe((resp: any) => {
       this.listaUsuarios = resp.body;
@@ -16,6 +16,32 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userlistService.getPerfilesUsuarios().subscribe((resp: any) => {
+      this.listaUsuarios = resp.body
+      console.log(this.listaUsuarios)
+    })
+    
   }
+  ordenar(ordenamiento: string){
+    switch(ordenamiento){
+      case 'masReciente':
+        this.listaUsuarios.sort((a , b) => new Date(b.email_verified_at).getTime() - new Date(a.email_verified_at).getTime());
+        break;
+      case 'masAntiguo':
+        this.listaUsuarios.sort((a , b) => new Date(a.email_verified_at).getTime() - new Date(b.email_verified_at).getTime());
+        break;
+      case 'alfabet_AZ':
+        this.listaUsuarios.sort((a , b) => a.name.toLowerCase().localeCompare( b.name.toLowerCase()));;
+        break;
+      case 'alfabet_ZA':
+        this.listaUsuarios.sort((a , b) => b.name.toLowerCase().localeCompare( a.name.toLowerCase()));
+        break;
+      case 'tipoUsuario':
+        this.listaUsuarios.sort((a , b) => a.type.localeCompare( b.type));
+        break;
+    }
 
+  }
+  buscarImagen(){
+   }
 }
