@@ -18,7 +18,14 @@ export class ImagesComponent implements OnInit {
   constructor(private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
-    this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    //   this.misImagenes = resp.body;
+    //   console.log(resp.body)
+    // }, error => {
+    //   console.log(error);
+    // })
+
+      this.adminImagesService.VerTodas().subscribe((resp: any) => {
       this.misImagenes = resp.body;
       console.log(resp.body)
     }, error => {
@@ -60,6 +67,38 @@ export class ImagesComponent implements OnInit {
         console.log(error);
         alert("No se pudo editar la imagen, inténtalo de nuevo");
       })
+  }
+
+  ordenar(ordenamiento: string){
+    switch(ordenamiento){
+      case 'masReciente':
+        this.misImagenes.sort((a , b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        break;
+      case 'masAntiguo':
+        this.misImagenes.sort((a , b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        break;
+      case 'alfabet_AZ':
+        this.misImagenes.sort((a , b) => a.user.name.toLowerCase().localeCompare( b.user.name.toLowerCase()));;
+        break;
+      case 'alfabet_ZA':
+        this.misImagenes.sort((a , b) => b.user.name.toLowerCase().localeCompare( a.user.name.toLowerCase()));
+        break;
+    }
+  }
+  ordenarMasReciente(){
+    this.misImagenes.sort((a , b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
+
+  ordenarMasAntiguo(){
+    this.misImagenes.sort((a , b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+  }
+
+  ordenar_AZ(){
+    this.misImagenes.sort((a , b) => a.user.name.toLowerCase().localeCompare( b.user.name.toLowerCase()));;
+  }
+
+  ordenar_ZA(){
+    this.misImagenes.sort((a , b) => b.user.name.toLowerCase().localeCompare( a.user.name.toLowerCase()));
   }
 
   getTitle(title: string){
