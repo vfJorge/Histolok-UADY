@@ -8,10 +8,13 @@ import { UserListService } from 'src/app/services/user-list.service';
 })
 export class UserListComponent implements OnInit {
   public listaUsuarios: Array<any> = [];
+  listaUsuariosOriginal: Array<any> = [];
   busqueda: string = "";
+  usuarioTipo: string ="";
   constructor(private userlistService: UserListService) {
     this.userlistService.getPerfilesUsuarios().subscribe((resp: any) => {
       this.listaUsuarios = resp.body;
+      this.listaUsuariosOriginal = resp.body
     })
   }
 
@@ -22,6 +25,7 @@ export class UserListComponent implements OnInit {
     })
     
   }
+  
   ordenar(ordenamiento: string){
     switch(ordenamiento){
       case 'masReciente':
@@ -42,6 +46,18 @@ export class UserListComponent implements OnInit {
     }
 
   }
-  buscarImagen(){
-   }
+  buscarUsuario(){
+    const search: string = this.busqueda.trim().toLowerCase();
+  
+    (search == "estudiante")? this.usuarioTipo = "E" :
+    (search == "profesor") ? this.usuarioTipo = "S" :
+    this.usuarioTipo = search;
+
+    this.listaUsuarios = this.listaUsuariosOriginal.filter((usuario) =>
+      usuario.name.toLowerCase().includes(search) ||
+      usuario.email.toLowerCase().includes(search) ||
+      usuario.type.includes(this.usuarioTipo)
+        
+    )
+  }
 }
