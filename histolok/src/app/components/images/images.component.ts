@@ -14,6 +14,8 @@ export class ImagesComponent implements OnInit {
   imgDesc: string = "";
   imgKeywords: string = "";
   imgID: any;
+  busqueda: string = "";
+  misImagenesOriginal: Array<any> = [];
 
   constructor(private adminImagesService: AdminImagesService) { }
 
@@ -25,8 +27,10 @@ export class ImagesComponent implements OnInit {
     //   console.log(error);
     // })
 
+    //Seccion para cuando se deban mostrar todas las imagenes 
       this.adminImagesService.VerTodas().subscribe((resp: any) => {
       this.misImagenes = resp.body;
+      this.misImagenesOriginal = resp.body;
       console.log(resp.body)
     }, error => {
       console.log(error);
@@ -85,20 +89,20 @@ export class ImagesComponent implements OnInit {
         break;
     }
   }
-  ordenarMasReciente(){
-    this.misImagenes.sort((a , b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-  }
 
-  ordenarMasAntiguo(){
-    this.misImagenes.sort((a , b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-  }
-
-  ordenar_AZ(){
-    this.misImagenes.sort((a , b) => a.user.name.toLowerCase().localeCompare( b.user.name.toLowerCase()));;
-  }
-
-  ordenar_ZA(){
-    this.misImagenes.sort((a , b) => b.user.name.toLowerCase().localeCompare( a.user.name.toLowerCase()));
+  buscarImagen(){
+    const search: string = this.busqueda.trim().toLowerCase();
+  
+    this.misImagenes = this.misImagenesOriginal.filter((imagen) =>
+      imagen.title.toLowerCase().includes(search) ||
+      imagen.user.name.toLowerCase().includes(search) ||
+      imagen.originalName.toLowerCase().includes(search) ||
+      imagen.palabclvs.some(({keyword}: any) => 
+        keyword.toLowerCase().includes(search)
+      )
+    
+    
+    )
   }
 
   getTitle(title: string){
