@@ -27,9 +27,9 @@
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-3 mt-4" *ngFor="let Imagen of misImagenes">
             <div class="card">
-                    
+
                     <img class="imgPrincipal " src= {{imagenesURL}}{{Imagen.filename}}
-                    data-bs-target="#mostrarImagen" data-bs-toggle="modal">
+                    (click)="mostrarImagen(Imagen)">
                     
                 <div class="card-body" id="cardInfo">
                     <h5 class="card-title text-center">{{Imagen.title}}</h5>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
+import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
 
 @Component({
   selector: 'app-images',
@@ -16,9 +18,11 @@ export class ImagesComponent implements OnInit {
   imgID: any;
   busqueda: string = "";
   misImagenesOriginal: Array<any> = [];
-  modalSwitch: boolean;
 
-  constructor(private adminImagesService: AdminImagesService) { }
+  constructor(
+    private adminImagesService: AdminImagesService,
+    private dialog: MatDialog
+    ) { }
 
   ngOnInit(): void {
     // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
@@ -104,6 +108,15 @@ export class ImagesComponent implements OnInit {
     )
   }
 
+  mostrarImagen(imagen: any){
+    this.dialog.open(ModalImagenComponent, {
+      height: '600px',
+      width: '900px',
+      data: {imagePath: this.imagenesURL + imagen.filename, title: imagen.title, description: imagen.desc},
+      autoFocus: false
+    })
+  }
+
   getTitle(title: string){
     this.imgTitle = title;
   }
@@ -120,7 +133,5 @@ export class ImagesComponent implements OnInit {
     this.archivoCapturado = event.target.files[0]
   }
 
-  mostrarModal(){
-    this.modalSwitch = true;
-  }
+ 
 }

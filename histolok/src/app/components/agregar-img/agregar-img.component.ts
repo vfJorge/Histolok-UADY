@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class AgregarImgComponent implements OnInit {
   imgDesc: string = "";
   imgKeywords: string = "";
 
-  constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) { }
+  constructor(private fb: UntypedFormBuilder, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
   }
