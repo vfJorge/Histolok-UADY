@@ -10,7 +10,7 @@ import { AdminImagesService } from 'src/app/services/admin-images.service';
 export class ModalImagenComponent implements OnInit {
   imagenesURL = "http://127.0.0.1:8000/storage/";
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: any, 
     public dialogRef: MatDialogRef<ModalImagenComponent>
   ) { }
 

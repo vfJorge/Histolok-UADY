@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
+import { UserListService } from '../../services/user-list.service';
+import { LoginRegisterService } from '../../services/login-register.service';
 
 @Component({
   selector: 'app-images',
@@ -18,28 +20,39 @@ export class ImagesComponent implements OnInit {
   imgID: any;
   busqueda: string = "";
   misImagenesOriginal: Array<any> = [];
+  perfilUsuario: string = "";
+  esEstudiante: boolean;
 
   constructor(
     private adminImagesService: AdminImagesService,
+    private loginRegisterService : LoginRegisterService,
     private dialog: MatDialog
     ) { }
 
   ngOnInit(): void {
-    // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
-    //   this.misImagenes = resp.body;
-    //   console.log(resp.body)
-    // }, error => {
-    //   console.log(error);
-    // })
-
-    //Seccion para cuando se deban mostrar todas las imagenes 
-      this.adminImagesService.VerTodas().subscribe((resp: any) => {
-      this.misImagenes = resp.body;
-      this.misImagenesOriginal = resp.body;
-      console.log(resp.body)
+    this.loginRegisterService.getPerfilUsuario().subscribe((resp: any) => {
+      this.perfilUsuario = resp.body.type;
+      console.log(this.perfilUsuario)
     }, error => {
       console.log(error);
     })
+    
+    
+    // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    //   this.misImagenes = resp.body;
+    //   this.misImagenesOriginal = resp.body;
+    //   console.log("¡¡¡¡")
+    // }, error => {
+    //   console.log(error);
+    // }) 
+
+    this.adminImagesService.VerTodas().subscribe((resp: any) => {
+    this.misImagenes = resp.body;
+    this.misImagenesOriginal = resp.body;
+    }, error => {
+      console.log(error);
+    })
+  
   }
 
   eliminarImagen(imagenID: any){
@@ -133,5 +146,9 @@ export class ImagesComponent implements OnInit {
     this.archivoCapturado = event.target.files[0]
   }
 
- 
+  getPerfilUsuario(){
+    this.perfilUsuario == 'E' ? this.esEstudiante = true : this.esEstudiante = false;
+    return this.esEstudiante;
+  }
+
 }
