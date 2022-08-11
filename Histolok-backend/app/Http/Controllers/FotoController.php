@@ -9,6 +9,7 @@ use App\Models\Palabclv;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\Rule;
 
 class FotoController extends Controller
 {
@@ -24,6 +25,17 @@ class FotoController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function public()                                        
+    {
+        $fotos = Foto::with(['palabclvs','user:id,name'])->where('access','public')->get();   
+        return $fotos;
+    }
+    
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -34,13 +46,15 @@ class FotoController extends Controller
 
         $request->validate([
             'title'=>'required|string',
-            'desc'=>'required|string'
+            'desc'=>'required|string',
+            'access'=>['required',Rule::in(['private','public'])]
         ]);
 
 
         $foto = new Foto();
         $foto->title = $request->title;
         $foto->desc = $request->desc;
+        $foto->access = $request->access;
         $foto->user_id = auth()->user()->id;
 
         if(!$request->hasfile('image')){
@@ -60,6 +74,10 @@ class FotoController extends Controller
         //refactorear en otra funcion XD
         $array = json_decode($request->keywords);
                                                         //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
+        if(!is_array($array)){
+            $foto->delete();
+            return response(["message"=>"Error en las palabras clave"],400);
+        } 
         foreach($array as $keyword){
             $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
             $foto->palabclvs()->attach($palabraclv);
@@ -79,7 +97,7 @@ class FotoController extends Controller
     {   
         
         $foto = Foto::with(['palabclvs','user:id,name'])->findOrFail($request->id);
-
+        if($foto->access!="public" && auth()->user()->id!=$foto->user_id) return response(['message'=>'Esta foto es privada'],403);
         return response($foto,200);
     }
 
@@ -106,33 +124,42 @@ class FotoController extends Controller
      */
     public function update(Request $request)
     {
-        $foto = Foto::with('palabclvs')->findOrFail($request->id);
+        $foto = Foto::with('palabclvs')->withCount('preguntas')->findOrFail($request->id);
 
         $this->authorize('author', $foto);
-
+        
         $request->validate([
-            'title'=>'required|string',
-            'desc'=>'required|string',
-            'keywords'=>'required'
+            'title'=>'string',
+            'desc'=>'string',
+            'access'=>Rule::in(['private','public'])
         ]);
-        $foto->title = $request->title;
-        $foto->desc = $request->desc;
-
-        $keywords = json_decode($request->keywords);
-        $array = array();
-                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
-        foreach($keywords as $keyword){
-            $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
-            array_push($array,$palabraclv->id);
+        if($request->filled('title')) $foto->title = $request->title;
+        if($request->filled('desc')) $foto->desc = $request->desc; 
+        if($foto->preguntas_count==0 && $request->filled('access')){
+            $foto->access = $request->access;
         }
-        $foto->palabclvs()->sync($array);
+        if($foto->preguntas_count>0 && $request->filled('access') && $request->access=="private"){
+            return response(["message"=>"No se puede cambiar el acceso si ya existen preguntas para la imagen"],400);
+        }
+        if($request->filled('keywords')){
+            $keywords = json_decode($request->keywords);
+            if(!is_array($keywords)){
+                return response(["message"=>"Error en las palabras clave"],400);
+            }
+            $array = array();
+            foreach($keywords as $keyword){
+                $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
+                array_push($array,$palabraclv->id);
+            }
+            $foto->palabclvs()->sync($array);
+        }
+ 
 
         if($request->hasfile('image')){
             $extension = $request->file('image')->getClientOriginalExtension();
             if($extension!='jpg'){
                 return response()->json(['errors'=>'image is not in jpg format'],400);
             }
-            echo $foto->filename;
             Storage::delete('public/'.$foto->filename);
             $foto->filename = $request->file('image')->store('imagenes','public');
             $foto->originalName = $request->file('image')->getClientOriginalName();
