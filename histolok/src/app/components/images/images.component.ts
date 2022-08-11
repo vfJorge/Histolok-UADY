@@ -16,6 +16,7 @@ export class ImagesComponent implements OnInit {
   imgID: any;
   busqueda: string = "";
   misImagenesOriginal: Array<any> = [];
+  modalSwitch: boolean;
 
   constructor(private adminImagesService: AdminImagesService) { }
 
@@ -117,5 +118,9 @@ export class ImagesComponent implements OnInit {
 
   capturarFile(event: any): any{
     this.archivoCapturado = event.target.files[0]
+  }
+
+  mostrarModal(){
+    this.modalSwitch = true;
   }
 }

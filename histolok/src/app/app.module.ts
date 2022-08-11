@@ -14,6 +14,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ImagesComponent } from './components/images/images.component';
 import { AgregarImgComponent } from './components/agregar-img/agregar-img.component';
+import { ModalImagenComponent } from './components/images/modal-imagen/modal-imagen.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AgregarImgComponent } from './components/agregar-img/agregar-img.compon
     RegisterComponent,
     UserListComponent,
     ImagesComponent,
-    AgregarImgComponent
+    AgregarImgComponent,
+    ModalImagenComponent
   ],
   imports: [
     BrowserModule,

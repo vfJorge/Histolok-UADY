@@ -16,7 +16,7 @@
                 Ordenar por
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" (click)="ordenar('masReciente')" >Más reciente</a></li>
+                <li><a class="dropdown-item" (click)="ordenar('masReciente')">Más reciente</a></li>
                 <li><a class="dropdown-item" (click)="ordenar('masAntiguo')" >Más antiguo</a></li>
                 <li><a class="dropdown-item" (click)="ordenar('alfabet_AZ')">Propietario (A-Z)</a></li>
                 <li><a class="dropdown-item" (click)="ordenar('alfabet_ZA')">Propietario (Z-A)</a></li>
@@ -28,7 +28,8 @@
         <div class="col-xs-12 col-sm-6 col-md-3 mt-4" *ngFor="let Imagen of misImagenes">
             <div class="card">
                     
-                    <img class="imgPrincipal " src= {{imagenesURL}}{{Imagen.filename}}>
+                    <img class="imgPrincipal " src= {{imagenesURL}}{{Imagen.filename}}
+                    data-bs-target="#mostrarImagen" data-bs-toggle="modal">
                     
                 <div class="card-body" id="cardInfo">
                     <h5 class="card-title text-center">{{Imagen.title}}</h5>
@@ -44,6 +45,8 @@
     </div>
 
     <app-agregar-img></app-agregar-img>
+   
+
 </div>
     <!-- Modal para Editar -->
     <div class="modal fade" id="editarImagen">
@@ -89,3 +92,4 @@
     </div>
     </div>
 
+  
