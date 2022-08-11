@@ -5,24 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Palabclv extends Model
+class Opcion extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'keyword'
+        'opcion'
     ];
-
     protected $hidden = [
-        'id',
+        //'id',
         'timestamps',
         'pivot',
         'created_at',
         'updated_at'
     ];
-    public function fotos(){
-        return $this->belongsToMany(\App\Models\Foto::class);
-    }
-
     public function preguntas(){
         return $this->belongsToMany(\App\Models\Pregunta::class);
     }

@@ -112,14 +112,13 @@ class FotoController extends Controller
     {
         $foto = Foto::with('palabclvs')->findOrFail($request->id);
 
-        $this->authorize('author', $foto);
-
+        
         $request->validate([
             'title'=>'string',
             'desc'=>'string'
         ]);
         if($request->has('title')) $foto->title = $request->title;
-        if($request->has('title')) $foto->desc = $request->desc;
+        if($request->has('desc')) $foto->desc = $request->desc;
         if($request->has('keywords')){
             $keywords = json_decode($request->keywords);
             if(!is_array($keywords)){

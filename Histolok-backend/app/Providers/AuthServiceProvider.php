@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Foto;
+use App\Models\Pregunta;
 use App\Models\User;
 use App\Policies\FotoPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -37,6 +38,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('author-users', function (User $user,User $user2) {
             return $user->id === $user2->id;
+        });
+
+        Gate::define('author-pregunta', function (User $user,Pregunta $pregunta) {
+            return $user->id === $pregunta->user_id;
+        });
+
+        Gate::define('author-foto', function (User $user,Foto $foto) {
+            return $user->id === $foto->user_id;
         });
     }
 }

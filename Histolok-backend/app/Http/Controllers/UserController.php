@@ -80,7 +80,6 @@ class UserController extends Controller
         ]);
 
         $user= User::findOrFail($request->id);
-
         if(Gate::allows('author-users',$user)||Gate::allows('crudAll-users')){
             if($request->has('name')) $user->name = $request->name;
             if($request->has('type') && Gate::allows('crudAll-users')) $user->type = $request->type;

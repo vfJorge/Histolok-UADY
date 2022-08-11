@@ -13,15 +13,28 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//Public routes
-
-
-
+//Public routes (Auth)
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('register','App\Http\Controllers\AuthController@register');
+    Route::post('login', 'App\Http\Controllers\AuthController@login');
+});
 
 //Authenticated routes
 Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
+    Route::group([
+        'prefix' => 'users'
+    ], function () {
+        Route::get('','App\Http\Controllers\UserController@index');         //ver todos los usuarios
+        Route::get('me', 'App\Http\Controllers\UserController@me');         //ver mi perfil
+        Route::get('{id}', 'App\Http\Controllers\UserController@show');     //ver otro perfil
+        Route::put('{id}', 'App\Http\Controllers\UserController@update');   //actualizar la info de mi perfil o si soy admin la de cualquiera
+        Route::delete('{id}', 'App\Http\Controllers\UserController@destroy')->middleware('is_superuser');//borrar perfil de estudiante (solo admins y profesores)
+    });
+
     Route::group([
         'prefix' => 'grupos',
         'middleware'=>'is_superuser'
@@ -39,6 +52,7 @@ Route::group([
         'middleware'=>'is_superuser'
     ], function () {
         Route::get('', 'App\Http\Controllers\FotoController@index');            //ver todas las fotos
+        Route::get('public','App\Http\Controllers\FotoController@public');  //ver las preguntas publicas
         Route::get('me', 'App\Http\Controllers\FotoController@owned');          //ver mis fotos
         Route::post('', 'App\Http\Controllers\FotoController@store');           //crear nueva foto
         Route::get('{id}', 'App\Http\Controllers\FotoController@show');         //ver una foto e info
@@ -47,26 +61,21 @@ Route::group([
     });
     
     Route::group([
-        'prefix' => 'users'
+        'prefix' => 'preguntas',
+        'middleware'=>'is_superuser'
     ], function () {
-        Route::get('','App\Http\Controllers\UserController@index');         //ver todos los usuarios
-        Route::get('me', 'App\Http\Controllers\UserController@me');         //ver mi perfil
-        Route::get('{id}', 'App\Http\Controllers\UserController@show');     //ver otro perfil
-        Route::put('{id}', 'App\Http\Controllers\UserController@update');   //actualizar la info de mi perfil o si soy admin la de cualquiera
-        Route::delete('{id}', 'App\Http\Controllers\UserController@destroy')->middleware('is_superuser');//borrar perfil de estudiante (solo admins y profesores)
+        Route::get('','App\Http\Controllers\PreguntaController@index')->middleware('is_admin');//ver todas las preguntas
+        Route::get('public','App\Http\Controllers\PreguntaController@public');  //ver las preguntas publicas
+        Route::get('me', 'App\Http\Controllers\PreguntaController@owned');         //ver mis preguntas
+        Route::get('{id}', 'App\Http\Controllers\PreguntaController@show');     //ver una pregunta
+        Route::post('', 'App\Http\Controllers\PreguntaController@store');          //crear pregunta
+        Route::put('{id}', 'App\Http\Controllers\PreguntaController@update');   //actualizar la info de pregunta
+        Route::delete('{id}', 'App\Http\Controllers\PreguntaController@destroy');//borrar una pregunta
     });
-    
-
+    //Auth
     Route::post('logout','App\Http\Controllers\AuthController@logout');
     Route::get('type', 'App\Http\Controllers\AuthController@type');
-    Route::get('storage/images/{id}');
     
 });
 
-//Auth
-Route::group([
-    'prefix' => 'auth'
-], function () {
-    Route::post('register','App\Http\Controllers\AuthController@register');
-    Route::post('login', 'App\Http\Controllers\AuthController@login');
-});
+
