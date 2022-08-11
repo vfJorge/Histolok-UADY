@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 //Public routes (Auth)
 Route::group([
     'prefix' => 'auth'
@@ -25,6 +26,7 @@ Route::group([
 Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
+
     Route::group([
         'prefix' => 'users'
     ], function () {
@@ -75,7 +77,5 @@ Route::group([
     //Auth
     Route::post('logout','App\Http\Controllers\AuthController@logout');
     Route::get('type', 'App\Http\Controllers\AuthController@type');
-    
+   
 });
-
-

@@ -34,6 +34,7 @@ class FotoController extends Controller
         $fotos = Foto::with(['palabclvs','user:id,name'])->where('access','public')->get();   
         return $fotos;
     }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -125,6 +126,7 @@ class FotoController extends Controller
     {
         $foto = Foto::with('palabclvs')->withCount('preguntas')->findOrFail($request->id);
 
+        $this->authorize('author', $foto);
         
         $request->validate([
             'title'=>'string',
@@ -151,7 +153,7 @@ class FotoController extends Controller
             }
             $foto->palabclvs()->sync($array);
         }
-        
+ 
 
         if($request->hasfile('image')){
             $extension = $request->file('image')->getClientOriginalExtension();

@@ -16,6 +16,7 @@ class Grupo extends Model
         //'filename',
         'pivot'
     ];
+    
     public function user(){
         return $this->belongsTo(\App\Models\User::class);
     }
