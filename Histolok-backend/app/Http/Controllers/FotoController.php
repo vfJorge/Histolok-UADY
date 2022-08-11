@@ -9,6 +9,7 @@ use App\Models\Palabclv;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\Rule;
 
 class FotoController extends Controller
 {
@@ -24,6 +25,16 @@ class FotoController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function public()                                        
+    {
+        $fotos = Foto::with(['palabclvs','user:id,name'])->where('access','public')->get();   
+        return $fotos;
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -34,13 +45,15 @@ class FotoController extends Controller
 
         $request->validate([
             'title'=>'required|string',
-            'desc'=>'required|string'
+            'desc'=>'required|string',
+            'access'=>['required',Rule::in(['private','public'])]
         ]);
 
 
         $foto = new Foto();
         $foto->title = $request->title;
         $foto->desc = $request->desc;
+        $foto->access = $request->access;
         $foto->user_id = auth()->user()->id;
 
         if(!$request->hasfile('image')){
@@ -83,7 +96,7 @@ class FotoController extends Controller
     {   
         
         $foto = Foto::with(['palabclvs','user:id,name'])->findOrFail($request->id);
-
+        if($foto->access!="public" && auth()->user()->id!=$foto->user_id) return response(['message'=>'Esta foto es privada'],403);
         return response($foto,200);
     }
 
@@ -110,16 +123,23 @@ class FotoController extends Controller
      */
     public function update(Request $request)
     {
-        $foto = Foto::with('palabclvs')->findOrFail($request->id);
+        $foto = Foto::with('palabclvs')->withCount('preguntas')->findOrFail($request->id);
 
         
         $request->validate([
             'title'=>'string',
-            'desc'=>'string'
+            'desc'=>'string',
+            'access'=>Rule::in(['private','public'])
         ]);
-        if($request->has('title')) $foto->title = $request->title;
-        if($request->has('desc')) $foto->desc = $request->desc;
-        if($request->has('keywords')){
+        if($request->filled('title')) $foto->title = $request->title;
+        if($request->filled('desc')) $foto->desc = $request->desc; 
+        if($foto->preguntas_count==0 && $request->filled('access')){
+            $foto->access = $request->access;
+        }
+        if($foto->preguntas_count>0 && $request->filled('access') && $request->access=="private"){
+            return response(["message"=>"No se puede cambiar el acceso si ya existen preguntas para la imagen"],400);
+        }
+        if($request->filled('keywords')){
             $keywords = json_decode($request->keywords);
             if(!is_array($keywords)){
                 return response(["message"=>"Error en las palabras clave"],400);

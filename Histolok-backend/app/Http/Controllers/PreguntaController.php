@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pregunta;
 use App\Models\Opcion;
 use App\Models\Palabclv;
+use App\Models\Foto;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -61,8 +62,11 @@ class PreguntaController extends Controller
         $pregunta->title = $request->title;
         $pregunta->question = $request->question;
         $pregunta->user_id = auth()->user()->id;
-        
-        $pregunta->foto_id = $request->foto_id; //falta validar que exista la foto
+        $foto = Foto::findOrFail($request->foto_id);
+        if($foto->access=="private"){
+            return response(["message"=>"La imagen es privada"],400);
+        }
+        $pregunta->foto_id = $foto->id;
         $pregunta->difficulty = $request->difficulty;
         $pregunta->access = $request->access;
         $nopciones = 2;

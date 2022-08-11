@@ -51,7 +51,7 @@ Route::group([
         'prefix' => 'fotos',
         'middleware'=>'is_superuser'
     ], function () {
-        Route::get('', 'App\Http\Controllers\FotoController@index');            //ver todas las fotos
+        Route::get('', 'App\Http\Controllers\FotoController@index')->middleware('is_admin');            //ver todas las fotos
         Route::get('public','App\Http\Controllers\FotoController@public');  //ver las preguntas publicas
         Route::get('me', 'App\Http\Controllers\FotoController@owned');          //ver mis fotos
         Route::post('', 'App\Http\Controllers\FotoController@store');           //crear nueva foto
