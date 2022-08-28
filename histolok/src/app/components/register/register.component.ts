@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoginRegisterService } from 'src/app/services/login-register.service';
 
 @Component({
@@ -9,16 +9,16 @@ import { LoginRegisterService } from 'src/app/services/login-register.service';
 })
 export class RegisterComponent implements OnInit {
 
-  validateForm!: FormGroup;
+  validateForm!: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder, private loginRegisterService: LoginRegisterService) { }
+  constructor(private fb: UntypedFormBuilder, private loginRegisterService: LoginRegisterService) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      email: new FormControl('', [Validators.email, Validators.required]),
-      name: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      password_confirmation: new FormControl('', [Validators.required, this.confirmationValidator]),
+      email: new UntypedFormControl('', [Validators.email, Validators.required]),
+      name: new UntypedFormControl('', [Validators.required]),
+      password: new UntypedFormControl('', [Validators.required]),
+      password_confirmation: new UntypedFormControl('', [Validators.required, this.confirmationValidator]),
     });
   }
 
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
     Promise.resolve().then(() => this.validateForm.controls.password_confirmation.updateValueAndValidity());
   }
 
-  confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
+  confirmationValidator = (control: UntypedFormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
