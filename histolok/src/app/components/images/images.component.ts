@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
+import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
+import { UserListService } from '../../services/user-list.service';
+import { LoginRegisterService } from '../../services/login-register.service';
 
 @Component({
   selector: 'app-images',
@@ -14,16 +18,41 @@ export class ImagesComponent implements OnInit {
   imgDesc: string = "";
   imgKeywords: string = "";
   imgID: any;
+  busqueda: string = "";
+  misImagenesOriginal: Array<any> = [];
+  perfilUsuario: string = "";
+  esEstudiante: boolean;
 
-  constructor(private adminImagesService: AdminImagesService) { }
+  constructor(
+    private adminImagesService: AdminImagesService,
+    private loginRegisterService : LoginRegisterService,
+    private dialog: MatDialog
+    ) { }
 
   ngOnInit(): void {
-    this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
-      this.misImagenes = resp.body;
-      console.log(resp.body)
+    this.loginRegisterService.getPerfilUsuario().subscribe((resp: any) => {
+      this.perfilUsuario = resp.body.type;
+      console.log(this.perfilUsuario)
     }, error => {
       console.log(error);
     })
+    
+    
+    // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    //   this.misImagenes = resp.body;
+    //   this.misImagenesOriginal = resp.body;
+    //   console.log("¡¡¡¡")
+    // }, error => {
+    //   console.log(error);
+    // }) 
+
+    this.adminImagesService.VerTodas().subscribe((resp: any) => {
+    this.misImagenes = resp.body;
+    this.misImagenesOriginal = resp.body;
+    }, error => {
+      console.log(error);
+    })
+  
   }
 
   eliminarImagen(imagenID: any){
@@ -62,6 +91,45 @@ export class ImagesComponent implements OnInit {
       })
   }
 
+  ordenar(ordenamiento: string){
+    switch(ordenamiento){
+      case 'masReciente':
+        this.misImagenes.sort((a , b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        break;
+      case 'masAntiguo':
+        this.misImagenes.sort((a , b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        break;
+      case 'alfabet_AZ':
+        this.misImagenes.sort((a , b) => a.user.name.toLowerCase().localeCompare( b.user.name.toLowerCase()));;
+        break;
+      case 'alfabet_ZA':
+        this.misImagenes.sort((a , b) => b.user.name.toLowerCase().localeCompare( a.user.name.toLowerCase()));
+        break;
+    }
+  }
+
+  buscarImagen(){
+    const search: string = this.busqueda.trim().toLowerCase();
+  
+    this.misImagenes = this.misImagenesOriginal.filter((imagen) =>
+      imagen.title.toLowerCase().includes(search) ||
+      imagen.user.name.toLowerCase().includes(search) ||
+      imagen.originalName.toLowerCase().includes(search) ||
+      imagen.palabclvs.some(({keyword}: any) => 
+        keyword.toLowerCase().includes(search)
+      )
+    )
+  }
+
+  mostrarImagen(imagen: any){
+    this.dialog.open(ModalImagenComponent, {
+      height: '600px',
+      width: '900px',
+      data: {imagePath: this.imagenesURL + imagen.filename, title: imagen.title, description: imagen.desc},
+      autoFocus: false
+    })
+  }
+
   getTitle(title: string){
     this.imgTitle = title;
   }
@@ -77,4 +145,10 @@ export class ImagesComponent implements OnInit {
   capturarFile(event: any): any{
     this.archivoCapturado = event.target.files[0]
   }
+
+  getPerfilUsuario(){
+    this.perfilUsuario == 'E' ? this.esEstudiante = true : this.esEstudiante = false;
+    return this.esEstudiante;
+  }
+
 }

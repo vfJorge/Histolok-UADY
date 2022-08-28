@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +16,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ImagesComponent } from './components/images/images.component';
 import { AgregarImgComponent } from './components/agregar-img/agregar-img.component';
+import { ModalImagenComponent } from './components/images/modal-imagen/modal-imagen.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,8 @@ import { AgregarImgComponent } from './components/agregar-img/agregar-img.compon
     RegisterComponent,
     UserListComponent,
     ImagesComponent,
-    AgregarImgComponent
+    AgregarImgComponent,
+    ModalImagenComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +38,8 @@ import { AgregarImgComponent } from './components/agregar-img/agregar-img.compon
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

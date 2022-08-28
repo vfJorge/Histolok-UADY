@@ -1,22 +1,7 @@
-div{
-    width: 100%;
-}
 
 a:hover{ 
     color: lightsalmon;
 }
 
-ul{
-    list-style-type: none;
-}
 
-.navbar{
-    position: static;
-    top: 0;
-    padding: 3rem 2rem;
-    height: 0rem;
-    min-height: 12vh;
-    padding: 1rem 0;
-    display: block;
-    text-decoration: none;
-}
+
