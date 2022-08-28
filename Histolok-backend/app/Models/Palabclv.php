@@ -22,4 +22,8 @@ class Palabclv extends Model
     public function fotos(){
         return $this->belongsToMany(\App\Models\Foto::class);
     }
+
+    public function preguntas(){
+        return $this->belongsToMany(\App\Models\Pregunta::class);
+    }
 }

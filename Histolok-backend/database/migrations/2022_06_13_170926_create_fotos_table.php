@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('originalName');
             $table->string('filename');
             $table->string('format');
-            //$table->json('keywords');
             $table->string('desc');
+            $table->string('access')->default('private');
             $table->foreignIdFor(\App\Models\User::class);
         });
     }

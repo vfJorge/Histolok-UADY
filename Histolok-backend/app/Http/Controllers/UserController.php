@@ -14,6 +14,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {   
         Gate::allows('crudAll-users')
@@ -75,7 +76,7 @@ class UserController extends Controller
             return $user;
         }
         else return request(['message'=>'Unauthorized acction'],403);
-
+                                                                //Checar pq no tira la excepcion
     }
 
     /**
