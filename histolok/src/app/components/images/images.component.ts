@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
-import { UserListService } from '../../services/user-list.service';
-import { LoginRegisterService } from '../../services/login-register.service';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-images',
@@ -22,8 +21,10 @@ export class ImagesComponent implements OnInit {
   misImagenesOriginal: Array<any> = [];
   perfilUsuario: string = "";
   esEstudiante: boolean;
+  datosImagenes!: FormGroup;
 
-  constructor(private adminImagesService: AdminImagesService, private dialog: MatDialog) { }
+  constructor(private adminImagesService: AdminImagesService, private dialog: MatDialog,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
@@ -33,6 +34,12 @@ export class ImagesComponent implements OnInit {
      console.log(error);
     })
   
+    this.datosImagenes = this.fb.group({
+      title: new FormControl('', [Validators.required]),
+      desc: new FormControl('', [Validators.required]),
+      keywords: new FormControl('', [Validators.required]),
+      image: new FormControl('', [Validators.required])
+    })
   }
 
   eliminarImagen(imagenID: any){
@@ -49,16 +56,16 @@ export class ImagesComponent implements OnInit {
   
   editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any){
     this.imgID = imagenID;
-    (<HTMLInputElement>document.getElementById("titulo")).value = imagenTITLE;
-    (<HTMLInputElement>document.getElementById("descripcion")).value = imagenDESC;
-    (<HTMLInputElement>document.getElementById("palabclv")).value = imagenKEYWORDS[0].keyword;
+    this.datosImagenes.controls['title'].setValue(imagenTITLE);
+    this.datosImagenes.controls['desc'].setValue(imagenDESC);
+    this.datosImagenes.controls['keywords'].setValue('["'+imagenKEYWORDS[0].keyword+'"]');
   }
 
   enviarEdicion(){
     const formularioDatos = new FormData();
-    formularioDatos.append('title', this.imgTitle)
-    formularioDatos.append('desc', this.imgDesc)
-    formularioDatos.append('keywords', this.imgKeywords)
+    formularioDatos.append('title', this.datosImagenes.controls['title'].getRawValue())
+    formularioDatos.append('desc', this.datosImagenes.controls['desc'].getRawValue())
+    formularioDatos.append('keywords', this.datosImagenes.controls['keywords'].getRawValue())
     formularioDatos.append('image', this.archivoCapturado)
       this.adminImagesService.putEditarImagen(formularioDatos, this.imgID).subscribe((resp: any) => {
         if(resp.status == 200){
@@ -108,18 +115,6 @@ export class ImagesComponent implements OnInit {
       data: {imagePath: this.imagenesURL + imagen.filename, title: imagen.title, description: imagen.desc},
       autoFocus: false
     })
-  }
-
-  getTitle(title: string){
-    this.imgTitle = title;
-  }
-
-  getDesc(desc: string){
-    this.imgDesc = desc;
-  }
-
-  getKeywords(keywords: string){
-    this.imgKeywords = keywords;
   }
 
   capturarFile(event: any): any{

@@ -3,3 +3,13 @@
 	width: 15px;
 	padding-bottom: 3px;
 }
+
+img:hover{
+	cursor:pointer;
+}
+
+.textoAyuda {
+	position: relative;
+	display: inline-block;
+	border-bottom: 0.3vh dotted black;
+}
