@@ -1,0 +1,14 @@
+.textoAyuda {
+  position: relative;
+  display: inline-block;
+  border-bottom: 0.3vh dotted black;
+}
+
+#tarjetasImag .row .imgPrincipal{
+  height: 300px;
+  object-fit: contain;
+}
+
+img:hover{
+  cursor:pointer;
+}

@@ -23,34 +23,14 @@ export class ImagesComponent implements OnInit {
   perfilUsuario: string = "";
   esEstudiante: boolean;
 
-  constructor(
-    private adminImagesService: AdminImagesService,
-    private loginRegisterService : LoginRegisterService,
-    private dialog: MatDialog
-    ) { }
+  constructor(private adminImagesService: AdminImagesService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.loginRegisterService.getPerfilUsuario().subscribe((resp: any) => {
-      this.perfilUsuario = resp.body.type;
-      console.log(this.perfilUsuario)
+    this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+      this.misImagenes = resp.body;
+      console.log(resp.body);
     }, error => {
-      console.log(error);
-    })
-    
-    
-    // this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
-    //   this.misImagenes = resp.body;
-    //   this.misImagenesOriginal = resp.body;
-    //   console.log("¡¡¡¡")
-    // }, error => {
-    //   console.log(error);
-    // }) 
-
-    this.adminImagesService.VerTodas().subscribe((resp: any) => {
-    this.misImagenes = resp.body;
-    this.misImagenesOriginal = resp.body;
-    }, error => {
-      console.log(error);
+     console.log(error);
     })
   
   }

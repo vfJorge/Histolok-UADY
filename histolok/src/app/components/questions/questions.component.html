@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row mt-2">
+    <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
+        <a class="btn btn-primary px-4" data-bs-target="#agregarPregunta" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir pregunta</span></a>
+    </div>
+</div>
+  
+    <ol class="container container-small list-group">
+      <div *ngFor="let preguntas of misPreguntas">
+        <li class="list-group-item d-flex justify-content-between align-items-start" >
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{preguntas.title}}</div>
+            {{preguntas.question}}
+          </div>
+          <span class="badge bg-primary rounded-pill" >Editar</span>
+        </li>
+      </div>
+    </ol>
+  </div>
+
+  <app-agregar-question></app-agregar-question>
