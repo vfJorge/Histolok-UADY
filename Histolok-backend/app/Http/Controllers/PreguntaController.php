@@ -134,7 +134,7 @@ class PreguntaController extends Controller
      */
     public function owned(Request $request)
     {
-        $preguntas = Pregunta::with(['palabclvs','opcions:id,opcion'])->where('user_id',auth()->user()->id)->get();
+        $preguntas = Pregunta::with(['palabclvs','opcions:id,opcion','user:id,name'])->where('user_id',auth()->user()->id)->get();
 
         return response($preguntas,200);
     }
