@@ -1,0 +1,12 @@
+
+#iconoAdicionar {
+	filter:invert(1);
+	width: 15px;
+	padding-bottom: 3px;
+}
+
+#tarjetasImag .row .imgPrincipal{
+	height: 300px;
+	object-fit: contain;
+}
+

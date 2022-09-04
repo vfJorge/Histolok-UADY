@@ -1,0 +1,14 @@
+<div class="position-relative w-100 h-100">
+  <button mat-icon-button class="position-absolute top-0 end-0" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <h2 class="py-2 fs-3 flex-grow-1 text-center fw-semibold">{{data.title}}</h2>
+
+  <div class="imgModal w-100">
+    <img class="img w-100 h-100" [src]="data.imagePath" alt=""> 
+  </div>
+  <div class="mt-2">
+    <h4 class="fs-5 text-center ">Descripción:</h4>
+    <p class="px-4 descripcion">{{data.description}}</p> 
+  </div>
+</div>

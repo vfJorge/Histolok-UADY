@@ -56,5 +56,4 @@ class User extends Authenticatable
     public function grupo(){
         return $this->hasMany(\App\Models\Grupo::class);
     }
-
 }

@@ -18,7 +18,6 @@ class GrupoController extends Controller
         return $grupos;
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -36,7 +35,6 @@ class GrupoController extends Controller
 
         $array = json_decode($request->users);
         $grupo->users()->attach($array);
-
 
         $group=Grupo::with(['users','users:id,name'])->find($grupo->id);
         return response($group,201);
@@ -59,10 +57,10 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
+     
     public function me(Request $request)
     {
         $grupos = Grupo::with('users','users:id')->where('user_id',auth()->user()->id)->get();
-
         return response($grupos,200);
     }
 
@@ -73,6 +71,7 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, $id)
     {
         $grupo = Grupo::find($id);
@@ -94,6 +93,7 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
         $grupo = Grupo::find($id);

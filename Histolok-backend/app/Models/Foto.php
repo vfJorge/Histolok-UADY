@@ -32,8 +32,9 @@ class Foto extends Model
     public function palabclvs(){
         return $this->belongsToMany(\App\Models\Palabclv::class)->withTimestamps();
     }
-
+    
     public function preguntas(){
         return $this->hasMany(\App\Models\Pregunta::class);
     }
+
 }
