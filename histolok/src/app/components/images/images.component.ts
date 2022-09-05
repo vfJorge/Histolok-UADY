@@ -29,6 +29,7 @@ export class ImagesComponent implements OnInit {
   ngOnInit(): void {
     this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
       this.misImagenes = resp.body;
+      this.misImagenesOriginal = resp.body;
       console.log(resp.body);
     }, error => {
      console.log(error);
@@ -100,7 +101,6 @@ export class ImagesComponent implements OnInit {
   
     this.misImagenes = this.misImagenesOriginal.filter((imagen) =>
       imagen.title.toLowerCase().includes(search) ||
-      imagen.user.name.toLowerCase().includes(search) ||
       imagen.originalName.toLowerCase().includes(search) ||
       imagen.palabclvs.some(({keyword}: any) => 
         keyword.toLowerCase().includes(search)

@@ -31,6 +31,9 @@ export class QuestionsComponent implements OnInit {
   opcionesi: any = 0;
   auxOpciones: any = 1;
 
+  busqueda: string = "";
+  misPreguntasOriginal: Array<any> = [];
+  
   constructor(private adminQuestionsService: AdminQuestionsService,
     private loginRegisterService : LoginRegisterService,
     private adminImagesService: AdminImagesService, private fb: FormBuilder) { }
@@ -38,14 +41,14 @@ export class QuestionsComponent implements OnInit {
   ngOnInit(): void {
     this.adminQuestionsService.getMisPreguntas().subscribe((resp: any) => {
       this.misPreguntas = resp.body;
-      console.log(resp.body);
+      this.misPreguntasOriginal = resp.body;
+      console.log(this.misPreguntas);
     }, error => {
       console.log(error);
     })
 
-    this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    this.adminImagesService.getImagenesPublic().subscribe((resp: any) => {
       this.misImagenes = resp.body;
-      console.log(resp.body);
     }, error => {
      console.log(error);
     })
@@ -127,5 +130,31 @@ export class QuestionsComponent implements OnInit {
 
   escogerImagenEdicion(FotoID: any){
     this.datosPreguntas.controls['foto_id'].setValue(FotoID);
+  }
+
+  buscarPregunta(){
+    const search: string = this.busqueda.trim().toLowerCase();
+    this.misPreguntas = this.misPreguntasOriginal.filter((pregunta) =>
+      pregunta.title.toLowerCase().includes(search) ||
+      pregunta.question.toLowerCase().includes(search) ||
+      pregunta.difficulty.toString().includes(search) ||
+      pregunta.palabclvs.some(({keyword}: any) => 
+        keyword.toLowerCase().includes(search)
+      ) ||
+      pregunta.opcions.some(({opcion}: any) => 
+        opcion.toLowerCase().includes(search)
+      ) 
+    )
+  }
+
+  ordenar(ordenamiento: string){
+    switch(ordenamiento){
+      case 'porTitulo':
+        this.misPreguntas.sort((a , b) => a.title.toLowerCase().localeCompare( b.title.toLowerCase()));;
+        break;
+      case 'porPregunta':
+        this.misPreguntas.sort((a , b) => a.question.toLowerCase().localeCompare( b.question.toLowerCase()));;
+        break;
+    }
   }
 }

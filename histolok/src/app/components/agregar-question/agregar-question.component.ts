@@ -12,7 +12,6 @@ export class AgregarQuestionComponent implements OnInit {
   public misImagenes: Array<any> = [];
   imagenesURL = "http://127.0.0.1:8000/storage/";
   datosPreguntaAgregar!: FormGroup;
-
   constructor(private fb: FormBuilder, private adminQuestionsService: AdminQuestionsService, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
@@ -29,7 +28,7 @@ export class AgregarQuestionComponent implements OnInit {
       foto_id: new FormControl('')
     })
 
-    this.adminImagesService.getMisImagenes().subscribe((resp: any) => {
+    this.adminImagesService.getImagenesPublic().subscribe((resp: any) => {
       this.misImagenes = resp.body;
       console.log(resp.body);
     }, error => {
@@ -50,4 +49,6 @@ export class AgregarQuestionComponent implements OnInit {
   escogerImagen(idImagen: any){
     this.datosPreguntaAgregar.controls.foto_id.patchValue(idImagen);
   }
+
+ 
 }

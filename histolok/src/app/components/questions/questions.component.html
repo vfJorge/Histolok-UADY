@@ -1,9 +1,25 @@
 <div class="container">
-  <div class="row mt-2">
-    <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
-        <a class="btn btn-primary px-4" data-bs-target="#agregarPregunta" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir pregunta</span></a>
+    <div class="row mt-2">
+        <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
+            <a class="btn btn-primary px-4" data-bs-target="#agregarPregunta" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir pregunta</span></a>
+        </div>
+        <div class="col-12 col-sm-4 col-lg-3 mb-2" >
+            <input type="text" class="form-control" 
+            [(ngModel)]="busqueda" 
+            (input)="buscarPregunta()"
+            placeholder="Buscar" 
+            aria-label="Buscar" >
+        </div>
+        <div class="col-12 col-sm-4 col-lg-2 mb-2 btn-group">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle px-4" data-bs-toggle="dropdown" aria-expanded="false">
+                Ordenar por
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" (click)="ordenar('porTitulo')">Por título</a></li>
+                <li><a class="dropdown-item" (click)="ordenar('porPregunta')">Por pregunta</a></li>
+            </ul>
+        </div>     
     </div>
-</div>
   
     <ol class="container container-small list-group">
       <div *ngFor="let pregunta of misPreguntas">
