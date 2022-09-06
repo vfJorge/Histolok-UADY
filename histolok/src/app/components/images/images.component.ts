@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ThisReceiver } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-images',
@@ -17,6 +19,9 @@ export class ImagesComponent implements OnInit {
   imgDesc: string = "";
   imgKeywords: string = "";
   imgID: any;
+  imgPrivacy: boolean;
+  imgAccess: string = "";
+  accessToggle: string = "";
   busqueda: string = "";
   misImagenesOriginal: Array<any> = [];
   perfilUsuario: string = "";
@@ -39,8 +44,14 @@ export class ImagesComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       desc: new FormControl('', [Validators.required]),
       keywords: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required])
+      image: new FormControl('', [Validators.required]),
+      access: new FormControl(this.imgAccess)
     })
+  }
+
+  getPrivacidad(){
+    this.imgPrivacy == false ? this.imgAccess = "private": this.imgAccess = "public"
+    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
   }
 
   eliminarImagen(imagenID: any){
@@ -55,11 +66,14 @@ export class ImagesComponent implements OnInit {
     })
   }
   
-  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any){
+  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any, access: any){
     this.imgID = imagenID;
     this.datosImagenes.controls['title'].setValue(imagenTITLE);
     this.datosImagenes.controls['desc'].setValue(imagenDESC);
     this.datosImagenes.controls['keywords'].setValue('["'+imagenKEYWORDS[0].keyword+'"]');
+    this.datosImagenes.controls['access'].setValue(access);
+    access == "public" ? this.imgPrivacy = true : this.imgPrivacy = false;
+    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
   }
 
   enviarEdicion(){
@@ -68,10 +82,13 @@ export class ImagesComponent implements OnInit {
     formularioDatos.append('desc', this.datosImagenes.controls['desc'].getRawValue())
     formularioDatos.append('keywords', this.datosImagenes.controls['keywords'].getRawValue())
     formularioDatos.append('image', this.archivoCapturado)
+    formularioDatos.append('access', this.imgAccess)
+    
       this.adminImagesService.putEditarImagen(formularioDatos, this.imgID).subscribe((resp: any) => {
         if(resp.status == 200){
-          alert("Imagen editada de manera exitosa");
+          alert("Imagen editada de manera exitosa");    
           window.location.reload();
+      
         }
       }, error => {
         console.log(error);
@@ -126,4 +143,5 @@ export class ImagesComponent implements OnInit {
     return this.esEstudiante;
   }
 
+  
 }

@@ -10,3 +10,6 @@
 	object-fit: contain;
 }
 
+.imgPrincipal:hover {
+	cursor: pointer;
+}

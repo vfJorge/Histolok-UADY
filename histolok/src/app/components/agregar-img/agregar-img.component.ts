@@ -12,6 +12,9 @@ export class AgregarImgComponent implements OnInit {
   imgTitle: string = "";
   imgDesc: string = "";
   imgKeywords: string = "";
+  imgPrivacy: boolean;
+  imgAccess: string = "";
+  accessToggle: string = "";
 
   constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) { }
 
@@ -32,6 +35,14 @@ export class AgregarImgComponent implements OnInit {
 
   capturarFile(event: any): any{
     this.archivoCapturado = event.target.files[0]
+    if (this.imgAccess == "" ){
+      this.imgAccess = "private" 
+    } 
+  }
+
+  getPrivacy(){
+    this.imgPrivacy == false ? this.imgAccess = "private": this.imgAccess = "public"
+    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
   }
 
   submitForm(){
@@ -40,7 +51,7 @@ export class AgregarImgComponent implements OnInit {
     formularioDatos.append('desc', this.imgDesc)
     formularioDatos.append('keywords', this.imgKeywords)
     formularioDatos.append('image', this.archivoCapturado)
-    formularioDatos.append('access', 'public')
+    formularioDatos.append('access', this.imgAccess)
       this.adminImagesService.postAgregarImagen(formularioDatos).subscribe((resp: any) => {
         if(resp.status == 201){
           alert("Imagen agregada de manera exitosa");

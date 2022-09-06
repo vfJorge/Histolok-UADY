@@ -34,7 +34,7 @@
                 <div class="card-body" id="cardInfo">
                     <h5 class="card-title text-center">{{Imagen.title}}</h5>
                     <div class="text-center" id="imgOpciones">
-                    <button class="btn btn-link" (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs)" data-bs-target="#editarImagen" data-bs-toggle="modal"><img src="../../assets/edit.png"></button>
+                    <button class="btn btn-link" (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs, Imagen.access)" data-bs-target="#editarImagen" data-bs-toggle="modal"><img src="../../assets/edit.png"></button>
                     &nbsp;
                     <button class="btn btn-link" (click)="eliminarImagen(Imagen.id)"><img src="../../assets/trash.png"></button>
                     </div>
@@ -59,7 +59,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form [formGroup] = "datosImagenes" class="login-form" (ngSubmit)="enviarEdicion()">
+           
             <div class="modal-body">
+                <div class="form-group">
+                    <mat-slide-toggle 
+                    class=""
+                    [(ngModel)]="imgPrivacy"
+                    (change)="getPrivacidad()"
+                    formControlName="access">
+                        Hacer imagen {{accessToggle}}
+                    </mat-slide-toggle>
+                </div>
                 <div class="form-group">
                     <label><b>Título</b></label>
                     <input type="text" class="form-control" placeholder="Mitocondria ejemplo 2" formControlName=title>
