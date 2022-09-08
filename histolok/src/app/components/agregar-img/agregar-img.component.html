@@ -7,7 +7,7 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="login-form" (ngSubmit)="submitForm()">
+        <form [formGroup] = "datosImagenes" class="login-form" (ngSubmit)="submitForm()">
             <div class="modal-body">
                 <div class="form-group">
                     <mat-slide-toggle 
@@ -21,19 +21,32 @@
                 </div>
                 <div class="form-group">
                     <label><b>Título</b></label>
-                    <input type="text" (change)="getTitle(title.value)" class="form-control" placeholder="Mitocondria ejemplo 2" #title>
+                    <input type="text"  class="form-control" placeholder="Mitocondria ejemplo 2" formControlName=title>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Descripción</b></label>
-                    <input type="text" (change)="getDesc(desc.value)" class="form-control" placeholder="Describe a la imagen" #desc>
+                    <input type="text"  class="form-control" placeholder="Describe a la imagen" formControlName=desc>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Palabras clave</b></label>
-                    <input type="text" (change)="getKeywords(keywords.value)" class="form-control" placeholder='["corazon", "celula"]' #keywords>
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                          <input placeholder="Introduce una etiqueta..."
+                                 [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                 [matChipInputAddOnBlur]="addOnBlur"
+                                 (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
                 </div>
-                <br>
                 <div class="form-group">
                     <label><b>Subir imagen (*.jpg)</b></label>
                     <input type="file" (change)="capturarFile($event)" class="form-control">

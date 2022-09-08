@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AdminQuestionsService } from 'src/app/services/admin-questions.service';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-agregar-question',
@@ -12,6 +14,8 @@ export class AgregarQuestionComponent implements OnInit {
   public misImagenes: Array<any> = [];
   imagenesURL = "http://127.0.0.1:8000/storage/";
   datosPreguntaAgregar!: FormGroup;
+  keywords: Array<string> = [];
+
   constructor(private fb: FormBuilder, private adminQuestionsService: AdminQuestionsService, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
@@ -37,6 +41,7 @@ export class AgregarQuestionComponent implements OnInit {
   }
 
   agregarPregunta(datosPreguntaAgregar: any){
+    this.datosPreguntaAgregar.controls['keywords'].setValue(JSON.stringify(this.keywords))
     this.adminQuestionsService.postAgregarPregunta(datosPreguntaAgregar).subscribe((resp: any) => {
       alert("La pregunta se ha añadido con éxito");
       window.location.reload();
@@ -50,5 +55,27 @@ export class AgregarQuestionComponent implements OnInit {
     this.datosPreguntaAgregar.controls.foto_id.patchValue(idImagen);
   }
 
+  //Inicio Keywords con Chips
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.keywords.push(value);
+    }
+
+    event.chipInput!.clear();
+  }
+  
+  remove(keyword: string): void {
+    const index = this.keywords.indexOf(keyword);
+
+    if (index >= 0) {
+      this.keywords.splice(index, 1);
+    }
+  }
+  //Fin Keywords con Chips
  
 }

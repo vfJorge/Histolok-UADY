@@ -13,3 +13,7 @@
 .imgPrincipal:hover {
 	cursor: pointer;
 }
+
+.example-chip-list {
+    width: 100%;
+  }

@@ -59,7 +59,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form [formGroup] = "datosImagenes" class="login-form" (ngSubmit)="enviarEdicion()">
-           
             <div class="modal-body">
                 <div class="form-group">
                     <mat-slide-toggle 
@@ -82,7 +81,21 @@
                 <br>
                 <div class="form-group">
                     <label><b>Palabras clave</b></label>
-                    <input type="text" class="form-control" placeholder='["corazon", "celula"]' formControlName=keywords>
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                          <input placeholder="Introduce una etiqueta..."
+                                 [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                 [matChipInputAddOnBlur]="addOnBlur"
+                                 (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
                 </div>
                 <br>
                 <div class="form-group">

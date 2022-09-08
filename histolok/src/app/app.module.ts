@@ -43,7 +43,7 @@ import { AgregarQuestionComponent } from './components/agregar-question/agregar-
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
