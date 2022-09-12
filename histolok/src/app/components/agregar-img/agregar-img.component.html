@@ -9,16 +9,7 @@
         </div>
         <form [formGroup] = "datosImagenes" class="login-form" (ngSubmit)="submitForm()">
             <div class="modal-body">
-                <div class="form-group">
-                    <mat-slide-toggle 
-                    [(ngModel)]="imgPrivacy"
-                    (change)="getPrivacy()"
-                    name = "privacy">
-                        <ng-template [ngIf]="accessToggle != ''" [ngIfElse]= "inicio">Hacer imagen {{accessToggle}}</ng-template>
-                        <ng-template #inicio>Imagen privada</ng-template>
-                        
-                    </mat-slide-toggle>
-                </div>
+                 
                 <div class="form-group">
                     <label><b>Título</b></label>
                     <input type="text"  class="form-control" placeholder="Mitocondria ejemplo 2" formControlName=title>
@@ -47,6 +38,15 @@
                         </mat-chip-list>
                     </mat-form-field>
                 </div>
+                <div class="form-group">
+                    <label><b>Tipo de acceso</b></label><br>
+                    <input type="radio" value="public" id="accesoPublico" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPublico" class="textoAyuda" data-bs-toggle="tooltip" title="Otros profesores podrán ver y utilizar tu pregunta">Público</label><br>
+                    <input type="radio" value="private" id="accesoPrivado" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPrivado" class="textoAyuda" data-bs-toggle="tooltip" title="Solo tú podrás ver y utilizar tu pregunta">Privado</label>
+                    
+                </div>
+                <br>
                 <div class="form-group">
                     <label><b>Subir imagen (*.jpg)</b></label>
                     <input type="file" (change)="capturarFile($event)" class="form-control">

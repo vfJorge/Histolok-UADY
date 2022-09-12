@@ -48,19 +48,11 @@ export class AgregarImgComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       desc: new FormControl('', [Validators.required]),
       image: new FormControl('', [Validators.required]),
-      access: new FormControl(this.imgAccess)
+      access: new FormControl('', [Validators.required])
     })
   }
   capturarFile(event: any): any{
     this.archivoCapturado = event.target.files[0]
-    if (this.imgAccess == "" ){
-      this.imgAccess = "private" 
-    } 
-  }
-
-  getPrivacy(){
-    this.imgPrivacy == false ? this.imgAccess = "private": this.imgAccess = "public"
-    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
   }
 
   submitForm(){
@@ -69,7 +61,7 @@ export class AgregarImgComponent implements OnInit {
     formularioDatos.append('desc', this.datosImagenes.controls['desc'].getRawValue())
     formularioDatos.append('keywords', JSON.stringify(this.keywords))
     formularioDatos.append('image', this.archivoCapturado)
-    formularioDatos.append('access', this.imgAccess)
+    formularioDatos.append('access', this.datosImagenes.controls['access'].getRawValue())
       this.adminImagesService.postAgregarImagen(formularioDatos).subscribe((resp: any) => {
         if(resp.status == 201){
           alert("Imagen agregada de manera exitosa");

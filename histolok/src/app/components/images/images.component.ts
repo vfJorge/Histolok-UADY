@@ -43,7 +43,8 @@ export class ImagesComponent implements OnInit {
     this.datosImagenes = this.fb.group({
       title: new FormControl('', [Validators.required]),
       desc: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required])
+      image: new FormControl('', [Validators.required]),
+      access: new FormControl('', [Validators.required]),
     })
   }
 
@@ -70,11 +71,6 @@ export class ImagesComponent implements OnInit {
   }
   //Fin Keywords con Chips
 
-  getPrivacidad(){
-    this.imgPrivacy == false ? this.imgAccess = "private": this.imgAccess = "public"
-    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
-  }
-
   eliminarImagen(imagenID: any){
     this.adminImagesService.delEliminarImagen(imagenID).subscribe((resp: any) => {
       if(resp.status == 200){
@@ -87,18 +83,22 @@ export class ImagesComponent implements OnInit {
     })
   }
   
-  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any, access: any){
+  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any, imagenACCESS: any){
     this.keywords = [];
 
     this.imgID = imagenID;
     this.datosImagenes.controls['title'].setValue(imagenTITLE);
     this.datosImagenes.controls['desc'].setValue(imagenDESC);
-    this.imgAccess = access;
 
     for(var i in imagenKEYWORDS) this.keywords.push(imagenKEYWORDS[i].keyword);
 
-    access == "public" ? this.imgPrivacy = true : this.imgPrivacy = false;
-    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
+    if(imagenACCESS == "public"){
+      this.datosImagenes.controls['access'].setValue("public");
+      
+    }
+    else{
+      this.datosImagenes.controls['access'].setValue("private");
+    }
   }
 
   enviarEdicion(){
@@ -107,7 +107,7 @@ export class ImagesComponent implements OnInit {
     formularioDatos.append('desc', this.datosImagenes.controls['desc'].getRawValue())
     formularioDatos.append('keywords', JSON.stringify(this.keywords))
     formularioDatos.append('image', this.archivoCapturado)
-    formularioDatos.append('access', this.imgAccess)
+    formularioDatos.append('access', this.datosImagenes.controls['access'].getRawValue())
     
       this.adminImagesService.putEditarImagen(formularioDatos, this.imgID).subscribe((resp: any) => {
         if(resp.status == 200){
