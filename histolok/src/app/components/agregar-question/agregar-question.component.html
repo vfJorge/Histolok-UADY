@@ -21,7 +21,21 @@
                 <br>
                 <div class="form-group">
                     <label><b>Palabras clave</b></label>
-                    <input type="text" class="form-control" placeholder='["corazon", "celula"]' formControlName="keywords">
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                          <input placeholder="Introduce una etiqueta..."
+                                 [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                 [matChipInputAddOnBlur]="addOnBlur"
+                                 (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
                 </div>
                 <br>
                 <div class="form-group">

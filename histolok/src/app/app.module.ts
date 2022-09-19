@@ -45,7 +45,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -13,3 +13,7 @@ img:hover{
 	display: inline-block;
 	border-bottom: 0.3vh dotted black;
 }
+
+.example-chip-list {
+    width: 100%;
+  }

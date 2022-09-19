@@ -3,6 +3,8 @@ import { LoginRegisterService } from '../../services/login-register.service';
 import { AdminQuestionsService } from 'src/app/services/admin-questions.service';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-questions',
@@ -18,21 +20,12 @@ export class QuestionsComponent implements OnInit {
   datosPreguntas!: FormGroup;
 
   preguntaID: any;
-  preguntaTitle: string = "";
-  preguntaQuestion: string = "";
-  preguntaKeywords: string = "";
-  preguntaAnswer: string = "";
-  preguntaOption1: string = "";
-  preguntaOption2: string = "";
-  preguntaOption3: string = "";
-  preguntaAccess: string = "";
-  preguntaDifficulty: string = "";
-  preguntaFotoID: string = "";
   opcionesi: any = 0;
   auxOpciones: any = 1;
 
   busqueda: string = "";
   misPreguntasOriginal: Array<any> = [];
+  keywords: Array<string> = [];
   
   constructor(private adminQuestionsService: AdminQuestionsService,
     private loginRegisterService : LoginRegisterService,
@@ -59,13 +52,36 @@ export class QuestionsComponent implements OnInit {
       keywords: new FormControl('', [Validators.required]),
       answer: new FormControl('', [Validators.required]),
       option1: new FormControl('', [Validators.required]),
-      option2: new FormControl('', [Validators.required]),
-      option3: new FormControl('', [Validators.required]),
+      option2: new FormControl(' ', [Validators.required]),
+      option3: new FormControl('  ', [Validators.required]),
       access: new FormControl('', [Validators.required]),
       difficulty: new FormControl('', [Validators.required]),
       foto_id: new FormControl('')
     })
   }
+
+  //Inicio Keywords con Chips
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.keywords.push(value);
+    }
+
+    event.chipInput!.clear();
+  }
+  
+  remove(keyword: string): void {
+    const index = this.keywords.indexOf(keyword);
+
+    if (index >= 0) {
+      this.keywords.splice(index, 1);
+    }
+  }
+  //Fin Keywords con Chips
 
   eliminarPregunta(preguntaID: any){
     this.adminQuestionsService.delEliminarPregunta(preguntaID).subscribe((resp: any) => {
@@ -86,15 +102,17 @@ export class QuestionsComponent implements OnInit {
 
   editarPreguntaVista(preguntaID: any, preguntaTITLE: any, preguntaQUESTION: any, preguntaKEYWORDS: any, preguntaANSWERID: any,
     preguntaOPCIONS: any, preguntaACCESS: any, preguntaDIFFICULTY: any, preguntaFOTOID: any){
+    this.keywords = [];
 
     this.preguntaID = preguntaID;
 
     this.datosPreguntas.controls['title'].setValue(preguntaTITLE);
     this.datosPreguntas.controls['question'].setValue(preguntaQUESTION);
-    this.datosPreguntas.controls['keywords'].setValue('["'+preguntaKEYWORDS[0].keyword+'"]');
+    
+    for(var i in preguntaKEYWORDS) this.keywords.push(preguntaKEYWORDS[i].keyword);
 
     this.auxOpciones = 1;
-    for(this.opcionesi; this.opcionesi < 4; this.opcionesi++){
+    for(this.opcionesi; this.opcionesi < preguntaOPCIONS.length; this.opcionesi++){
       if(preguntaOPCIONS[this.opcionesi].id == preguntaANSWERID){
         this.datosPreguntas.controls['answer'].setValue(preguntaOPCIONS[this.opcionesi].opcion);
       }
@@ -117,6 +135,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   enviarEdicion(datosPreguntas: any){
+    this.datosPreguntas.controls['keywords'].setValue(JSON.stringify(this.keywords))
       this.adminQuestionsService.putEditarPregunta(datosPreguntas, this.preguntaID).subscribe((resp: any) => {
         if(resp.status == 200){
           alert("Pregunta editada de manera exitosa");

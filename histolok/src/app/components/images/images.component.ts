@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ThisReceiver } from '@angular/compiler';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 
 @Component({
@@ -15,18 +16,17 @@ export class ImagesComponent implements OnInit {
   public misImagenes: Array<any> = [];
   imagenesURL = "http://127.0.0.1:8000/storage/";
   archivoCapturado: any;
-  imgTitle: string = "";
-  imgDesc: string = "";
-  imgKeywords: string = "";
   imgID: any;
   imgPrivacy: boolean;
   imgAccess: string = "";
   accessToggle: string = "";
   busqueda: string = "";
+  
   misImagenesOriginal: Array<any> = [];
   perfilUsuario: string = "";
   esEstudiante: boolean;
   datosImagenes!: FormGroup;
+  keywords: Array<string> = [];
 
   constructor(private adminImagesService: AdminImagesService, private dialog: MatDialog,
     private fb: FormBuilder) { }
@@ -43,16 +43,33 @@ export class ImagesComponent implements OnInit {
     this.datosImagenes = this.fb.group({
       title: new FormControl('', [Validators.required]),
       desc: new FormControl('', [Validators.required]),
-      keywords: new FormControl('', [Validators.required]),
       image: new FormControl('', [Validators.required]),
-      access: new FormControl(this.imgAccess)
+      access: new FormControl('', [Validators.required]),
     })
   }
 
-  getPrivacidad(){
-    this.imgPrivacy == false ? this.imgAccess = "private": this.imgAccess = "public"
-    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
+  //Inicio Keywords con Chips
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.keywords.push(value);
+    }
+
+    event.chipInput!.clear();
   }
+  
+  remove(keyword: string): void {
+    const index = this.keywords.indexOf(keyword);
+
+    if (index >= 0) {
+      this.keywords.splice(index, 1);
+    }
+  }
+  //Fin Keywords con Chips
 
   eliminarImagen(imagenID: any){
     this.adminImagesService.delEliminarImagen(imagenID).subscribe((resp: any) => {
@@ -66,23 +83,31 @@ export class ImagesComponent implements OnInit {
     })
   }
   
-  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any, access: any){
+  editarImagenVista(imagenID: any, imagenTITLE: any, imagenDESC: any, imagenKEYWORDS: any, imagenACCESS: any){
+    this.keywords = [];
+
     this.imgID = imagenID;
     this.datosImagenes.controls['title'].setValue(imagenTITLE);
     this.datosImagenes.controls['desc'].setValue(imagenDESC);
-    this.datosImagenes.controls['keywords'].setValue('["'+imagenKEYWORDS[0].keyword+'"]');
-    this.datosImagenes.controls['access'].setValue(access);
-    access == "public" ? this.imgPrivacy = true : this.imgPrivacy = false;
-    this.imgPrivacy == true ? this.accessToggle = "pública" : this.accessToggle = "privada";
+
+    for(var i in imagenKEYWORDS) this.keywords.push(imagenKEYWORDS[i].keyword);
+
+    if(imagenACCESS == "public"){
+      this.datosImagenes.controls['access'].setValue("public");
+      
+    }
+    else{
+      this.datosImagenes.controls['access'].setValue("private");
+    }
   }
 
   enviarEdicion(){
     const formularioDatos = new FormData();
     formularioDatos.append('title', this.datosImagenes.controls['title'].getRawValue())
     formularioDatos.append('desc', this.datosImagenes.controls['desc'].getRawValue())
-    formularioDatos.append('keywords', this.datosImagenes.controls['keywords'].getRawValue())
+    formularioDatos.append('keywords', JSON.stringify(this.keywords))
     formularioDatos.append('image', this.archivoCapturado)
-    formularioDatos.append('access', this.imgAccess)
+    formularioDatos.append('access', this.datosImagenes.controls['access'].getRawValue())
     
       this.adminImagesService.putEditarImagen(formularioDatos, this.imgID).subscribe((resp: any) => {
         if(resp.status == 200){
