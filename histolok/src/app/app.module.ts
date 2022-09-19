@@ -20,6 +20,7 @@ import { ModalImagenComponent } from './components/images/modal-imagen/modal-ima
 import { MaterialModule } from './material/material.module';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { AgregarQuestionComponent } from './components/agregar-question/agregar-question.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { AgregarQuestionComponent } from './components/agregar-question/agregar-
     AgregarImgComponent,
     ModalImagenComponent,
     QuestionsComponent,
-    AgregarQuestionComponent
+    AgregarQuestionComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
