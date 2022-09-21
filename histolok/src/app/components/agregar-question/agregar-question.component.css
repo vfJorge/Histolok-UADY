@@ -16,3 +16,13 @@ img:hover{
 .example-chip-list {
   width: 100%;
 }
+
+.with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.mat-icon {
+  font-size: 18px;
+  color: gray;
+}

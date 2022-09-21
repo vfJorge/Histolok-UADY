@@ -16,6 +16,7 @@ export class AgregarImgComponent implements OnInit {
   accessToggle: string = "";
   datosImagenes!: FormGroup;
   keywords: Array<string> = [];
+  imgPreview: string | ArrayBuffer;
 
   constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) {
   }
@@ -52,7 +53,7 @@ export class AgregarImgComponent implements OnInit {
     })
   }
   capturarFile(event: any): any{
-    this.archivoCapturado = event.target.files[0]
+    this.archivoCapturado = event.target.files[0];
   }
 
   submitForm(){

@@ -17,3 +17,9 @@ img:hover{
 .example-chip-list {
     width: 100%;
   }
+
+.with-icon {
+    display: flex;
+    align-items: center;
+	color: rgb(48, 59, 97);
+}

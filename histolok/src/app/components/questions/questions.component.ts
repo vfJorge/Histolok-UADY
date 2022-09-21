@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginRegisterService } from '../../services/login-register.service';
 import { AdminQuestionsService } from 'src/app/services/admin-questions.service';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalQuestionsComponent } from './modal-questions/modal-questions.component';
+
 
 @Component({
   selector: 'app-questions',
@@ -18,6 +20,7 @@ export class QuestionsComponent implements OnInit {
   perfilUsuario: string = "";
   esEstudiante: boolean;
   datosPreguntas!: FormGroup;
+  imgFilename: string = "";
 
   preguntaID: any;
   opcionesi: any = 0;
@@ -28,7 +31,7 @@ export class QuestionsComponent implements OnInit {
   keywords: Array<string> = [];
   
   constructor(private adminQuestionsService: AdminQuestionsService,
-    private loginRegisterService : LoginRegisterService,
+    private dialog: MatDialog,
     private adminImagesService: AdminImagesService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -175,5 +178,20 @@ export class QuestionsComponent implements OnInit {
         this.misPreguntas.sort((a , b) => a.question.toLowerCase().localeCompare( b.question.toLowerCase()));;
         break;
     }
+  }
+
+  mostrarPregunta(pregunta: any){
+    for (let i = 0; i < this.misImagenes.length; i++) {
+      if (this.misImagenes[i].id == pregunta.foto_id){
+        this.imgFilename = this.misImagenes[i].filename;   
+      }
+    }
+
+    this.dialog.open(ModalQuestionsComponent, {
+      height: '550px',
+      width: '500px',
+      data: {title: pregunta.title, question: pregunta.question, options: pregunta.opcions, imagePath: this.imagenesURL + this.imgFilename},
+      autoFocus: false
+    })
   }
 }
