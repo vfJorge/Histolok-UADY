@@ -54,6 +54,7 @@ export class AgregarQuestionComponent implements OnInit {
   escogerImagen(idImagen: any){
     this.datosPreguntaAgregar.controls.foto_id.patchValue(idImagen);
   }
+ 
 
   //Inicio Keywords con Chips
   addOnBlur = true;
