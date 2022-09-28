@@ -20,7 +20,7 @@ class PreguntaController extends Controller
      */
     public function index()
     {
-        $preguntas = Pregunta::with(['palabclvs','user:id,name','opcions:id,opcion'])->where('access','public')->get();
+        $preguntas = Pregunta::with(['palabclvs','user:id,name','opcions:id,opcion'])->get();
         return $preguntas;
     }
 
@@ -31,7 +31,7 @@ class PreguntaController extends Controller
      */
     public function public()
     {
-        $preguntas = Pregunta::with(['palabclvs'])->get();
+        $preguntas = Pregunta::with(['palabclvs','user:id,name','opcions:id,opcion'])->where('access','public')->get();
         return $preguntas;
     }
 

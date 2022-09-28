@@ -75,7 +75,7 @@ class GrupoController extends Controller
     public function update(Request $request, $id)
     {
         $grupo = Grupo::find($id);
-
+                                                                //ESTA MAL
         $grupo->name = $request->get('name');
         $grupo->description= $request->get('description');
         $grupo->creator=1;
@@ -97,7 +97,7 @@ class GrupoController extends Controller
     public function destroy($id)
     {
         $grupo = Grupo::find($id);
-
+                                                                //ESTA MAL
         $grupo->delete();
         return redirect('/grupos');
     }

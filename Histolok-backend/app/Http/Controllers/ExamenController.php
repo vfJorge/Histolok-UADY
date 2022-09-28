@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Examen;
+use App\Models\Pregunta;
+use App\Models\Opcion;
+use App\Models\Palabclv;
+
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+
+class ExamenController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $examen = Examen::with(['palabclvs','user:id,name'])->get();
+        return $preguntas;
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function public()
+    {
+        $examen = Examen::with(['palabclvs','user:id,name'])->where('access','public')->get();
+        return $preguntas;
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title'=> 'required|string',
+            'description'=>'required|string',
+            'n_questions'=>'integer',
+            'difficulty'=>'required|integer|between:1,5',
+            'duration'=>'required',
+            'access'=>['required',Rule::in(['private','public'])]
+            
+        ]);
+
+
+        $examen = new Examen();
+        $examen->title = $request->title;
+        $examen->description = $request->description;
+        $examen->user_id = auth()->user()->id;
+        $examen->difficulty = $request->difficulty;
+        $examen->access = $request->access;
+        $examen->duration = $request->duration;
+        $examen->n_questions=0;
+        $examen->n_correct=0;
+        if(auth()->user()->type=="E"){
+            $examen->mode="entrenamiento";
+        }
+        else $examen->mode="batalla"; 
+        
+        $examen->save();
+
+        //palabras clave
+        $array = json_decode($request->keywords);
+                                                        //$array =array_filter(preg_split("/^\[|\]$|,|'+/", $request->keywords)); si es con ' en vez de "
+        if(!is_array($array)){
+            $examen->delete();
+            return response(["message"=>"Error en las palabras clave"],400);
+        } 
+        foreach($array as $keyword){
+            $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
+            $examen->palabclvs()->attach($palabraclv);
+        }
+        //preguntas
+        if($examen->mode=="batalla"){
+            $preguntas_arr = json_decode($request->questions);
+            if(!is_array($preguntas_arr)){
+                $examen->palabclvs()->detach();
+                $examen->delete();
+                return response(["message"=>"Error al agregar las preguntas"],400);
+            } 
+            $npreguntas=0;
+            foreach($preguntas_arr as $preguntaid){
+                $pregunta = Pregunta::findOrFail($preguntaid);
+                if($pregunta->access=="public"){
+                    $examen->preguntas()->attach($pregunta);
+                    $npreguntas++;
+                }
+                
+            }
+            $examen->n_questions=$npreguntas;
+        }
+        if($examen->mode=="entrenamiento"){
+            $preguntas = $this->generarExamen($request);
+            
+            $examen->preguntas()->attach($preguntas);
+            
+        }
+            
+        $examen->push();
+        $examen=Examen::with(['palabclvs','user:id,name',"preguntas:id,question"])->findOrFail($examen->id);
+        return response($examen,201);
+    }
+
+    public function generarExamen(Request $request)
+    {
+        $array = json_decode($request->keywords);
+        if(is_array($array) && count($array)>0){
+            $preguntas = Pregunta::where('access','public')->where('difficulty', $request->difficulty)->whereHas('palabclvs',function ($query) use ($array) {
+            
+                $query->whereIn('keyword', $array);
+                             
+            })
+            ->select('id')->inRandomOrder()->limit($request->n_questions)->get();
+        }
+        else{
+            $preguntas = Pregunta::where('access','public')->where('difficulty', $request->difficulty)->inRandomOrder()->limit($request->n_questions)->get();
+        }
+        return $preguntas;
+    }
+
+    public function show(Request $request)
+    {
+        $examen = Examen::with(['palabclvs','user:id,name','preguntas:id,title,question'])->findOrFail($request->id);
+        if($examen->access!="public" && auth()->user()->id!=$examen->user_id) return response(['message'=>'Este examen es privado'],403);
+        return response($pregunta,200);
+    }
+}
