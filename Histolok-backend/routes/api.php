@@ -82,7 +82,8 @@ Route::group([
         Route::get('','App\Http\Controllers\ExamenController@index')->middleware('is_admin');//ver todas los examenes
         Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas
         Route::get('me', 'App\Http\Controllers\ExamenController@owned');         //ver mis examenes
-        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen      
+        Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
+        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen
         Route::put('{id}', 'App\Http\Controllers\ExamenController@update');   //editar examen
         Route::delete('{id}', 'App\Http\Controllers\ExamenController@destroy');//borrar un examen
     });
@@ -90,7 +91,7 @@ Route::group([
     Route::group([
         'prefix' => 'examenes'
     ], function () {
-        Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
+        Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
     });
     //Auth
     Route::post('logout','App\Http\Controllers\AuthController@logout');
