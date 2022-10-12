@@ -21,7 +21,7 @@ export class QuestionsComponent implements OnInit {
   esEstudiante: boolean;
   datosPreguntas!: FormGroup;
   imgFilename: string = "";
-
+  conserva: any;
   preguntaID: any;
   opcionesi: any = 0;
   auxOpciones: any = 1;
@@ -39,6 +39,7 @@ export class QuestionsComponent implements OnInit {
       this.misPreguntas = resp.body;
       this.misPreguntasOriginal = resp.body;
       console.log(this.misPreguntas);
+      console.log(this.conserva)
     }, error => {
       console.log(error);
     })
@@ -135,23 +136,28 @@ export class QuestionsComponent implements OnInit {
 
     this.datosPreguntas.controls['difficulty'].setValue(preguntaDIFFICULTY);
     this.datosPreguntas.controls['foto_id'].setValue(preguntaFOTOID);
+    this.getFilename(preguntaFOTOID);
   }
 
   enviarEdicion(datosPreguntas: any){
-    this.datosPreguntas.controls['keywords'].setValue(JSON.stringify(this.keywords))
+    this.datosPreguntas.controls['keywords'].setValue(JSON.stringify(this.keywords));
       this.adminQuestionsService.putEditarPregunta(datosPreguntas, this.preguntaID).subscribe((resp: any) => {
         if(resp.status == 200){
           alert("Pregunta editada de manera exitosa");
-          window.location.reload();
+          this.conserva = datosPreguntas;
+          console.log(this.conserva);
+         //window.location.reload();
         }
       }, error => {
         console.log(error);
         alert("No se pudo editar la pregunta, inténtalo de nuevo");
       })
+      
   }
 
   escogerImagenEdicion(FotoID: any){
     this.datosPreguntas.controls['foto_id'].setValue(FotoID);
+    this.getFilename(FotoID);
   }
 
   buscarPregunta(){
@@ -180,17 +186,27 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  mostrarPregunta(pregunta: any){
+  getFilename(imgID: String){
     for (let i = 0; i < this.misImagenes.length; i++) {
-      if (this.misImagenes[i].id == pregunta.foto_id){
-        this.imgFilename = this.misImagenes[i].filename;   
+      if (this.misImagenes[i].id == imgID){
+        this.imgFilename = this.imagenesURL + this.misImagenes[i].filename;   
       }
     }
 
+  }
+
+  mostrarPregunta(pregunta: any){
+    // for (let i = 0; i < this.misImagenes.length; i++) {
+    //   if (this.misImagenes[i].id == pregunta.foto_id){
+    //     this.imgFilename = this.misImagenes[i].filename;   
+    //   }
+    // }
+
+    this.getFilename(pregunta.foto_id);
     this.dialog.open(ModalQuestionsComponent, {
       height: '550px',
       width: '500px',
-      data: {title: pregunta.title, question: pregunta.question, options: pregunta.opcions, imagePath: this.imagenesURL + this.imgFilename},
+      data: {title: pregunta.title, question: pregunta.question, options: pregunta.opcions, imagePath: this.imgFilename},
       autoFocus: false
     })
   }

@@ -23,3 +23,13 @@ img:hover{
     align-items: center;
 	color: rgb(48, 59, 97);
 }
+
+.imgSelected{
+	height: 50%;
+	width: 50%;
+  }
+.imgSelected img{
+	height: 100%; 
+	width: 100%; 
+	object-fit: contain;
+}

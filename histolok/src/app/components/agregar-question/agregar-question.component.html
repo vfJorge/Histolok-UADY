@@ -77,7 +77,13 @@
                 <br>
                 <div class="form-group">
                     <label><b>Imagen</b></label><br>
-                    <div class="text-center"><a class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Seleccionar imagen</span></a></div>
+                    <div class="text-center">
+                        <a *ngIf="imgFilename == ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Seleccionar imagen</span></a>
+                        <a *ngIf="imgFilename != ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Cambiar imagen</span></a>
+                    </div>
+                    <div class="imgSelected mx-auto" *ngIf="imgFilename != ''">
+                        <img src="{{imagenesURL}}{{imgFilename}}">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -90,17 +96,17 @@
 
 <div class="modal fade" id="escogerImagen">
     <div class="container" id="tarjetasImag">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-content p-3">
                 <div class="modal-header">
                     <div class="text-center">
-                        <h5 class="modal-title" id="registroLabel">Seleccionar una imagen</h5>
+                        <h5 class="modal-title" id="registroLabel">Selecciona una imagen</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 mt-4" *ngFor="let Imagen of misImagenes">
-                        <div class="card">
+                <div class="row pt-4">
+                    <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let Imagen of misImagenes">
+                        <div class="card h-80">
                                 <img class="imgPrincipal" src={{imagenesURL}}{{Imagen.filename}} (click)="escogerImagen(Imagen.id)" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#agregarPregunta">
                                 
                             <div class="card-body" id="cardInfo">
