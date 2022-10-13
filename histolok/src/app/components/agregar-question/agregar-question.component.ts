@@ -42,7 +42,7 @@ export class AgregarQuestionComponent implements OnInit {
   }
 
   agregarPregunta(datosPreguntaAgregar: any){
-    this.datosPreguntaAgregar.controls['keywords'].setValue(JSON.stringify(this.keywords))
+    this.datosPreguntaAgregar.controls['keywords'].setValue(JSON.stringify(this.keywords));
     this.adminQuestionsService.postAgregarPregunta(datosPreguntaAgregar).subscribe((resp: any) => {
       alert("La pregunta se ha añadido con éxito");
       window.location.reload();

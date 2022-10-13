@@ -21,7 +21,6 @@ export class QuestionsComponent implements OnInit {
   esEstudiante: boolean;
   datosPreguntas!: FormGroup;
   imgFilename: string = "";
-  conserva: any;
   preguntaID: any;
   opcionesi: any = 0;
   auxOpciones: any = 1;
@@ -39,7 +38,7 @@ export class QuestionsComponent implements OnInit {
       this.misPreguntas = resp.body;
       this.misPreguntasOriginal = resp.body;
       console.log(this.misPreguntas);
-      console.log(this.conserva)
+      
     }, error => {
       console.log(error);
     })
@@ -144,9 +143,7 @@ export class QuestionsComponent implements OnInit {
       this.adminQuestionsService.putEditarPregunta(datosPreguntas, this.preguntaID).subscribe((resp: any) => {
         if(resp.status == 200){
           alert("Pregunta editada de manera exitosa");
-          this.conserva = datosPreguntas;
-          console.log(this.conserva);
-         //window.location.reload();
+          window.location.reload();
         }
       }, error => {
         console.log(error);
