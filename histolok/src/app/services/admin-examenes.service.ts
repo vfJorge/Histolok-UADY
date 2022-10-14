@@ -24,13 +24,13 @@ export class AdminExamenesService {
   getMisExamenes(){
     var _url =  this.URL + 'examenes/me';
     var bearerToken = localStorage.getItem('bearerToken');
-    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken)
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.get(_url, {headers: header, observe:'response'});
   }
   getExamenesPublicos(){
     var _url = this.URL + 'examenes/public';
     var bearerToken = localStorage.getItem('bearerToken');
-    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken)
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.get(_url, {headers: header, observe:'response'});
   }
  
