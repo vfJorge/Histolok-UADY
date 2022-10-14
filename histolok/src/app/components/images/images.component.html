@@ -1,8 +1,10 @@
 <div class="container" id="tarjetasImag">
     
     <div class="row mt-2">
-        <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
-            <a class="btn btn-primary px-4" data-bs-target="#agregarImagen" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir imagen</span></a>
+        <div class="col-12 col-sm-4 col-lg-7 mb-2 with-icon">
+            <a class="btn btn-primary px-3" data-bs-target="#agregarImagen" data-bs-toggle="modal"> 
+                <span><mat-icon fontIcon="add"></mat-icon>Añadir imagen</span>
+            </a>
         </div>
         <div class="col-12 col-sm-4 col-lg-3 mb-2" >
             <input type="text" class="form-control" 
@@ -34,9 +36,14 @@
                 <div class="card-body" id="cardInfo">
                     <h5 class="card-title text-center">{{Imagen.title}}</h5>
                     <div class="text-center" id="imgOpciones">
-                    <button class="btn btn-link" (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs, Imagen.access)" data-bs-target="#editarImagen" data-bs-toggle="modal"><img src="../../assets/edit.png"></button>
+                    <button class="btn btn-link btn-edit" mat-icon-button 
+                        (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs, Imagen.access)" 
+                        data-bs-target="#editarImagen" data-bs-toggle="modal"> <mat-icon>edit</mat-icon>
+                    </button>
                     &nbsp;
-                    <button class="btn btn-link" (click)="eliminarImagen(Imagen.id)"><img src="../../assets/trash.png"></button>
+                    <button mat-icon-button color="warn" (click)="eliminarImagen(Imagen.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                     </div>
                 </div>
             </div>

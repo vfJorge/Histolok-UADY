@@ -21,6 +21,7 @@ export class QuestionsComponent implements OnInit {
   esEstudiante: boolean;
   datosPreguntas!: FormGroup;
   imgFilename: string = "";
+  imgOriginalName: string = "";
   preguntaID: any;
   opcionesi: any = 0;
   auxOpciones: any = 1;
@@ -187,6 +188,7 @@ export class QuestionsComponent implements OnInit {
     for (let i = 0; i < this.misImagenes.length; i++) {
       if (this.misImagenes[i].id == imgID){
         this.imgFilename = this.imagenesURL + this.misImagenes[i].filename;   
+        this.imgOriginalName = this.misImagenes[i].originalName;
       }
     }
 

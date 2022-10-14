@@ -17,6 +17,7 @@ export class AgregarQuestionComponent implements OnInit {
   keywords: Array<string> = [];
   existeImg: boolean = false;
   imgFilename: string = '';
+  imgOriginalName: string = '';
   constructor(private fb: FormBuilder, private adminQuestionsService: AdminQuestionsService, private adminImagesService: AdminImagesService) { }
 
   ngOnInit(): void {
@@ -54,12 +55,7 @@ export class AgregarQuestionComponent implements OnInit {
   
   escogerImagen(idImagen: any){
     this.datosPreguntaAgregar.controls.foto_id.patchValue(idImagen);
-
-    for (let i = 0; i < this.misImagenes.length; i++) {
-      if (this.misImagenes[i].id == idImagen){
-        this.imgFilename = this.misImagenes[i].filename;   
-      }
-    }
+    this.getFilename(idImagen);
   }
  
   //Inicio Keywords con Chips
@@ -85,4 +81,13 @@ export class AgregarQuestionComponent implements OnInit {
   }
   //Fin Keywords con Chips
  
+  getFilename(imgID: String){
+    for (let i = 0; i < this.misImagenes.length; i++) {
+      if (this.misImagenes[i].id == imgID){
+        this.imgFilename = this.imagenesURL + this.misImagenes[i].filename;   
+        this.imgOriginalName = this.misImagenes[i].originalName;
+      }
+    }
+
+  }
 }

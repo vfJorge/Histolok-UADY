@@ -1,0 +1,20 @@
+.with-icon {
+  display: flex;
+  align-items: center;
+  }
+  
+.mat-icon {
+  vertical-align: bottom;
+  font-size: 18px;
+  color: gray;
+}
+
+.textoAyuda {
+	position: relative;
+	display: inline-block;
+	border-bottom: 0.3vh dotted black;
+}
+
+.example-chip-list {
+  width: 100%;
+}

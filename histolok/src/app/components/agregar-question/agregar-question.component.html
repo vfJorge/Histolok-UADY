@@ -81,8 +81,9 @@
                         <a *ngIf="imgFilename == ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Seleccionar imagen</span></a>
                         <a *ngIf="imgFilename != ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Cambiar imagen</span></a>
                     </div>
-                    <div class="imgSelected mx-auto" *ngIf="imgFilename != ''">
-                        <img src="{{imagenesURL}}{{imgFilename}}">
+                    <div class="imgSelected mx-auto text-center" *ngIf="imgFilename != ''">
+                        {{imgOriginalName}}
+                        <img src="{{imgFilename}}">
                     </div>
                 </div>
             </div>
