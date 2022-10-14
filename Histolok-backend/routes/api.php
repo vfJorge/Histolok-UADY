@@ -74,6 +74,25 @@ Route::group([
         Route::put('{id}', 'App\Http\Controllers\PreguntaController@update');   //actualizar la info de pregunta
         Route::delete('{id}', 'App\Http\Controllers\PreguntaController@destroy');//borrar una pregunta
     });
+
+    Route::group([
+        'prefix' => 'examenes',
+        'middleware'=>'is_superuser'
+    ], function () {
+        Route::get('','App\Http\Controllers\ExamenController@index')->middleware('is_admin');//ver todas los examenes
+        Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas
+        Route::get('me', 'App\Http\Controllers\ExamenController@owned');         //ver mis examenes
+        Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
+        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen
+        Route::put('{id}', 'App\Http\Controllers\ExamenController@update');   //editar examen
+        Route::delete('{id}', 'App\Http\Controllers\ExamenController@destroy');//borrar un examen
+    });
+
+    Route::group([
+        'prefix' => 'examenes'
+    ], function () {
+        Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
+    });
     //Auth
     Route::post('logout','App\Http\Controllers\AuthController@logout');
     Route::get('type', 'App\Http\Controllers\AuthController@type');

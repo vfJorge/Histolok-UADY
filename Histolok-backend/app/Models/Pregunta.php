@@ -33,5 +33,8 @@ class Pregunta extends Model
         return $this->belongsTo(\App\Models\Foto::class);
     }
 
+    public function examens(){
+        return $this->belongsToMany(\App\Models\Examen::class)->withTimestamps();
+    }
     
 }

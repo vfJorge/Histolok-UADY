@@ -26,4 +26,8 @@ class Palabclv extends Model
     public function preguntas(){
         return $this->belongsToMany(\App\Models\Pregunta::class);
     }
+
+    public function examens(){
+        return $this->belongsToMany(\App\Models\Examen::class);
+    }
 }
