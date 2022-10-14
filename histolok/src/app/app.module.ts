@@ -18,6 +18,12 @@ import { ImagesComponent } from './components/images/images.component';
 import { AgregarImgComponent } from './components/agregar-img/agregar-img.component';
 import { ModalImagenComponent } from './components/images/modal-imagen/modal-imagen.component';
 import { MaterialModule } from './material/material.module';
+import { QuestionsComponent } from './components/questions/questions.component';
+import { AgregarQuestionComponent } from './components/agregar-question/agregar-question.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ModalQuestionsComponent } from './components/questions/modal-questions/modal-questions.component';
+import { AgregarExamenComponent } from './components/agregar-examen/agregar-examen.component';
+import { ExamenComponent } from './components/examen/examen.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +36,13 @@ import { MaterialModule } from './material/material.module';
     UserListComponent,
     ImagesComponent,
     AgregarImgComponent,
-    ModalImagenComponent
+    ModalImagenComponent,
+    QuestionsComponent,
+    AgregarQuestionComponent,
+    UserProfileComponent,
+    ModalQuestionsComponent,
+    AgregarExamenComponent,
+    ExamenComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +51,7 @@ import { MaterialModule } from './material/material.module';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
