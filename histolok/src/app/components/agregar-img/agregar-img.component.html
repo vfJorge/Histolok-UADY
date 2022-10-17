@@ -1,5 +1,5 @@
 <div class="modal fade" id="agregarImagen">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" id="agregarImgModal">
         <div class="modal-content">
         <div class="modal-header">
             <div class="text-center">
@@ -48,8 +48,13 @@
                     </mat-form-field>
                 </div>
                 <div class="form-group">
-                    <label><b>Subir imagen (*.jpg)</b></label>
+                    <label><b>Editar y subir imagen (*.jpg)</b></label>
+                    <!---
                     <input type="file" (change)="capturarFile($event)" class="form-control">
+                    -->
+                    <image-drawing borderCss="2px solid black" [showCancelButton]="false"
+                    [enableLoadAnotherImage]="true" [enableRemoveImage]="true" (save)="capturarFile($event)" 
+                    [drawingSizes]="{ small: 2, medium: 5, large: 10, extra: 15 }" [i18n]="i18n" outputMimeType="image/jpeg" ></image-drawing>
                 </div>
             </div>
             <div class="modal-footer">

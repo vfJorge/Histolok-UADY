@@ -3,6 +3,7 @@ import {FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { I18nInterface } from 'ngx-image-drawing/src/i18n';
 
 @Component({
   selector: 'app-agregar-img',
@@ -16,6 +17,13 @@ export class AgregarImgComponent implements OnInit {
   accessToggle: string = "";
   datosImagenes!: FormGroup;
   keywords: Array<string> = [];
+
+  public i18n: I18nInterface = {
+    saveBtn: 'Guardar imagen',
+    sizes: {
+        extra: 'Extra'
+    }
+};
 
   constructor(private fb: FormBuilder, private adminImagesService: AdminImagesService) {
   }
@@ -51,8 +59,9 @@ export class AgregarImgComponent implements OnInit {
       access: new FormControl(this.imgAccess)
     })
   }
-  capturarFile(event: any): any{
-    this.archivoCapturado = event.target.files[0]
+  capturarFile($event: any): any{
+    console.log("p1")
+    this.archivoCapturado = $event
     if (this.imgAccess == "" ){
       this.imgAccess = "private" 
     } 
