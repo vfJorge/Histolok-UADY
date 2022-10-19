@@ -174,8 +174,8 @@ class ExamenController extends Controller
     {
         $examen = Examen::findOrFail($request->id);
 
-        //Gate::authorize('author-examen', $examen);
-        //Gate::authorize('batalla-examen', $examen);
+        Gate::authorize('author-examen', $examen);
+        Gate::authorize('batalla-examen', $examen);
 
         $request->validate([
             'title'=> 'required|string',
