@@ -20,7 +20,7 @@ class ExamenController extends Controller
     public function index()
     {
         $examen = Examen::with(['palabclvs','user:id,name'])->get();
-        return $preguntas;
+        return $examen;
     }
     
     /**
@@ -31,7 +31,7 @@ class ExamenController extends Controller
     public function public()
     {
         $examen = Examen::with(['palabclvs','user:id,name'])->where('access','public')->get();
-        return $preguntas;
+        return $examen;
     }
     /**
      * Store a newly created resource in storage.
@@ -162,5 +162,89 @@ class ExamenController extends Controller
         $examen = Examen::with(['palabclvs','user:id,name','preguntas:id,title,question','preguntas.opcions'])->findOrFail($request->id);
         if($examen->access!="public" && auth()->user()->id!=$examen->user_id) return response(['message'=>'Este examen es privado'],403);
         return response($examen,200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+
+        //Gate::authorize('author-examen', $examen);
+        //Gate::authorize('batalla-examen', $examen);
+
+        $request->validate([
+            'title'=> 'required|string',
+            'description'=>'required|string',
+            'difficulty'=>'required|integer|between:1,5',
+            'duration'=>'required',
+            'access'=>['required',Rule::in(['private','public'])]
+            
+        ]);
+        if($request->filled('title')) $examen->title = $request->title;
+        if($request->filled('description')) $examen->description = $request->description;
+        if($request->filled('difficulty')) $examen->difficulty = $request->difficulty;
+        if($request->filled('duration')) $examen->duration = $request->duration;
+        if($request->filled('access')) $examen->access = $request->access;
+
+        $examen->save();
+        //palabras clave
+        if($request->filled('keywords')){
+            $keywords = json_decode($request->keywords);
+            if(!is_array($keywords)){
+                return response(["message"=>"Error en las palabras clave"],400);
+            }
+            $array = array();
+            foreach($keywords as $keyword){
+                $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
+                array_push($array,$palabraclv->id);
+            }
+            $examen->palabclvs()->sync($array);
+        }
+
+
+        //preguntas
+        if($request->filled('questions')){
+            $preguntas_arr = json_decode($request->questions);
+            if(!is_array($preguntas_arr)){
+                return response(["message"=>"Error al cambiar las preguntas"],400);
+            } 
+            $examen->preguntas()->detach();
+            $npreguntas=0;
+            foreach($preguntas_arr as $preguntaid){
+                $pregunta = Pregunta::findOrFail($preguntaid);
+                if($pregunta->access=="public"){
+                    $examen->preguntas()->attach($pregunta);
+                    $npreguntas++;
+                }
+                
+            }
+            $examen->n_questions=$npreguntas;
+        }
+        
+            
+        $examen->push();
+        $examen=Examen::with(['palabclvs','user:id,name',"preguntas:id,question"])->findOrFail($examen->id);
+        return response($examen,200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Pregunta  $pregunta
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+        Gate::authorize('author-examen', $examen);
+
+        $examen->palabclvs()->detach();
+        $examen->preguntas()->detach();
+        $examen->delete();
     }
 }

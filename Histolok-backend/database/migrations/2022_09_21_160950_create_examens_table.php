@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->integer('n_questions')->nullable();
-            $table->integer('n_correct')->default('0');
+            //$table->integer('n_correct')->default('0');
             $table->integer('difficulty');
-            $table->timestamp('start_time')->nullable();
-            $table->timestamp('end_time')->nullable();
+            //$table->timestamp('start_time')->nullable();
+            //$table->timestamp('end_time')->nullable();
             $table->time('duration')->default('00:15:00');
             $table->string('mode');
             $table->string('access')->default('private');
