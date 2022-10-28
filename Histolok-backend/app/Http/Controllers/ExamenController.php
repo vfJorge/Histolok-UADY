@@ -9,6 +9,9 @@ use App\Models\Palabclv;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ExamenController extends Controller
 {
@@ -32,6 +35,13 @@ class ExamenController extends Controller
     {
         $examen = Examen::with(['palabclvs','user:id,name'])->where('access','public')->get();
         return $examen;
+    }
+
+    public function owned(Request $request)
+    {
+        $examen = Examen::with(['palabclvs'])->where('user_id',auth()->user()->id)->get();
+
+        return response($examen,200);
     }
     /**
      * Store a newly created resource in storage.
@@ -61,7 +71,7 @@ class ExamenController extends Controller
         $examen->duration = $request->duration;
         $examen->n_questions=0;
         $examen->n_correct=0;
-        $examen->mode="batalla"; 
+        $examen->mode="batalla";
         
         $examen->save();
 
@@ -164,6 +174,7 @@ class ExamenController extends Controller
         return response($examen,200);
     }
 
+    
     /**
      * Update the specified resource in storage.
      *
@@ -247,4 +258,144 @@ class ExamenController extends Controller
         $examen->preguntas()->detach();
         $examen->delete();
     }
+
+    public function start(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $user_id = auth()->user()->id;
+
+
+        $directorio = 'logs/'.$user_id.'/';
+        $nombre = $user_id."_".$examen->id.".txt";
+        //si existe un examen iniciado anterior
+        if($examen->users()->exists()){
+            $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
+            $start_time = strtotime($pivot->start_time);
+            $dur = $this->addTime($examen->duration);
+            $end_time = $start_time+$dur;
+            $now = strtotime($mytime);
+            //echo date('Y-m-d H:i:s', $now)."  ".date('Y-m-d H:i:s', $end_time);
+            //y sigue estando activo
+            if($end_time > $now && $pivot->end_time==NULL){
+                return response(["mensaje"=>"Este examen ya se inicio y no ha finalizado"],400);
+            }
+            elseif($end_time < $now && $pivot->end_time==NULL){
+                $linea = $mytime." ".$pivot->n_correct;
+                Storage::disk('local')->append($directorio.$nombre, $linea);
+                $query = DB::table('examen_user')->where('id', $id)->update(['end_time' => $mytime]);
+            }
+        }
+        $examen->users()->attach(auth()->user()->id);
+
+        $primeraLinea = $examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration;
+        Storage::disk('local')->append($directorio.$nombre, $primeraLinea);
+
+        
+        return $examen->preguntas()->with(['opcions:id,opcion'])->first()->makeHidden(['answer_id','user_id','access']);
+    }
+
+    public function next(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $user_id = auth()->user()->id;
+
+        //si existe un examen iniciado anterior
+        if($examen->users()->exists()){
+            $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
+            //si end_time no es null, entonces ya finalizo el ultimo examen
+            if($pivot->end_time!=NULL){
+                return response(["error"=>"Este examen no se encuentra iniciado o ya acabó"],400);
+            }
+
+            $start_time = strtotime($pivot->start_time);
+            $dur = $this->addTime($examen->duration);
+            $end_time = $start_time+$dur;
+            $now = strtotime($mytime);
+
+            $directorio = 'logs/'.$user_id.'/';
+            $nombre = $user_id."_".$examen->id.".txt";
+
+            //SI YA ACABO EL TIEMPO del examen
+            if($end_time < $now){
+                $linea = $mytime." ".$pivot->n_correct;
+                Storage::disk('local')->append($directorio.$nombre, $linea);
+                $query = DB::table('examen_user')->where('id', $id)->update(['end_time' => $mytime]);
+
+                return response(["error"=>"El examen ya expiró (y se guardaron sus datos)"],400);
+            }
+            //Si el examen sigue activo
+            else{
+                $i = $pivot->n_answered;
+                //si ya se contestaron todas (inalcanzable?)
+                if($i >= $examen->n_questions){
+                    return response(["error"=>"Este examen ya acabó"],400);
+                }
+                elseif($i+1 < $examen->n_questions){
+                    $preguntas = $examen->preguntas()->with(['opcions:id,opcion'])->get();
+                    $pregunta = $preguntas[$i];
+                    $linea = $request->tiempo_inicio." ".$request->tiempo_selec." ".$request->tiempo_sig;
+                    //respuesta correcta
+                    if($pregunta->answer_id == $request->option_id){
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct+1,NULL);
+                        $linea = $linea." 1";
+                        
+                    }
+                    //respuesta incorrecta
+                    else{
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct,NULL);
+                        $linea = $linea." 0";
+                    }
+                    Storage::disk('local')->append($directorio.$nombre, $linea);
+                    $sigPregunta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
+                    return response(['answer_id'=>$pregunta->answer_id,'siguiente'=>$sigPregunta],200);
+                }else{
+                    $pregunta = $examen->preguntas()->with(['opcions:id,opcion'])->get()[$i];
+                    $linea = $request->tiempo_inicio." ".$request->tiempo_selec." ".$request->tiempo_sig;
+                    $lineaFinal = $mytime." ";
+                    //respuesta correcta
+                    if($pregunta->answer_id == $request->option_id){
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct+1,$mytime);
+                        $linea = $linea." 1";
+                        $lineaFinal = $lineaFinal.$pivot->n_correct+1;
+                        
+                    }
+                    //respuesta incorrecta
+                    else{
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct,$mytime);
+                        $linea = $linea." 0";
+                        $lineaFinal = $lineaFinal.$pivot->n_correct;
+                    }
+                    
+                    Storage::disk('local')->append($directorio.$nombre, $linea);
+                    Storage::disk('local')->append($directorio.$nombre, $lineaFinal);
+                    $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
+                    return response(['answer_id'=>$pregunta->answer_id,'resultados'=>$pivot],200);
+                }
+                
+            }
+        }
+        else{
+            return response(["error"=>"Este examen no se encuentra iniciado"],400);
+        }
+        
+    }
+
+    public function addTime(string $time){
+        $time_arr =  explode(":",$time);
+        $hours = $time_arr[0];
+        $min = $time_arr[1];
+        $seg = $time_arr[2];
+        return  $hours*3600+$min*60+$seg;
+    }
+
+    public function updateExamen($id, $n_answered, $n_correct,$end_time)
+    {
+        $query = DB::table('examen_user')
+            ->where('id', $id)
+            ->update(['n_answered' => $n_answered,'n_correct' => $n_correct,'end_time' => $end_time]);
+    }
+
+    
 }
