@@ -57,7 +57,10 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Grupo::class);
     }
 
-    public function examens(){
-        return $this->hasMany(\App\Models\Foto::class);
+    public function examens(){ //propiedad de examen, este usuario creo los examenes
+        return $this->hasMany(\App\Models\Examen::class);
+    }
+    public function examenes(){//presenta o presento examenes
+        return $this->belongsToMany(\App\Models\Examen::class);
     }
 }

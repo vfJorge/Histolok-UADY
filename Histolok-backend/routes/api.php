@@ -92,6 +92,8 @@ Route::group([
         'prefix' => 'examenes'
     ], function () {
         Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
+        Route::get('{id}/start', 'App\Http\Controllers\ExamenController@start'); 
+        Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next'); 
     });
     //Auth
     Route::post('logout','App\Http\Controllers\AuthController@logout');
