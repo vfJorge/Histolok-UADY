@@ -40,16 +40,17 @@ export class AgregarExamenComponent implements OnInit {
 
   crearExamen(datosPreguntaAgregar: any){
     const formularioDatos = new FormData();
+    this.preguntasSeleccionadas =  this.preguntasSeleccionadas.map(String);
     formularioDatos.append('title', this.datosExamen.controls['title'].getRawValue())
     formularioDatos.append('description', this.datosExamen.controls['description'].getRawValue())
     formularioDatos.append('keywords', JSON.stringify(this.keywords))
     formularioDatos.append('access', this.datosExamen.controls['access'].getRawValue())
     formularioDatos.append('duration', this.datosExamen.controls['duration'].getRawValue())
     formularioDatos.append('difficulty', this.datosExamen.controls['difficulty'].getRawValue())
-    formularioDatos.append('questions', JSON.stringify(this.preguntasSeleccionadas))
+    formularioDatos.append('questions', JSON.stringify(this.preguntasSeleccionadas));
     // this.datosExamen.controls['keywords'].setValue(JSON.stringify(this.keywords));
     // this.datosExamen.controls['questions'].setValue(JSON.stringify(this.preguntasSeleccionadas));
-    console.log(this.preguntasSeleccionadas);
+    
     this.adminExamenesService.postCrearExamen(formularioDatos).subscribe((resp: any) => {
       alert("El examen ha sido creado con éxito");
       window.location.reload();

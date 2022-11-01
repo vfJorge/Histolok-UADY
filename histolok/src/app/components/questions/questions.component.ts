@@ -62,6 +62,8 @@ export class QuestionsComponent implements OnInit {
       difficulty: new FormControl('', [Validators.required]),
       foto_id: new FormControl('')
     })
+
+   
   }
 
   //Inicio Keywords con Chips
@@ -114,6 +116,7 @@ export class QuestionsComponent implements OnInit {
     this.datosPreguntas.controls['question'].setValue(preguntaQUESTION);
     
     for(var i in preguntaKEYWORDS) this.keywords.push(preguntaKEYWORDS[i].keyword);
+    
 
     this.auxOpciones = 1;
     for(this.opcionesi; this.opcionesi < preguntaOPCIONS.length; this.opcionesi++){
@@ -140,7 +143,18 @@ export class QuestionsComponent implements OnInit {
   }
 
   enviarEdicion(datosPreguntas: any){
-    this.datosPreguntas.controls['keywords'].setValue(JSON.stringify(this.keywords));
+    this.datosPreguntas.controls['keywords'].setValue( JSON.stringify(this.keywords))
+    const formularioDatos = new FormData();
+    formularioDatos.append('title', this.datosPreguntas.controls['title'].value);
+    formularioDatos.append('question', this.datosPreguntas.controls['question'].value);
+    formularioDatos.append('keywords', this.datosPreguntas.controls['keywords'].value);
+    formularioDatos.append('answer', this.datosPreguntas.controls['answer'].value);
+    formularioDatos.append('option1', this.datosPreguntas.controls['option1'].value);
+    formularioDatos.append('option2', this.datosPreguntas.controls['option2'].value);
+    formularioDatos.append('option3', this.datosPreguntas.controls['option3'].value);
+    formularioDatos.append('access', this.datosPreguntas.controls['access'].value);
+    formularioDatos.append('difficulty', this.datosPreguntas.controls['difficulty'].value);
+    formularioDatos.append('foto_id', this.datosPreguntas.controls['foto_id'].value);
       this.adminQuestionsService.putEditarPregunta(datosPreguntas, this.preguntaID).subscribe((resp: any) => {
         if(resp.status == 200){
           alert("Pregunta editada de manera exitosa");

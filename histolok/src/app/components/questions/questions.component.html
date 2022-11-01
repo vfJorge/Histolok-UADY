@@ -31,14 +31,16 @@
             {{pregunta.question}}
           </div>
           <div class="with-icon">
-            <mat-icon fontIcon="visibility" (click)="mostrarPregunta(pregunta)"></mat-icon>
-            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-link" mat-icon-button (click)="mostrarPregunta(pregunta)">
+                <mat-icon>visibility</mat-icon>
+            </button>
+            &nbsp;&nbsp;
             <button class="btn btn-link btn-edit" mat-icon-button  data-bs-target="#editarPregunta"
                 data-bs-toggle="modal" (click)="editarPreguntaVista(pregunta.id,pregunta.title, pregunta.question,
                 pregunta.palabclvs, pregunta.answer_id, pregunta.opcions, pregunta.access, pregunta.difficulty, pregunta.foto_id)">
                 <mat-icon>edit</mat-icon>
             </button>
-            &nbsp;
+            &nbsp;&nbsp;
             <button class="btn btn-link" mat-icon-button color="warn" (click)="eliminarPregunta(pregunta.id)">
                 <mat-icon>delete</mat-icon>
             </button>

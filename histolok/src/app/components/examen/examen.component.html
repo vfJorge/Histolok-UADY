@@ -24,110 +24,142 @@
     </div>
   
     <ol class="container container-small list-group px-0">
-      <div *ngFor="let examen of misExamenes">
-        <li class="list-group-item d-flex justify-content-between" >
-          <div class="ms-2 me-auto">
-            <div class="fw-bold">{{examen.title}}</div>
-          </div>  
-        </li>
-      </div>
+        <div *ngFor="let examen of misExamenes">
+            <li class="list-group-item d-flex justify-content-between" >
+                <div class="ms-2 me-auto pt-2">
+                    <div class="fw-bold">{{examen.title}}</div>
+                </div> 
+                <div class="with-icon">
+                    <button class="btn btn-link" mat-icon-button (click)="mostrarExamen(examen)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-link btn-edit" mat-icon-button  data-bs-target="#editarExamen"
+                        data-bs-toggle="modal" (click)="editarExamenVista(examen.id,examen.title,
+                        examen.description, examen.palabclvs, examen.access, examen.difficulty, examen.duration)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-link" mat-icon-button color="warn" (click)="eliminarExamen(examen.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div> 
+            </li>
+        </div>
     </ol>
   </div>
 
   <app-agregar-examen></app-agregar-examen>
 
 <!-- Modal para Editar -->
-<!-- <div class="modal fade" id="editarPregunta">
-<div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-    <div class="modal-header">
-        <div class="text-center">
-            <h5 class="modal-title" id="registroLabel">Editar una pregunta</h5>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <form [formGroup] = "datosPreguntas" class="login-form" (ngSubmit)="enviarEdicion(datosPreguntas.value)">
-      <div class="modal-body">
-          <div class="form-group">
-              <label><b>Título</b></label>
-              <input type="text" class="form-control" placeholder="Pregunta Mitocondria 1" formControlName=title>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Pregunta</b></label>
-              <input type="text" class="form-control" placeholder="¿Qué nombre recibe la siguiente estructura?" formControlName=question>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Palabras clave</b></label>
-              <mat-form-field class="example-chip-list" appearance="fill">
-                <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
-                        {{keyword}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip>
-                  <input placeholder="Introduce una etiqueta..."
-                         [matChipInputFor]="chipList"
-                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                         [matChipInputAddOnBlur]="addOnBlur"
-                         (matChipInputTokenEnd)="add($event)">
-                </mat-chip-list>
-            </mat-form-field>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Respuesta</b></label>
-              <input type="text" class="form-control" placeholder='Mitocondria' formControlName=answer>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Opción alternativa 1</b></label>
-              <input type="text" class="form-control" placeholder='Ribosoma' formControlName=option1>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Opción alternativa 2</b></label>
-              <input type="text" class="form-control" placeholder='Libosoma' formControlName=option2>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Opción alternativa 3</b></label>
-              <input type="text" class="form-control" placeholder='Ninguno de los anteriores' formControlName=option3>
-          </div>
-          <br>
-          <div class="form-group">
-              <label><b>Tipo de acceso</b></label><br>
-              <input type="radio" value="public" id="accesoPublico" name="access" formControlName="access">
-              &nbsp;<label for="accesoPublico" class="textoAyuda" data-bs-toggle="tooltip" title="Otros profesores podrán ver y utilizar tu pregunta">Público</label><br>
-              <input type="radio" value="private" id="accesoPrivado" name="access" formControlName="access">
-              &nbsp;<label for="accesoPrivado" class="textoAyuda" data-bs-toggle="tooltip" title="Solo tú podrás ver y utilizar tu pregunta">Privado</label>
-              
-          </div>
-          <br>
-          <div class="form-group">
-            <div class="with-icon">
-                <label><b>Dificultad (1 al 5)</b></label> &nbsp;
-                <mat-icon fontIcon="help" data-bs-toggle="tooltip" title="Dificultad de la pregunta, donde 1 es más fácil y 5 más difícil"></mat-icon> 
+<div class="modal fade" id="editarExamen">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Crear examen</h5>
             </div>
-            <input type="number" id="dificultad" class="form-control" placeholder='3' min="1" max="5" formControlName="difficulty">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-          <br>
-        <div class="form-group">
-            <label><b>Imagen</b></label><br>
-            <div class="text-center"><a class="btn btn-link px-4" data-bs-target="#escogerImagenEdicion" data-bs-toggle="modal"><span>Cambiar imagen</span></a></div>
-            <div class="imgSelected mx-auto" *ngIf="imgFilename != ''">
-                <img src="imgFilename">
+        <form [formGroup] = "datosExamen" class="login-form" (ngSubmit)="enviarEdicion()">
+            <div class="modal-body">   
+                <div class="form-group">
+                    <label><b>Título</b></label>
+                    <input type="text"  class="form-control" placeholder="Examen histología 1" formControlName=title>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Descripción</b></label>
+                    <input type="text"  class="form-control" placeholder="Descripción del examen" formControlName=description>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Palabras clave</b></label>
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                            </mat-chip>
+                            <input placeholder="Introduce una etiqueta..."
+                                [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <label><b>Tipo de acceso</b></label><br>
+                    <input type="radio" value="public" id="accesoPublico" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPublico" class="textoAyuda" data-bs-toggle="tooltip" title="Otros profesores podrán ver y utilizar tu pregunta">Público</label><br>
+                    <input type="radio" value="private" id="accesoPrivado" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPrivado" class="textoAyuda" data-bs-toggle="tooltip" title="Solo tú podrás ver y utilizar tu pregunta">Privado</label>
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="with-icon">
+                        <label><b>Duración</b></label> &nbsp;
+                        <mat-icon fontIcon="help" data-bs-toggle="tooltip" title="Duración máxima para para contestar todas las preguntas"></mat-icon> 
+                    </div>
+                    <input type="datetime" class="form-control" placeholder="hh:mm:ss" formControlName=duration>
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="with-icon">
+                        <label><b>Dificultad (1 al 5)</b></label> &nbsp;
+                        <mat-icon fontIcon="help" data-bs-toggle="tooltip" title="Dificultad de la pregunta, donde 1 es más fácil y 5 más difícil"></mat-icon> 
+                    </div>
+                    <input type="number" id="dificultad" class="form-control" placeholder='3' min="1" max="5" formControlName="difficulty">
+                </div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <a class="btn btn-link px-4" data-bs-target="#escogerPreguntasEdicion" data-bs-toggle="modal"><span>Seleccionar preguntas</span></a>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-      <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Editar pregunta</button>
-      </div>
-  </form>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Editar examen</button>
+            </div>
+        </form>
+        </div>
     </div>
 </div>
-</div> -->
 
+<div class="modal fade" id="escogerPreguntasEdicion">
+    <div class="container" id="tarjetasImag">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header justify-content-between">
+                    <div class="return-button">
+                        <button mat-icon-button data-bs-target="#editarExamen" data-bs-toggle="modal" data-bs-dismiss="modal"> <mat-icon>arrow_back</mat-icon></button> 
+                    </div>
+                    <div class="text-center">
+                        <h5 class="modal-title" id="registroLabel">Seleccionar preguntas</h5>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-success" data-bs-target="#editarExamen" data-bs-toggle="modal" data-bs-dismiss="modal">Seleccionar</button> 
+                    </div>
+                </div>
+                <div class="row pt-4">
+                    <ol class="container container-small list-group px-4">
+                        <div *ngFor="let pregunta of misPreguntas">
+                            <li class="list-group-item d-flex justify-content-between" >
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{pregunta.title}}</div>
+                                    {{pregunta.question}}
+                                </div>
+                                <div class="d-flex align-items-center pe-2">
+                                    <input class="form-check-input" type="checkbox" [checked]="isSelected(pregunta.id)" (change)="escogerPreguntas($event, pregunta.id)" id="checkboxNoLabel" value="">
+                                </div>
+                            </li>
+                        </div>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

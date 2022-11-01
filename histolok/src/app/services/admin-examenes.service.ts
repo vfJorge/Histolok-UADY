@@ -33,5 +33,23 @@ export class AdminExamenesService {
     let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.get(_url, {headers: header, observe:'response'});
   }
- 
+  eliminarExamen(examenID: any){
+    var _url =  this.URL + 'examenes/' + examenID;
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.delete(_url, {headers: header, observe:'response'});
+  }
+  verExamen(examenID: any){
+    var _url = this.URL + 'examenes/' + examenID;
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
+
+  editarExamen(examenDatos: any, examenID: any){
+    var _url = this.URL + 'examenes/' + examenID;
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.put(_url, examenDatos, {headers: header, observe:'response'});
+  }
 }
