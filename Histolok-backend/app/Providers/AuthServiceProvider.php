@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Foto;
+use App\Models\Examen;
 use App\Models\Pregunta;
 use App\Models\User;
 use App\Policies\FotoPolicy;
@@ -44,8 +45,15 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $pregunta->user_id;
         });
 
+        Gate::define('author-examen', function (User $user,Examen $examen) {
+            return $user->id === $examen->user_id;
+        });
+
         Gate::define('author-foto', function (User $user,Foto $foto) {
             return $user->id === $foto->user_id;
+        });
+        Gate::define('batalla-examen', function (User $user,Examen $examen) {
+            return $examen->mode === "batalla";
         });
     }
 }

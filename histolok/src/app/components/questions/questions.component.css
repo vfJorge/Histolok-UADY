@@ -1,7 +1,5 @@
-#iconoAdicionar {
-	filter:invert(1);
-	width: 15px;
-	padding-bottom: 3px;
+.btn-edit{
+	color: orange;
 }
 
 img:hover{
@@ -32,4 +30,9 @@ img:hover{
 	height: 100%; 
 	width: 100%; 
 	object-fit: contain;
+}
+
+.mat-icon {
+    vertical-align: bottom;
+    font-size: 24px;
 }

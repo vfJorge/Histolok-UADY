@@ -1,7 +1,9 @@
   <div class="container">
     <div class="row mt-2">
-        <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
-            <a class="btn btn-primary px-4" data-bs-target="#agregarPregunta" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir pregunta</span></a>
+        <div class="col-12 col-sm-4 col-lg-7 mb-2 with-icon" *ngIf="!getPerfilUsuario()">
+            <a class="btn btn-primary px-3" data-bs-target="#agregarPregunta" data-bs-toggle="modal"> 
+                <span><mat-icon fontIcon="add"></mat-icon>Añadir pregunta</span>
+            </a>
         </div>
         <div class="col-12 col-sm-4 col-lg-3 mb-2" >
             <input type="text" class="form-control" 
@@ -29,12 +31,19 @@
             {{pregunta.question}}
           </div>
           <div class="with-icon">
-            <mat-icon fontIcon="visibility" (click)="mostrarPregunta(pregunta)"></mat-icon>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="btn btn-link" data-bs-target="#editarPregunta" data-bs-toggle="modal" (click)="editarPreguntaVista(pregunta.id,pregunta.title, pregunta.question,
-            pregunta.palabclvs, pregunta.answer_id, pregunta.opcions, pregunta.access, pregunta.difficulty, pregunta.foto_id)"><img src="../../assets/edit.png"></button>
-            &nbsp;
-            <button class="btn btn-link" (click)="eliminarPregunta(pregunta.id)"><img src="../../assets/trash.png"></button>
+            <button class="btn btn-link" mat-icon-button (click)="mostrarPregunta(pregunta)">
+                <mat-icon>visibility</mat-icon>
+            </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-link btn-edit" mat-icon-button  data-bs-target="#editarPregunta"
+                data-bs-toggle="modal" (click)="editarPreguntaVista(pregunta.id,pregunta.title, pregunta.question,
+                pregunta.palabclvs, pregunta.answer_id, pregunta.opcions, pregunta.access, pregunta.difficulty, pregunta.foto_id)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-link" mat-icon-button color="warn" (click)="eliminarPregunta(pregunta.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </li>
       </div>
@@ -124,8 +133,9 @@
         <div class="form-group">
             <label><b>Imagen</b></label><br>
             <div class="text-center"><a class="btn btn-link px-4" data-bs-target="#escogerImagenEdicion" data-bs-toggle="modal"><span>Cambiar imagen</span></a></div>
-            <div class="imgSelected mx-auto" *ngIf="imgFilename != ''">
-                <img src="imgFilename">
+            <div class="imgSelected mx-auto text-center" *ngIf="imgFilename != ''">
+                {{imgOriginalName}}
+                <img src="{{imgFilename}}">
             </div>
          </div>
       </div>
