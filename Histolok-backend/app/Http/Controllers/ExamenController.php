@@ -70,7 +70,6 @@ class ExamenController extends Controller
         $examen->access = $request->access;
         $examen->duration = $request->duration;
         $examen->n_questions=0;
-        $examen->n_correct=0;
         $examen->mode="batalla";
         
         $examen->save();
@@ -129,7 +128,6 @@ class ExamenController extends Controller
         $examen->access = "private";
         $examen->duration = $request->duration;
         $examen->n_questions=$request->n_questions;
-        $examen->n_correct=0;
         $examen->mode="entrenamiento";
         $examen->description = "Examen de practica ".(Examen::where('user_id',auth()->user()->id)->where('mode','entrenamiento')->count()+1)." Dificultad ".$request->difficulty;
         
