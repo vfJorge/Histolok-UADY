@@ -167,7 +167,7 @@ class ExamenController extends Controller
 
     public function show(Request $request)
     {
-        $examen = Examen::with(['palabclvs','user:id,name','preguntas:id,title,question','preguntas.opcions'])->findOrFail($request->id);
+        $examen = Examen::with(['palabclvs','user:id,name','preguntas:id,title,question,foto_id','preguntas.opcions','preguntas.foto:id,filename'])->findOrFail($request->id);
         if($examen->access!="public" && auth()->user()->id!=$examen->user_id) return response(['message'=>'Este examen es privado'],403);
         return response($examen,200);
     }
@@ -259,6 +259,12 @@ class ExamenController extends Controller
 
     public function start(Request $request)
     {
+        $request->validate([
+            'tiempo_inicio'=> 'date',
+            'tiempo_selec'=> 'date',
+            'tiempo_sig'=> 'date'
+            
+        ]);
         $examen = Examen::findOrFail($request->id);
         $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
         $user_id = auth()->user()->id;
@@ -268,7 +274,7 @@ class ExamenController extends Controller
         $nombre = $user_id."_".$examen->id.".txt";
         //si existe un examen iniciado anterior
         if($examen->users()->exists()){
-            $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
+            $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->firstOrFail()->pivot;
             $start_time = strtotime($pivot->start_time);
             $dur = $this->addTime($examen->duration);
             $end_time = $start_time+$dur;
@@ -281,7 +287,7 @@ class ExamenController extends Controller
             elseif($end_time < $now && $pivot->end_time==NULL){
                 $linea = $mytime." ".$pivot->n_correct;
                 Storage::disk('local')->append($directorio.$nombre, $linea);
-                $query = DB::table('examen_user')->where('id', $id)->update(['end_time' => $mytime]);
+                $query = DB::table('examen_user')->where('id', $pivot->id)->update(['end_time' => $mytime]);
             }
         }
         $examen->users()->attach(auth()->user()->id);
@@ -291,6 +297,31 @@ class ExamenController extends Controller
 
         
         return $examen->preguntas()->with(['opcions:id,opcion'])->first()->makeHidden(['answer_id','user_id','access']);
+    }
+
+    public function current(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $user_id = auth()->user()->id;
+
+        if($examen->users()->exists()){
+            $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->firstOrFail()->pivot;
+            $start_time = strtotime($pivot->start_time);
+            $dur = $this->addTime($examen->duration);
+            $end_time = $start_time+$dur;
+            $now = strtotime($mytime);
+            //echo date('Y-m-d H:i:s', $now)."  ".date('Y-m-d H:i:s', $end_time);
+            //y sigue estando activo
+            if($end_time > $now && $pivot->end_time==NULL){
+                $preguntas = $examen->preguntas()->with(['opcions:id,opcion'])->get();
+                $pregunta = $preguntas[$pivot->n_answered];
+                return response($pregunta,200); 
+            }
+            elseif($end_time < $now && $pivot->end_time==NULL){
+                return response(["mensaje"=>"Este examen no se encuentra iniciado o ya acabó"],400);
+            }
+        }
     }
 
     public function next(Request $request)
@@ -319,7 +350,7 @@ class ExamenController extends Controller
             if($end_time < $now){
                 $linea = $mytime." ".$pivot->n_correct;
                 Storage::disk('local')->append($directorio.$nombre, $linea);
-                $query = DB::table('examen_user')->where('id', $id)->update(['end_time' => $mytime]);
+                $query = DB::table('examen_user')->where('id', $pivot->id)->update(['end_time' => $mytime]);
 
                 return response(["error"=>"El examen ya expiró (y se guardaron sus datos)"],400);
             }
