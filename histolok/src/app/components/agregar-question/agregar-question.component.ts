@@ -43,19 +43,8 @@ export class AgregarQuestionComponent implements OnInit {
   }
 
   agregarPregunta(datosPreguntaAgregar: any){
-    this.datosPreguntaAgregar.controls['keywords'].setValue( JSON.stringify(this.keywords))
-    const formularioDatos = new FormData();
-    formularioDatos.append('title', this.datosPreguntaAgregar.controls['title'].value);
-    formularioDatos.append('question', this.datosPreguntaAgregar.controls['question'].value);
-    formularioDatos.append('keywords', this.datosPreguntaAgregar.controls['keywords'].value);
-    formularioDatos.append('answer', this.datosPreguntaAgregar.controls['answer'].value);
-    formularioDatos.append('option1', this.datosPreguntaAgregar.controls['option1'].value);
-    formularioDatos.append('option2', this.datosPreguntaAgregar.controls['option2'].value);
-    formularioDatos.append('option3', this.datosPreguntaAgregar.controls['option3'].value);
-    formularioDatos.append('access', this.datosPreguntaAgregar.controls['access'].value);
-    formularioDatos.append('difficulty', this.datosPreguntaAgregar.controls['difficulty'].value);
-    formularioDatos.append('foto_id', this.datosPreguntaAgregar.controls['foto_id'].value);
-    this.adminQuestionsService.postAgregarPregunta(formularioDatos).subscribe((resp: any) => {
+    this.datosPreguntaAgregar.controls.keywords.patchValue( JSON.stringify(this.keywords));
+    this.adminQuestionsService.postAgregarPregunta(datosPreguntaAgregar).subscribe((resp: any) => {
       alert("La pregunta se ha añadido con éxito");
       window.location.reload();
     }, error => {
@@ -65,6 +54,7 @@ export class AgregarQuestionComponent implements OnInit {
   }
   
   escogerImagen(idImagen: any){
+    this.datosPreguntaAgregar.controls.keywords.patchValue( JSON.stringify(this.keywords));
     this.datosPreguntaAgregar.controls.foto_id.patchValue(idImagen);
     this.getFilename(idImagen);
   }

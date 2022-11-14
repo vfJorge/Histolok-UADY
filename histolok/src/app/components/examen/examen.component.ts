@@ -29,7 +29,7 @@ export class ExamenComponent implements OnInit {
   imagenesURL = "http://127.0.0.1:8000/storage/";
   imgFilename : string = "";
 
-  constructor(private fb: FormBuilder,private adminExamenesService: AdminExamenesService,
+  constructor(private fb: FormBuilder, private adminExamenesService: AdminExamenesService,
      private adminQuestionsService: AdminQuestionsService, private dialog: MatDialog,
      private adminImagesService: AdminImagesService) { }
 

@@ -7,6 +7,7 @@ import { ImagesComponent } from './components/images/images.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ExamenComponent } from './components/examen/examen.component';
+import { ListaExamenesComponent } from './components/lista-examenes/lista-examenes.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path: 'images', component:ImagesComponent},
   {path: 'questions', component:QuestionsComponent},
   {path: 'examenes', component:ExamenComponent},
+  {path: 'listaExamenes', component:ListaExamenesComponent},
   {path: '**', redirectTo:'/home', pathMatch: 'full'},
   {path: '', redirectTo:'/', pathMatch: 'full'}
 ];
