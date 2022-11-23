@@ -12,11 +12,12 @@ export class PreguntaComponent implements OnInit {
   raizImagenes = "http://127.0.0.1:8000/storage/";
   respuestaID: any;
   examenID = 1;
-  public misDatosExamen: any;
+  misDatosExamen: any;
   ImagenesURL = "";
   itemizacionOpciones = "vbtn-radio";
   tiempoInicial = "";
   tiempoSeleccion = "";
+  examenTerminado = 0;
 
   constructor(private adminExamenesService: AdminExamenesService,
     private adminQuestionsService: AdminQuestionsService,
@@ -25,14 +26,15 @@ export class PreguntaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.adminExamenesService.empezarExamen(this.examenID).subscribe((resp: any) => {
+    this.adminExamenesService.preguntaActualExamen(this.examenID).subscribe((resp: any) => {
       this.misDatosExamen = resp.body;
+      console.log(resp.status)
       console.log(this.misDatosExamen);
       }, error => {
       console.log(error);
     })
 
-    if(this.tiempoInicial == ""){
+    if(this.tiempoInicial == ""){ //TIENE QUE SER DESDE QUE PRESIONE EL BOTON EN LISTA-EXAMENES
 
     }
 
