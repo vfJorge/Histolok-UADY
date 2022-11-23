@@ -25,6 +25,7 @@ import { ModalQuestionsComponent } from './components/questions/modal-questions/
 import { AgregarExamenComponent } from './components/agregar-examen/agregar-examen.component';
 import { ExamenComponent } from './components/examen/examen.component';
 import { ModalExamenComponent } from './components/examen/modal-examen/modal-examen.component';
+import { ListaExamenesComponent } from './components/lista-examenes/lista-examenes.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ModalExamenComponent } from './components/examen/modal-examen/modal-exa
     ModalQuestionsComponent,
     AgregarExamenComponent,
     ExamenComponent,
-    ModalExamenComponent
+    ModalExamenComponent,
+    ListaExamenesComponent
   ],
   imports: [
     BrowserModule,

@@ -30,6 +30,12 @@ export class AdminQuestionsService {
     return this.http.get(_url, {headers: header, observe:'response'});
   }
 
+  getPregunta(preguntaID: any){
+    var _url =  this.URL + 'preguntas/' + preguntaID;
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
   putEditarPregunta(preguntaDatos: any, preguntaID: any){
     var _url =  this.URL + 'preguntas/' + preguntaID;
     var bearerToken = localStorage.getItem('bearerToken');

@@ -49,4 +49,11 @@ export class AdminImagesService {
     let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.post(_url, imagenDatos, {headers: header, observe:'response'});
   }
+
+  getInfoImagen(imagenID: any){
+    var _url = this.URL + 'fotos/' + imagenID;
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken)
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
 }

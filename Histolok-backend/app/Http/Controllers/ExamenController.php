@@ -294,6 +294,7 @@ class ExamenController extends Controller
 
         $primeraLinea = $examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration;
         Storage::disk('local')->append($directorio.$nombre, $primeraLinea);
+        $query = DB::table('examen_user')->where('id', $pivot->id)->update(['end_time' => $mytime]);
 
         
         return $examen->preguntas()->with(['opcions:id,opcion'])->first()->makeHidden(['answer_id','user_id','access']);
