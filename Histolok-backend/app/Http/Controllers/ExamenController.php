@@ -39,7 +39,7 @@ class ExamenController extends Controller
 
     public function owned(Request $request)
     {
-        $examen = Examen::with(['palabclvs'])->where('user_id',auth()->user()->id)->get();
+        $examen = Examen::with(['palabclvs','preguntas.foto:id,filename'])->where('user_id',auth()->user()->id)->get();
 
         return response($examen,200);
     }
@@ -315,13 +315,15 @@ class ExamenController extends Controller
             //echo date('Y-m-d H:i:s', $now)."  ".date('Y-m-d H:i:s', $end_time);
             //y sigue estando activo
             if($end_time > $now && $pivot->end_time==NULL){
-                $preguntas = $examen->preguntas()->with(['opcions:id,opcion'])->get();
+                $preguntas = $examen->preguntas()->with(['opcions:id,opcion','foto:id,filename'])->get()->makeHidden(['answer_id','user_id','access']);;
                 $pregunta = $preguntas[$pivot->n_answered];
-                return response($pregunta,200); 
+                $preguntasRestantes = $examen->n_questions - $pivot->n_answered-1;
+                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta],200); 
             }
             elseif($end_time < $now && $pivot->end_time==NULL){
                 return response(["mensaje"=>"Este examen no se encuentra iniciado o ya acabó"],400);
             }
+            else response(["mensaje"=>"aa"],400);
         }
     }
 
