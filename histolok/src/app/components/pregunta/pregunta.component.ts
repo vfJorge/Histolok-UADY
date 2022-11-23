@@ -9,11 +9,11 @@ import { AdminImagesService } from 'src/app/services/admin-images.service';
   styleUrls: ['./pregunta.component.css']
 })
 export class PreguntaComponent implements OnInit {
-  raizImagenes = "http://127.0.0.1:8000/storage/";
+  ImagenesURL = "http://127.0.0.1:8000/storage/";
   respuestaID: any;
   examenID = 1;
   misDatosExamen: any;
-  ImagenesURL = "";
+  preguntasFaltantes: any;
   itemizacionOpciones = "vbtn-radio";
   tiempoInicial = "";
   tiempoSeleccion = "";
@@ -27,8 +27,9 @@ export class PreguntaComponent implements OnInit {
 
   ngOnInit(): void {
     this.adminExamenesService.preguntaActualExamen(this.examenID).subscribe((resp: any) => {
-      this.misDatosExamen = resp.body;
-      console.log(resp.status)
+      this.preguntasFaltantes = resp.body;
+      this.misDatosExamen = resp.body.pregunta;
+      console.log(this.preguntasFaltantes);
       console.log(this.misDatosExamen);
       }, error => {
       console.log(error);
@@ -37,13 +38,6 @@ export class PreguntaComponent implements OnInit {
     if(this.tiempoInicial == ""){ //TIENE QUE SER DESDE QUE PRESIONE EL BOTON EN LISTA-EXAMENES
 
     }
-
-    this.adminImagesService.getInfoImagen(this.misDatosExamen.foto_id).subscribe((resp: any) => {
-      this.ImagenesURL = this.raizImagenes + resp.body.filename;
-      console.log(this.ImagenesURL);
-      }, error => {
-      console.log(error);
-    })
   }
 
   siguientePregunta(){
