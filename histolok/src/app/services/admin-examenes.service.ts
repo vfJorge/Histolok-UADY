@@ -62,6 +62,13 @@ export class AdminExamenesService {
     return this.http.get(_url, {headers: header, observe:'response'});
   }
 
+  preguntaActualExamen(examenID: any){
+    var _url =  this.URL + 'examenes/' + examenID +'/current';
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
+
   sigPreguntaExamen(examenID: any, examenDatos: any){
     var _url =  this.URL + 'examenes/' + examenID +'/next';
     var bearerToken = localStorage.getItem('bearerToken');

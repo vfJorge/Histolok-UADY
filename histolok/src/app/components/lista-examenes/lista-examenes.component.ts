@@ -13,6 +13,7 @@ export class ListaExamenesComponent implements OnInit {
   public misExamenes: Array<any> = [];
   misExamenesOriginal: Array<any> = [];
   busqueda: string = "";
+  misDatosExamen: any;
 
   constructor(private adminExamenesService: AdminExamenesService,
     private adminQuestionsService: AdminQuestionsService,
@@ -39,7 +40,12 @@ export class ListaExamenesComponent implements OnInit {
     )
   }
 
-  iniciarExamen(){
-
+  iniciarExamen(examenID: any){
+    this.adminExamenesService.empezarExamen(examenID).subscribe((resp: any) => {
+      this.misDatosExamen = resp.body;
+      console.log(this.misDatosExamen);
+      }, error => {
+      console.log(error);
+    })
   }
 }
