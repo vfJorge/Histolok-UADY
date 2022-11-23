@@ -9,6 +9,7 @@ import { AdminImagesService } from '../../services/admin-images.service';
   styleUrls: ['./lista-examenes.component.css']
 })
 export class ListaExamenesComponent implements OnInit {
+  //LISTA DE EXAMENES DISPONIBLES PARA PRACTICAR
   public misExamenes: Array<any> = [];
   misExamenesOriginal: Array<any> = [];
   busqueda: string = "";
