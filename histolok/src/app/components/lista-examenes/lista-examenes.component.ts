@@ -41,6 +41,14 @@ export class ListaExamenesComponent implements OnInit {
   }
 
   iniciarExamen(examenID: any){
+    localStorage.setItem('ExamenID', examenID);
+
+    this.adminExamenesService.verExamen(examenID).subscribe((resp: any) => {
+      localStorage.setItem('TiempoExamen', resp.body.duration);
+      }, error => {
+      console.log(error);
+    })
+
     this.adminExamenesService.empezarExamen(examenID).subscribe((resp: any) => {
       this.misDatosExamen = resp.body;
       console.log(this.misDatosExamen);
