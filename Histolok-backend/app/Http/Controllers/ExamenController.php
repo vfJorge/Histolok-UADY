@@ -413,6 +413,27 @@ class ExamenController extends Controller
         
     }
 
+    public function results(Request $request)
+    {
+        $examen = Examen::findOrFail($request->id);
+        $user_id = auth()->user()->id;
+
+        //si existe un examen iniciado anterior
+        if($examen->users()->exists()){
+            $pivot = $examen->users()->where('user_id',$user_id)->latest('end_time')->first()->pivot;
+            //si end_time no es null, entonces ya finalizo el ultimo examen
+            if($pivot->end_time!=NULL){
+                return response($pivot,200);
+            }
+            else{
+                return response(["error"=>"Este examen no ha acabado"],400);
+            }
+        }
+        else{
+            return response(["error"=>"No se ha contesado ningun examen"],400);
+        }
+    }
+
     public function addTime(string $time){
         $time_arr =  explode(":",$time);
         $hours = $time_arr[0];
