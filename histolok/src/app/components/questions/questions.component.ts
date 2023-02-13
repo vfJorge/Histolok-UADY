@@ -23,7 +23,7 @@ export class QuestionsComponent implements OnInit {
   imgFilename: string = "";
   imgOriginalName: string = "";
   preguntaID: any;
-  opcionesi: any = 0;
+  opcionesi: any;
   auxOpciones: any = 1;
 
   busqueda: string = "";
@@ -56,8 +56,8 @@ export class QuestionsComponent implements OnInit {
       keywords: new FormControl('', [Validators.required]),
       answer: new FormControl('', [Validators.required]),
       option1: new FormControl('', [Validators.required]),
-      option2: new FormControl(' ', [Validators.required]),
-      option3: new FormControl('  ', [Validators.required]),
+      option2: new FormControl('', [Validators.required]),
+      option3: new FormControl('', [Validators.required]),
       access: new FormControl('', [Validators.required]),
       difficulty: new FormControl('', [Validators.required]),
       foto_id: new FormControl('')
@@ -116,10 +116,11 @@ export class QuestionsComponent implements OnInit {
     this.datosPreguntas.controls['question'].setValue(preguntaQUESTION);
     
     for(var i in preguntaKEYWORDS) this.keywords.push(preguntaKEYWORDS[i].keyword);
-    
+
+    for(this.auxOpciones = 1; this.auxOpciones < 4; this.auxOpciones++) this.datosPreguntas.controls['option'+this.auxOpciones].setValue(""); //Setter de opciones o Limpiador de campos
 
     this.auxOpciones = 1;
-    for(this.opcionesi; this.opcionesi < preguntaOPCIONS.length; this.opcionesi++){
+    for(this.opcionesi = 0; this.opcionesi < preguntaOPCIONS.length; this.opcionesi++){
       if(preguntaOPCIONS[this.opcionesi].id == preguntaANSWERID){
         this.datosPreguntas.controls['answer'].setValue(preguntaOPCIONS[this.opcionesi].opcion);
       }
@@ -128,6 +129,7 @@ export class QuestionsComponent implements OnInit {
         this.auxOpciones++;
       }
     }
+    
 
     if(preguntaACCESS == "public"){
       this.datosPreguntas.controls['access'].setValue("public");
