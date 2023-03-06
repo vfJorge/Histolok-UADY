@@ -104,7 +104,12 @@ Route::group([
         Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next');
     });
     //Auth
-    Route::post('logout','App\Http\Controllers\AuthController@logout');
-    Route::get('type', 'App\Http\Controllers\AuthController@type');
+    Route::group([
+        'prefix' => 'auth'
+    ], function () {
+        Route::post('logout','App\Http\Controllers\AuthController@logout');
+        Route::get('type', 'App\Http\Controllers\AuthController@type');
+    });
+    
    
 });
