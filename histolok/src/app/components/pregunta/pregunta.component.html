@@ -1,45 +1,28 @@
-<div class="container">
+<div class="container" *ngIf="preguntasFaltantes.faltan > -1">
     <div class="card-group">
         <div class="col-12 col-lg-6">
             <div class="card text-center">
-                <h5><strong>¿Qué nombre recibe la siguiente estructura?</strong></h5>
-                <img src="../../../assets/mitocondria.png" class="img-fluid rounded" alt="...">
+                <h4><strong>{{misDatosExamen.question}}</strong></h4>
+                <img src={{ImagenesURL}}{{misDatosExamen.foto.filename}} class="img-fluid rounded" alt="" (click)="mostrarImagen(misDatosExamen.foto.filename)">
             </div>
         </div>
         <div class="col-12 col-lg-6">
             <div class="card align-items-center">
                 <div class="card-body">
                     <div class="card-text">
-                        <form class="" action="">
+                            <div class="text-center">Tiempo restante: {{ hours | number:'2.0'}}:{{ minutes | number:'2.0'}}:{{ seconds | number:'2.0'}}</div> <br>
                             <p class="text-center"><strong>Selecciona la respuesta correcta:</strong></p>
-                    
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleForm" id="radio2Example1" />
-                              <label class="form-check-label" for="radio2Example1">
-                                Mitocondria
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleForm" id="radio2Example2" />
-                              <label class="form-check-label" for="radio2Example2">
-                                Lisosoma
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleForm" id="radio2Example3" />
-                              <label class="form-check-label" for="radio2Example3">
-                                Ribosoma
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleForm" id="radio2Example4" />
-                              <label class="form-check-label" for="radio2Example4">
-                                Ninguno de los anteriores
-                              </label>
-                            </div>
-                        </form>
-                        <div class="text-center">
-                            <button type="button" class="btn btn-primary">Submit</button>
+
+                          <div class="btn-group-vertical d-grid mb-2 d-md-block d-flex" role="group" aria-label="Vertical radio toggle button group" *ngFor="let OpcionesPregunta of misDatosExamen.opcions">
+                            <input type="radio" class="btn-check flex-fill" name="vbtn-radio" id={{itemizacionOpciones}}{{OpcionesPregunta.id}} autocomplete="off" (click)="guardarRespuesta(OpcionesPregunta.id)">
+                            <label class="btn btn-outline-danger" for={{itemizacionOpciones}}{{OpcionesPregunta.id}}>{{OpcionesPregunta.opcion}}</label>
+                          </div><br><br>
+                          
+                        <div class="text-center"  *ngIf="preguntasFaltantes.faltan == 0">
+                            <button id="botonEnviar" type="button" class="btn btn-outline-danger disabled" (click)="terminarExamen()" routerLink="/resultados">Finalizar examen</button>
+                        </div>
+                        <div class="text-center"  *ngIf="preguntasFaltantes.faltan != 0">
+                            <button id="botonEnviar" type="button" class="btn btn-primary disabled" (click)="siguientePregunta()">Siguiente pregunta</button>
                         </div>
                     </div>
                 </div>

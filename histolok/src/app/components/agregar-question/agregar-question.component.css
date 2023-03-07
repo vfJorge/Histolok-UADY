@@ -1,0 +1,38 @@
+.textoAyuda {
+  position: relative;
+  display: inline-block;
+  border-bottom: 0.3vh dotted black;
+}
+
+#tarjetasImag .row .imgPrincipal{
+  height: 300px;
+  object-fit: contain;
+}
+
+img:hover{
+  cursor:pointer;
+}
+
+.example-chip-list {
+  width: 100%;
+}
+
+.with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.mat-icon {
+  font-size: 18px;
+  color: gray;
+}
+
+.imgSelected{
+  height: 50%;
+  width: 50%;
+}
+.imgSelected img{
+  height: 100%; 
+  width: 100%; 
+  object-fit: contain;
+}

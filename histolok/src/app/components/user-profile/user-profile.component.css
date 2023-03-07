@@ -1,0 +1,10 @@
+img {
+ height: 250px;
+ width: 250px;
+ margin: auto;
+ display: block;
+}
+
+.textName{
+   font-size: 40px;
+}

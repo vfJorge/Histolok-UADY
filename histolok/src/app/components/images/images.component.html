@@ -1,8 +1,10 @@
 <div class="container" id="tarjetasImag">
     
     <div class="row mt-2">
-        <div class="col-12 col-sm-4 col-lg-7 mb-2" *ngIf="!getPerfilUsuario()">
-            <a class="btn btn-primary px-4" data-bs-target="#agregarImagen" data-bs-toggle="modal"> <span><img src="../../assets/add.png" id="iconoAdicionar">&nbsp;Añadir imagen</span></a>
+        <div class="col-12 col-sm-4 col-lg-7 mb-2 with-icon">
+            <a class="btn btn-primary px-3" data-bs-target="#agregarImagen" data-bs-toggle="modal"> 
+                <span><mat-icon fontIcon="add"></mat-icon>Añadir imagen</span>
+            </a>
         </div>
         <div class="col-12 col-sm-4 col-lg-3 mb-2" >
             <input type="text" class="form-control" 
@@ -28,15 +30,20 @@
         <div class="col-xs-12 col-sm-6 col-md-3 mt-4" *ngFor="let Imagen of misImagenes">
             <div class="card">
 
-                    <img class="imgPrincipal" src= {{imagenesURL}}{{Imagen.filename}}
-                    (click)="mostrarImagen(Imagen)">
+                <img class="imgPrincipal" src= {{imagenesURL}}{{Imagen.filename}}
+                (click)="mostrarImagen(Imagen)">
                     
                 <div class="card-body" id="cardInfo">
                     <h5 class="card-title text-center">{{Imagen.title}}</h5>
                     <div class="text-center" id="imgOpciones">
-                    <button class="btn btn-link" (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs)" data-bs-target="#editarImagen" data-bs-toggle="modal" ><img src="../../assets/edit.png"></button>
+                    <button class="btn btn-link btn-edit" mat-icon-button 
+                        (click)="editarImagenVista(Imagen.id,Imagen.title, Imagen.desc, Imagen.palabclvs, Imagen.access)" 
+                        data-bs-target="#editarImagen" data-bs-toggle="modal"> <mat-icon>edit</mat-icon>
+                    </button>
                     &nbsp;
-                    <button class="btn btn-link" (click)="eliminarImagen(Imagen.id)"><img src="../../assets/trash.png"></button>
+                    <button mat-icon-button color="warn" (click)="eliminarImagen(Imagen.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                     </div>
                 </div>
             </div>
@@ -58,25 +65,44 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="login-form" (ngSubmit)="enviarEdicion()">
+        <form [formGroup] = "datosImagenes" class="login-form" (ngSubmit)="enviarEdicion()">
             <div class="modal-body">
-                <div class="form-group">
-                    <label><b>ID de imagen</b></label>
-                    <input type="number" class="form-control" id="idImagen" readonly>
-                </div>
+                
                 <div class="form-group">
                     <label><b>Título</b></label>
-                    <input type="text" (change)="getTitle(title.value)" class="form-control" placeholder="Mitocondria ejemplo 2" id="titulo" #title>
+                    <input type="text" class="form-control" placeholder="Mitocondria ejemplo 2" formControlName=title>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Descripción</b></label>
-                    <input type="text" (change)="getDesc(desc.value)" class="form-control" placeholder="Describe a la imagen" id="descripcion" #desc>
+                    <input type="text" class="form-control" placeholder="Describe a la imagen" formControlName=desc>
                 </div>
                 <br>
                 <div class="form-group">
                     <label><b>Palabras clave</b></label>
-                    <input type="text" (change)="getKeywords(keywords.value)" class="form-control" placeholder='["corazon", "celula"]' id="palabclv" #keywords>
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                          <input placeholder="Introduce una etiqueta..."
+                                 [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                 [matChipInputAddOnBlur]="addOnBlur"
+                                 (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <label><b>Tipo de acceso</b></label><br>
+                    <input type="radio" value="public" id="accesoPublico" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPublico" class="textoAyuda" data-bs-toggle="tooltip" title="Otros profesores podrán ver y utilizar tu imagen">Público</label><br>
+                    <input type="radio" value="private" id="accesoPrivado" name="access" formControlName="access">
+                    &nbsp;<label for="accesoPrivado" class="textoAyuda" data-bs-toggle="tooltip" title="Solo tú podrás ver y utilizar tu imagen">Privado</label>
+                    
                 </div>
                 <br>
                 <div class="form-group">
