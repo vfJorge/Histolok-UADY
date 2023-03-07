@@ -46,9 +46,9 @@ class GrupoController extends Controller
      * @param  \App\Models\Grupo  $grupo
      * @return \Illuminate\Http\Response
      */
-    public function show(Grupo $grupo)
+    public function show(Request $request)
     {
-        //
+        $grupos = Grupo::with('user:id,name','users:id,name')->findOrFail($request->id);
     }
 
     /**
@@ -60,7 +60,19 @@ class GrupoController extends Controller
      
     public function me(Request $request)
     {
-        $grupos = Grupo::with('users','users:id')->where('user_id',auth()->user()->id)->get();
+        $grupos = Grupo::with('user:id,name','users:id,name')->whereRelation('users','user_id',auth()->user()->id)->get();
+        return response($grupos,200);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Grupo  $grupo
+     * @return \Illuminate\Http\Response
+     */
+     
+    public function owned(Request $request) 
+    {
+        $grupos = Grupo::with('user:id,name','users:id,name')->where('user_id',auth()->user()->id)->get();
         return response($grupos,200);
     }
 
@@ -74,17 +86,21 @@ class GrupoController extends Controller
 
     public function update(Request $request, $id)
     {
-        $grupo = Grupo::find($id);
-                                                                //ESTA MAL
+        $grupo = Grupo::findOrFail($id);
+
         $grupo->name = $request->get('name');
-        $grupo->description= $request->get('description');
-        $grupo->creator=1;
-        $grupo->update_at;
-        $grupo->create_at;
+        $grupo->desc= $request->get('desc');
 
+        if($request->filled('users')){
+            $users = json_decode($request->users);
+            if(!is_array($users)){
+                return response(["message"=>"Error en los usuarios"],400);
+            }
+            $grupo->users()->sync($users);
+        }
         $grupo->save();
-
-        return redirect('/grupos');
+        $group = Grupo::with(['users','users:id,name'])->find($id);
+        return response($group,200);
     }
 
     /**
@@ -97,8 +113,6 @@ class GrupoController extends Controller
     public function destroy($id)
     {
         $grupo = Grupo::find($id);
-                                                                //ESTA MAL
         $grupo->delete();
-        return redirect('/grupos');
     }
 }

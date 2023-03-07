@@ -41,13 +41,19 @@ Route::group([
         'prefix' => 'grupos',
         'middleware'=>'is_superuser'
     ], function () {
-        Route::get('', 'App\Http\Controllers\GrupoController@index')->middleware('is_admin');//ver todos los grupos (solo admin)
-        Route::get('me', 'App\Http\Controllers\GrupoController@me');                         //ver los grupos a los que pertenezco 
-        Route::post('', 'App\Http\Controllers\GrupoController@store');                       //crear nuevo grupo   
-        Route::get('{id}', 'App\Http\Controllers\GrupoController@show');                     //ver informacion de un grupo   
-        Route::put('{id}', 'App\Http\Controllers\GrupoController@update');                   //actualizar info e integrantes de grupo   
+        Route::get('',        'App\Http\Controllers\GrupoController@index')->middleware('is_admin');//ver todos los grupos (solo admin)
+        Route::get('owned',   'App\Http\Controllers\GrupoController@owned');                   //ver los grupos que soy propietario (Maestro)
+        Route::get('me',      'App\Http\Controllers\GrupoController@me');                         //ver los grupos a los que pertenezco (Alumno)
+        Route::post('',       'App\Http\Controllers\GrupoController@store');                       //crear nuevo grupo   
+        Route::get('{id}',    'App\Http\Controllers\GrupoController@show');                     //ver informacion de un grupo   
+        Route::put('{id}',    'App\Http\Controllers\GrupoController@update');                   //actualizar info e integrantes de grupo   
         Route::delete('{id}', 'App\Http\Controllers\GrupoController@destroy');               //borrar grupo
+ 
+
+
     });
+
+   
 
     Route::group([
         'prefix' => 'fotos',
@@ -94,10 +100,16 @@ Route::group([
         Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
         Route::get('{id}/start', 'App\Http\Controllers\ExamenController@start');
         Route::get('{id}/current', 'App\Http\Controllers\ExamenController@current');
+        Route::get('{id}/results', 'App\Http\Controllers\ExamenController@results');
         Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next');
     });
     //Auth
-    Route::post('logout','App\Http\Controllers\AuthController@logout');
-    Route::get('type', 'App\Http\Controllers\AuthController@type');
+    Route::group([
+        'prefix' => 'auth'
+    ], function () {
+        Route::post('logout','App\Http\Controllers\AuthController@logout');
+        Route::get('type', 'App\Http\Controllers\AuthController@type');
+    });
+    
    
 });

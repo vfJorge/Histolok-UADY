@@ -286,8 +286,6 @@ class ExamenController extends Controller
         }
         //Nuevo examen
         $examen->users()->attach(auth()->user()->id);
-            //Session
-            $request->session()->forget('examen'.$examen->id.'.resultados');
             //Log
             $primeraLinea = $examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration;
             Storage::disk('local')->append($directorio.$nombre, $primeraLinea);
@@ -370,36 +368,50 @@ class ExamenController extends Controller
                 $preguntas = $examen->preguntas()->with(['opcions:id,opcion'])->get();
                 $pregunta = $preguntas[$i];
                 $linea = $request->tiempo_inicio." ".$request->tiempo_selec." ".$request->tiempo_sig;
-
-                $nCorrect=$pivot->n_correct;
-                //Si es la respuesta correcta
-                if($pregunta->answer_id == $request->option_id){
-                    $nCorrect++;
-                    $linea = $linea." 1";
-                    $request->session()->push('examen'.$examen->id.'.resultados', "$pregunta->answer_id");
-                //Si no es la respuesta correcta
-                } else {
-                    $linea = $linea." 0";
-                    $request->session()->push('examen'.$examen->id.'.resultados', $pregunta->answer_id.",".$request->option_id);
-                }
-                Storage::disk('local')->append($directorio.$nombre, $linea);
-                $tiempo=NULL;
-                $lineaFinal = $mytime." ";
-                //Si es la ultima pregunta del examen
-                if ($i+1 == $examen->n_questions) {
-                    $tiempo=$mytime;
-                    $lineaFinal = $lineaFinal.$nCorrect;
+                //si no es la ultima preguna
+                if($i+1 < $examen->n_questions){
+                    //respuesta correcta
+                    if($pregunta->answer_id == $request->option_id){
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct+1,NULL);
+                        $linea = $linea." 1";
+                        $request->session()->push('examen.resultados', '1');
+                        
+                    }
+                    //respuesta incorrecta
+                    else{
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct,NULL);
+                        $linea = $linea." 0";
+                        $request->session()->push('examen.resultados', '0');
+                    }
+                    Storage::disk('local')->append($directorio.$nombre, $linea);
+                    $sigPregunta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
+                    return response(['answer_id'=>$pregunta->answer_id,'siguiente'=>$sigPregunta],200);
+                //Si es la ultima pregunta
+                }else{
+                    
+                    
+                    $lineaFinal = $mytime." ";
+                    //respuesta correcta
+                    if($pregunta->answer_id == $request->option_id){
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct+1,$mytime);
+                        $linea = $linea." 1";
+                        $lineaFinal = $lineaFinal.$pivot->n_correct+1;
+                        $request->session()->push('examen.resultados', '1');
+                    }
+                    //respuesta incorrecta
+                    else{
+                        $this->updateExamen($pivot->id,$pivot->n_answered+1,$pivot->n_correct,$mytime);
+                        $linea = $linea." 0";
+                        $lineaFinal = $lineaFinal.$pivot->n_correct;
+                        $request->session()->push('examen.resultados', '0');
+                    }
+                    
+                    Storage::disk('local')->append($directorio.$nombre, $linea);
                     Storage::disk('local')->append($directorio.$nombre, $lineaFinal);
-                    $respuesta = "Fin del examen";
-                    $llave = 'mensaje';
-                //Si no era la ultima pregunta
-                } else {
-                    $llave ='siguiente';
-                    $respuesta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
+                    $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
+                    return response(['answer_id'=>$pregunta->answer_id,'resultados'=>$pivot],200);
                 }
-
-                $this->updateExamen($pivot->id,$pivot->n_answered+1,$nCorrect,$tiempo);
-                return response(['answer_id'=>$pregunta->answer_id,$llave=>$respuesta],200);
+                
             }
         }
         else{
@@ -414,11 +426,11 @@ class ExamenController extends Controller
         $user_id = auth()->user()->id;
 
         //si existe un examen iniciado anterior
-        if($examen->users()->where('user_id',$user_id)->exists()){
+        if($examen->users()->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('end_time')->first()->pivot;
             //si end_time no es null, entonces ya finalizo el ultimo examen
             if($pivot->end_time!=NULL){
-                return response([$pivot,$request->session()->get('examen'.$examen->id.'.resultados')],200);
+                return response([$pivot,$request->session()->get("examen.resultados")],200);
             }
             else{
                 return response(["error"=>"Este examen no ha acabado"],400);
