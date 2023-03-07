@@ -89,7 +89,7 @@ Route::group([
         Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas
         Route::get('me', 'App\Http\Controllers\ExamenController@owned');         //ver mis examenes
         Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
-        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen
+        
         Route::put('{id}', 'App\Http\Controllers\ExamenController@update');   //editar examen
         Route::delete('{id}', 'App\Http\Controllers\ExamenController@destroy');//borrar un examen
     });
@@ -102,6 +102,8 @@ Route::group([
         Route::get('{id}/current', 'App\Http\Controllers\ExamenController@current');
         Route::get('{id}/results', 'App\Http\Controllers\ExamenController@results');
         Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next');
+        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen
+        Route::get('{id}/medallero', 'App\Http\Controllers\ExamenController@medallero');
     });
     //Auth
     Route::group([
