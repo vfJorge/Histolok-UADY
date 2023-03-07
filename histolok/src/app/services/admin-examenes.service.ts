@@ -75,4 +75,11 @@ export class AdminExamenesService {
     let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.post(_url, examenDatos, {headers: header, observe:'response'});
   }
+  
+  resultadosExamen(examenID: any){
+    var _url =  this.URL + 'examenes/' + examenID +'/results';
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
 }

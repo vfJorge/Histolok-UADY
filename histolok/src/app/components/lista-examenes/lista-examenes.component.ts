@@ -52,6 +52,7 @@ export class ListaExamenesComponent implements OnInit {
     this.adminExamenesService.empezarExamen(examenID).subscribe((resp: any) => {
       this.misDatosExamen = resp.body;
       console.log(this.misDatosExamen);
+      window.location.reload();
       }, error => {
       console.log(error);
     })
