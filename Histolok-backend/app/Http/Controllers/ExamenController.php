@@ -313,7 +313,7 @@ class ExamenController extends Controller
                 $pregunta = $preguntas[$pivot->n_answered];
                 $preguntasRestantes = $examen->n_questions - $pivot->n_answered-1;
 
-                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta],200); 
+                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta],200);
             }
             elseif($end_time < $now && $pivot->end_time==NULL){
                 return response(["mensaje"=>"Este examen no se encuentra iniciado o ya acabó"],400);
@@ -376,11 +376,13 @@ class ExamenController extends Controller
                 if($pregunta->answer_id == $request->option_id){
                     $nCorrect++;
                     $linea = $linea." 1";
-                    $request->session()->push('examen'.$examen->id.'.resultados', [$pregunta->answer_id]);
+
+                    
+                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id"]);
                 //Si no es la respuesta correcta
                 } else {
                     $linea = $linea." 0";
-                    $request->session()->push('examen'.$examen->id.'.resultados', [$pregunta->answer_id,intval($request->option_id)]);
+                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id",$request->option_id]);
                 }
                 Storage::disk('local')->append($directorio.$nombre, $linea);
                 $tiempo=NULL;
@@ -431,8 +433,6 @@ class ExamenController extends Controller
 
     public function medallero(Request $request){
 
-       
-        
         $query = DB::table('examen_user')
             ->join('users', 'examen_user.user_id', '=', 'users.id')
             ->where('examen_id', $request->id)
