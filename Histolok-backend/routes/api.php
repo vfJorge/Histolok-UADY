@@ -86,7 +86,7 @@ Route::group([
         'middleware'=>'is_superuser'
     ], function () {
         Route::get('','App\Http\Controllers\ExamenController@index')->middleware('is_admin');//ver todas los examenes
-        Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas
+        
         Route::get('me', 'App\Http\Controllers\ExamenController@owned');         //ver mis examenes
         Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
         
@@ -97,13 +97,15 @@ Route::group([
     Route::group([
         'prefix' => 'examenes'
     ], function () {
+        Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas //SE CAMBIO  CHEKAR PERMISOS
         Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
         Route::get('{id}/start', 'App\Http\Controllers\ExamenController@start');
         Route::get('{id}/current', 'App\Http\Controllers\ExamenController@current');
         Route::get('{id}/results', 'App\Http\Controllers\ExamenController@results');
         Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next');
-        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen
+        Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen           //SE CAMBIO  CHEKAR PERMISOS
         Route::get('{id}/medallero', 'App\Http\Controllers\ExamenController@medallero');
+        
     });
     //Auth
     Route::group([

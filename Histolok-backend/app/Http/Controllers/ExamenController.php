@@ -299,6 +299,7 @@ class ExamenController extends Controller
         $examen = Examen::findOrFail($request->id);
         $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
         $user_id = auth()->user()->id;
+        session()->keep(['examen'.$examen->id.'.resultados']);//xd
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->firstOrFail()->pivot;
@@ -312,8 +313,9 @@ class ExamenController extends Controller
                 $preguntas = $examen->preguntas()->with(['opcions:id,opcion','foto:id,filename'])->get()->makeHidden(['answer_id','user_id','access']);;
                 $pregunta = $preguntas[$pivot->n_answered];
                 $preguntasRestantes = $examen->n_questions - $pivot->n_answered-1;
-
-                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta],200);
+                $session=$request->session()->get('examen'.$examen->id.'.resultados');
+                session()->keep(['examen'.$examen->id.'.resultados']);//xd
+                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta,'session'=>$session],200);
             }
             elseif($end_time < $now && $pivot->end_time==NULL){
                 return response(["mensaje"=>"Este examen no se encuentra iniciado o ya acabó"],400);
@@ -333,7 +335,7 @@ class ExamenController extends Controller
         $examen = Examen::findOrFail($request->id);
         $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
         $user_id = auth()->user()->id;
-
+        session()->keep(['examen'.$examen->id.'.resultados']);
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
@@ -399,7 +401,7 @@ class ExamenController extends Controller
                     $llave ='siguiente';
                     $respuesta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
                 }
-
+                session()->keep(['examen'.$examen->id.'.resultados']);
                 $this->updateExamen($pivot->id,$pivot->n_answered+1,$nCorrect,$tiempo);
                 return response(['answer_id'=>$pregunta->answer_id,$llave=>$respuesta],200);
             }
@@ -414,13 +416,15 @@ class ExamenController extends Controller
     {
         $examen = Examen::findOrFail($request->id);
         $user_id = auth()->user()->id;
-
+        session()->keep(['examen'.$examen->id.'.resultados']);
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('end_time')->first()->pivot;
             //si end_time no es null, entonces ya finalizo el ultimo examen
             if($pivot->end_time!=NULL){
-                return response(["pivote"=>$pivot,"respuestas"=>$request->session()->get('examen'.$examen->id.'.resultados')],200);
+                $session=$request->session()->get('examen'.$examen->id.'.resultados');
+                session()->keep(['examen'.$examen->id.'.resultados']);//xd
+                return response(["pivote"=>$pivot,"respuestas"=>$request->$session],200);
             }
             else{
                 return response(["error"=>"Este examen no ha acabado"],400);
