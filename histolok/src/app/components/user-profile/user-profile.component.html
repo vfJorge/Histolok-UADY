@@ -1,0 +1,108 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-sm-12 mt-2">
+            <img src="https://cdn-icons-png.flaticon.com/512/2102/2102647.png" alt="">
+        </div>
+        <div class="col-lg-8 col-sm-12 mt-3" *ngFor="let info of infoPerfil" >
+            <h1>{{info.name}}</h1>
+            <hr>
+            <p>Correo electrónico: {{info.email}}</p>
+            <p>Permisos: {{info.type}}</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button 
+                class="btn btn-primary me-md-2" 
+                type="button" data-bs-target="#editarPerfil" 
+                data-bs-toggle="modal"
+                (click)="editarDatosVista(info.name, info.email)">
+                    Modificar perfil
+                </button>
+                <button 
+                class="btn btn-secondary me-md-2" 
+                type="button" data-bs-target="#editarContrasena" 
+                data-bs-toggle="modal">
+                    Cambiar contraseña
+                </button>
+            </div>
+            <hr>
+            <button type="button" class="btn btn-link" routerLink="/images"> Gestionar mis imágenes</button>
+            <br>
+            <button type="button" class="btn btn-link" routerLink="/questions"> Gestionar mis preguntas</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar -->
+<div class="modal fade" id="editarPerfil">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+    <div class="modal-header">
+        <div class="text-center">
+            <h5 class="modal-title" id="registroLabel">Modificar perfil</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form [formGroup] = "datosPerfil" class="login-form" (ngSubmit)="enviarEdicion()">
+        <div class="modal-body">
+            <div class="form-group">
+                <label><b>Correo electrónico</b></label>
+                <input type="mail" class="form-control" placeholder="juansena@example.com" formControlName="email">
+            </div>
+            <br>
+            <div class="form-group">
+                <label><b>Nombre</b></label>
+                <input type="text" class="form-control" placeholder="Introduce tu nombre y apellido" formControlName="name">
+            </div>
+            <br>
+            <div class="form-group">
+                <label><b>Contraseña</b></label>
+                <input type="password" class="form-control" placeholder="Escribe tu contraseña para confirmar los cambios" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+            </div>
+            <br>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    </form>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="editarContrasena">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Modificar perfil</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "datosPerfil" class="login-form" (ngSubmit)="enviarEdicion()">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Contraseña actual</b></label>
+                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Contraseña nueva</b></label>
+                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Confirmar contraseña</b></label>
+                    <input type="password" class="form-control" placeholder="Confirma tu contraseña" formControlName="password_confirmation">
+                    <ng-template #errorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">¡Por favor confirma tu contraseña!</ng-container>
+                        <ng-container *ngIf="control.hasError('confirm')">¡Las contraseñas no coinciden!</ng-container>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+            
+        </form>
+        </div>
+    </div>
+</div>
+    

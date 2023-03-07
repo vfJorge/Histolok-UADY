@@ -1,0 +1,13 @@
+.imgModal{
+    height: 250px;
+}
+
+.img{
+    object-fit: contain;
+}
+
+.descripcion{
+    margin: auto 25%;
+    font-size: 15px;
+    text-align: justify;
+}

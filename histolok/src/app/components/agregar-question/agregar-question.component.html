@@ -1,0 +1,125 @@
+<div class="modal fade" id="agregarPregunta">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Agregar una pregunta</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "datosPreguntaAgregar" (ngSubmit)="agregarPregunta(datosPreguntaAgregar.value)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><b>Título</b></label>
+                    <input type="text" class="form-control" placeholder="Pregunta Mitocondria 1" formControlName="title">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Pregunta</b></label>
+                    <input type="text" class="form-control" placeholder="¿Qué nombre recibe la siguiente estructura?" formControlName="question">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Palabras clave</b></label>
+                    <mat-form-field class="example-chip-list" appearance="fill">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let keyword of keywords" (removed)="remove(keyword)">
+                                {{keyword}}
+                            <button matChipRemove>
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                          <input placeholder="Introduce una etiqueta..."
+                                 [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                 [matChipInputAddOnBlur]="addOnBlur"
+                                 (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Respuesta</b></label>
+                    <input type="text" class="form-control" placeholder='Mitocondria' formControlName="answer">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Opción alternativa 1</b></label>
+                    <input type="text" class="form-control" placeholder='Ribosoma' formControlName="option1">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Opción alternativa 2</b></label>
+                    <input type="text" class="form-control" placeholder='Libosoma' formControlName="option2">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Opción alternativa 3</b></label>
+                    <input type="text" class="form-control" placeholder='Ninguno de los anteriores' formControlName="option3">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Tipo de acceso</b></label><br>
+                    <input type="radio" id="publicAccess" value="public" formControlName="access">
+                    &nbsp;<label for="publicAccess" class="textoAyuda" data-bs-toggle="tooltip" title="Otros profesores podrán ver y utilizar tu pregunta">Público</label><br>
+                    <input type="radio" id="privateAccess" value="private" formControlName="access">
+                    &nbsp;<label for="privateAccess" class="textoAyuda" data-bs-toggle="tooltip" title="Solo tú podrás ver y utilizar tu pregunta">Privado</label>
+                    
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="with-icon">
+                        <label><b>Dificultad (1 al 5)</b></label> &nbsp;
+                        <mat-icon fontIcon="help" data-bs-toggle="tooltip" title="Dificultad de la pregunta, donde 1 es más fácil y 5 más difícil"></mat-icon> 
+                    </div>
+                    <input type="number" id="dificultad" class="form-control" placeholder='3' min="1" max="5" formControlName="difficulty">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Imagen</b></label><br>
+                    <div class="text-center">
+                        <a *ngIf="imgFilename == ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Seleccionar imagen</span></a>
+                        <a *ngIf="imgFilename != ''" class="btn btn-link px-4" data-bs-target="#escogerImagen" data-bs-toggle="modal"><span>Cambiar imagen</span></a>
+                    </div>
+                    <div class="imgSelected mx-auto text-center" *ngIf="imgFilename != ''">
+                        {{imgOriginalName}}
+                        <img src="{{imgFilename}}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Agregar pregunta</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="escogerImagen">
+    <div class="container" id="tarjetasImag">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-content p-3">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="registroLabel">Selecciona una imagen</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="row pt-4">
+                    <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let Imagen of misImagenes">
+                        <div class="card h-80">
+                                <img class="imgPrincipal" src={{imagenesURL}}{{Imagen.filename}} (click)="escogerImagen(Imagen.id)" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#agregarPregunta">
+                                
+                            <div class="card-body" id="cardInfo">
+                                <h5 class="card-title text-center">{{Imagen.title}}</h5>
+                                <div class="text-center" id="imgOpciones">
+                                </div>
+                            </div>
+                        </div>
+                    <br>
+                    </div>
+                </div>
+                </div>
+            </div>
+    </div>
+</div>

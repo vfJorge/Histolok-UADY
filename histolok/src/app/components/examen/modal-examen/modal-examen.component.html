@@ -1,0 +1,26 @@
+<div class="position-relative w-100 h-100">
+    <button mat-icon-button class="position-absolute top-0 end-0" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="py-2 fs-3 flex-grow-1 text-center fw-semibold">{{data.title}}</h2>
+  
+    <!-- <div class="imgModal w-100">
+      <img class="img w-100 h-100" [src]="data.imagePath" alt=""> 
+    </div> -->
+    <div class="mt-2">
+      <!-- <h4 class="fs-5 text-center mb-3">{{data.question}}</h4> -->
+      
+        <div class="px-4 descripcion" *ngFor="let i = index; let question of data.questions">
+            <p class="fw-semibold"> {{i+1 + ". " + question.question}} </p>
+            
+            <div *ngFor = "let k = index; let image of data.imagePaths" class="imgModal w-100">
+                <img *ngIf="image.id == question.id" [src]="image.img" class="img w-100 h-100">
+            </div>
+            <br>
+            <div *ngFor = "let j = index; let opciones of question.opcions">
+                {{j+1 + ". " + opciones.opcion}}
+            </div>
+            <br>
+        </div>
+    </div>
+</div>

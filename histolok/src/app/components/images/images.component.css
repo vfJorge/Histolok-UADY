@@ -1,8 +1,5 @@
-
-#iconoAdicionar {
-	filter:invert(1);
-	width: 15px;
-	padding-bottom: 3px;
+.btn-edit{
+	color: orange;
 }
 
 #tarjetasImag .row .imgPrincipal{
@@ -10,3 +7,20 @@
 	object-fit: contain;
 }
 
+.imgPrincipal:hover {
+	cursor: pointer;
+}
+
+.example-chip-list {
+    width: 100%;
+}
+
+.with-icon {
+    display: flex;
+    align-items: center;
+}
+
+.mat-icon {
+    vertical-align: bottom;
+    font-size: 24px;
+}

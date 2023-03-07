@@ -1,0 +1,38 @@
+.btn-edit{
+	color: orange;
+}
+
+img:hover{
+	cursor:pointer;
+}
+
+.textoAyuda {
+	position: relative;
+	display: inline-block;
+	border-bottom: 0.3vh dotted black;
+}
+
+.example-chip-list {
+    width: 100%;
+  }
+
+.with-icon {
+    display: flex;
+    align-items: center;
+	color: rgb(48, 59, 97);
+}
+
+.imgSelected{
+	height: 50%;
+	width: 50%;
+  }
+.imgSelected img{
+	height: 100%; 
+	width: 100%; 
+	object-fit: contain;
+}
+
+.mat-icon {
+    vertical-align: bottom;
+    font-size: 24px;
+}
