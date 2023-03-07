@@ -29,7 +29,6 @@ class Examen extends Model
         return $this->belongsToMany(\App\Models\User::class)->withPivot('id','start_time', 'end_time','n_answered','n_correct');
     }
 
-
     public function palabclvs(){
         return $this->belongsToMany(\App\Models\Palabclv::class)->withTimestamps();
     }
