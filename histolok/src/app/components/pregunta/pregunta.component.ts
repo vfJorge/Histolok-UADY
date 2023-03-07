@@ -44,8 +44,8 @@ export class PreguntaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.examenID = localStorage.getItem('ExamenID');
     this.duracionExamen = localStorage.getItem('TiempoExamen');
+    this.examenID = localStorage.getItem('ExamenID');
     this.adminExamenesService.preguntaActualExamen(this.examenID).subscribe((resp: any) => {
       this.preguntasFaltantes = resp.body;
       this.misDatosExamen = resp.body.pregunta;
@@ -54,26 +54,21 @@ export class PreguntaComponent implements OnInit {
       }, error => {
       console.log(error);
     })
-
-    if(this.tiempoInicial == ""){ //TIENE QUE SER DESDE QUE PRESIONE EL BOTON EN LISTA-EXAMENES
-
-    }
-
-    this.setExamenTimer()
     
+    this.setExamenTimer();
     this.start();
+    this.iniciarTemporizador();
   }
 
   terminarExamen(){
-    localStorage.setItem('ExamenID', '');
-    localStorage.setItem('TiempoExamen', '');
     const datosExamen = new FormData();
     datosExamen.append('option_id', this.respuestaID);
     datosExamen.append('tiempo_inicio', this.tiempoInicial);
     datosExamen.append('tiempo_selec', this.tiempoSeleccion);
     datosExamen.append('tiempo_sig', this.formatDate(new Date()));
     this.adminExamenesService.sigPreguntaExamen(this.examenID, datosExamen).subscribe((resp: any) =>{
-      window.location.reload()
+      localStorage.removeItem('TiempoExamen');
+      window.location.reload();
     })
   }
 
