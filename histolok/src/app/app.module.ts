@@ -26,6 +26,8 @@ import { AgregarExamenComponent } from './components/agregar-examen/agregar-exam
 import { ExamenComponent } from './components/examen/examen.component';
 import { ModalExamenComponent } from './components/examen/modal-examen/modal-examen.component';
 import { ListaExamenesComponent } from './components/lista-examenes/lista-examenes.component';
+import { ResultadosComponent } from './components/resultados/resultados.component';
+import { ModalImagenPreguntaComponent } from './components/pregunta/modal-imagen-pregunta/modal-imagen-pregunta.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { ListaExamenesComponent } from './components/lista-examenes/lista-examen
     AgregarExamenComponent,
     ExamenComponent,
     ModalExamenComponent,
-    ListaExamenesComponent
+    ListaExamenesComponent,
+    ResultadosComponent,
+    ModalImagenPreguntaComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +60,7 @@ import { ListaExamenesComponent } from './components/lista-examenes/lista-examen
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,23 +1,28 @@
-<div class="container">
+<div class="container" *ngIf="preguntasFaltantes.faltan > -1">
     <div class="card-group">
         <div class="col-12 col-lg-6">
             <div class="card text-center">
                 <h4><strong>{{misDatosExamen.question}}</strong></h4>
-                <img src={{ImagenesURL}} class="img-fluid rounded" alt="...">
+                <img src={{ImagenesURL}}{{misDatosExamen.foto.filename}} class="img-fluid rounded" alt="" (click)="mostrarImagen(misDatosExamen.foto.filename)">
             </div>
         </div>
         <div class="col-12 col-lg-6">
             <div class="card align-items-center">
                 <div class="card-body">
                     <div class="card-text">
+                            <div class="text-center">Tiempo restante: {{ hours | number:'2.0'}}:{{ minutes | number:'2.0'}}:{{ seconds | number:'2.0'}}</div> <br>
                             <p class="text-center"><strong>Selecciona la respuesta correcta:</strong></p>
 
-                          <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group" *ngFor="let OpcionesPregunta of misDatosExamen.opcions">
-                            <input type="radio" class="btn-check" name="vbtn-radio" id={{itemizacionOpciones}}{{OpcionesPregunta.id}} autocomplete="off" (click)="guardarRespuesta(OpcionesPregunta.id)">
+                          <div class="btn-group-vertical d-grid mb-2 d-md-block d-flex" role="group" aria-label="Vertical radio toggle button group" *ngFor="let OpcionesPregunta of misDatosExamen.opcions">
+                            <input type="radio" class="btn-check flex-fill" name="vbtn-radio" id={{itemizacionOpciones}}{{OpcionesPregunta.id}} autocomplete="off" (click)="guardarRespuesta(OpcionesPregunta.id)">
                             <label class="btn btn-outline-danger" for={{itemizacionOpciones}}{{OpcionesPregunta.id}}>{{OpcionesPregunta.opcion}}</label>
-                          </div><br>
-                        <div class="text-center" (click)="siguientePregunta()">
-                            <button type="button" class="btn btn-primary">Siguiente pregunta</button>
+                          </div><br><br>
+                          
+                        <div class="text-center"  *ngIf="preguntasFaltantes.faltan == 0">
+                            <button id="botonEnviar" type="button" class="btn btn-outline-danger disabled" (click)="terminarExamen()" routerLink="/resultados">Finalizar examen</button>
+                        </div>
+                        <div class="text-center"  *ngIf="preguntasFaltantes.faltan != 0">
+                            <button id="botonEnviar" type="button" class="btn btn-primary disabled" (click)="siguientePregunta()">Siguiente pregunta</button>
                         </div>
                     </div>
                 </div>
