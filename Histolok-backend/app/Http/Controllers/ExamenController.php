@@ -377,11 +377,11 @@ class ExamenController extends Controller
                     $nCorrect++;
                     $linea = $linea." 1";
                     
-                    $request->session()->push('examen'.$examen->id.'.resultados', [$pregunta->answer_id]);
+                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id"]);
                 //Si no es la respuesta correcta
                 } else {
                     $linea = $linea." 0";
-                    $request->session()->push('examen'.$examen->id.'.resultados', [$pregunta->answer_id,intval($request->option_id)]);
+                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id",$request->option_id]);
                 }
                 Storage::disk('local')->append($directorio.$nombre, $linea);
                 $tiempo=NULL;
