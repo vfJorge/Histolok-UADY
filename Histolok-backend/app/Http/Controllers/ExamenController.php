@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -259,7 +260,7 @@ class ExamenController extends Controller
         
         $examen = Examen::findOrFail($request->id);
         
-        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $mytime = Carbon::now('America/Belize')->toDateTimeString();
         $now = strtotime($mytime);
 
         $user_id = auth()->user()->id;
@@ -272,7 +273,7 @@ class ExamenController extends Controller
             $start_time = strtotime($pivot->start_time);
             $dur = $this->addTime($examen->duration);
             $end_time = $start_time+$dur;
-            
+            //echo date('Y-m-d H:i:s', $now)."  ".date('Y-m-d H:i:s', $start_time)."  ".$mytime;
             //y sigue estando activo
             if($end_time > $now && $pivot->end_time==NULL){
                 return response(["mensaje"=>"Este examen ya se inicio y no ha finalizado"],400);
@@ -286,8 +287,11 @@ class ExamenController extends Controller
         }
         //Nuevo examen
         $examen->users()->attach(auth()->user()->id);
-            //Session
-            $request->session()->forget('examen'.$examen->id.'.resultados');
+        
+            //Cache
+            Cache::forget('results-'.$examen->id."-".$user_id);
+            $resultados=[];
+            Cache::put('results-'.$examen->id."-".$user_id, $resultados);
             //Log
             $primeraLinea = $examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration;
             Storage::disk('local')->append($directorio.$nombre, $primeraLinea);
@@ -297,9 +301,8 @@ class ExamenController extends Controller
     public function current(Request $request)
     {
         $examen = Examen::findOrFail($request->id);
-        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $mytime = Carbon::now('America/Belize')->toDateTimeString();
         $user_id = auth()->user()->id;
-        session()->keep(['examen'.$examen->id.'.resultados']);//xd
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->firstOrFail()->pivot;
@@ -313,9 +316,7 @@ class ExamenController extends Controller
                 $preguntas = $examen->preguntas()->with(['opcions:id,opcion','foto:id,filename'])->get()->makeHidden(['answer_id','user_id','access']);;
                 $pregunta = $preguntas[$pivot->n_answered];
                 $preguntasRestantes = $examen->n_questions - $pivot->n_answered-1;
-                $session=$request->session()->get('examen'.$examen->id.'.resultados');
-                session()->keep(['examen'.$examen->id.'.resultados']);//xd
-                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta,'session'=>$session],200);
+                return response(['faltan'=>$preguntasRestantes,'pregunta'=>$pregunta],200);
             }
             elseif($end_time < $now && $pivot->end_time==NULL){
                 return response(["mensaje"=>"Este examen no se encuentra iniciado o ya acabó"],400);
@@ -333,9 +334,8 @@ class ExamenController extends Controller
             
         ]);
         $examen = Examen::findOrFail($request->id);
-        $mytime = Carbon::now('America/Mexico_City')->toDateTimeString();
+        $mytime = Carbon::now('America/Belize')->toDateTimeString();
         $user_id = auth()->user()->id;
-        session()->keep(['examen'.$examen->id.'.resultados']);
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->first()->pivot;
@@ -374,19 +374,25 @@ class ExamenController extends Controller
                 $linea = $request->tiempo_inicio." ".$request->tiempo_selec." ".$request->tiempo_sig;
 
                 $nCorrect=$pivot->n_correct;
+
+                $resultados = Cache::get('results-'.$examen->id."-".$user_id);
                 //Si es la respuesta correcta
                 if($pregunta->answer_id == $request->option_id){
                     $nCorrect++;
                     $linea = $linea." 1";
 
-                    
-                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id"]);
+                    $resultados[$i]="".$pregunta->answer_id;
                 //Si no es la respuesta correcta
                 } else {
                     $linea = $linea." 0";
-                    $request->session()->push('examen'.$examen->id.'.resultados', ["$pregunta->answer_id",$request->option_id]);
+
+                    $resultados[$i]=$pregunta->answer_id.",".$request->option_id;
                 }
+                //Cache
+                Cache::put('results-'.$examen->id."-".$user_id, $resultados);
+                //Log
                 Storage::disk('local')->append($directorio.$nombre, $linea);
+
                 $tiempo=NULL;
                 $lineaFinal = $mytime." ";
                 //Si es la ultima pregunta del examen
@@ -401,7 +407,6 @@ class ExamenController extends Controller
                     $llave ='siguiente';
                     $respuesta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
                 }
-                session()->keep(['examen'.$examen->id.'.resultados']);
                 $this->updateExamen($pivot->id,$pivot->n_answered+1,$nCorrect,$tiempo);
                 return response(['answer_id'=>$pregunta->answer_id,$llave=>$respuesta],200);
             }
@@ -411,20 +416,18 @@ class ExamenController extends Controller
         }
         
     }
-
+    
     public function results(Request $request)
     {
         $examen = Examen::findOrFail($request->id);
         $user_id = auth()->user()->id;
-        session()->keep(['examen'.$examen->id.'.resultados']);
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('end_time')->first()->pivot;
             //si end_time no es null, entonces ya finalizo el ultimo examen
             if($pivot->end_time!=NULL){
-                $session=$request->session()->get('examen'.$examen->id.'.resultados');
-                session()->keep(['examen'.$examen->id.'.resultados']);//xd
-                return response(["pivote"=>$pivot,"respuestas"=>$request->$session],200);
+                $resultados = Cache::get('results-'.$examen->id."-".$user_id);
+                return response(["pivote"=>$pivot,"respuestas"=>$resultados],200);
             }
             else{
                 return response(["error"=>"Este examen no ha acabado"],400);
