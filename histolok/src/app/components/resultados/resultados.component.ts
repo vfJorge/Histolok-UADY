@@ -13,7 +13,10 @@ import { ModalResultadoComponent } from './modal-resultado/modal-resultado.compo
 export class ResultadosComponent implements OnInit {
   examenID: any; //La debe otorgar el clickear en iniciar examen
   resultados: any;
-  respuestas: any;
+  incisosExamen: any;
+  arrayRespuestas: any[];
+  retroalimentacion: any;
+  arrayRetros: any[];
   imagenesURL = "http://127.0.0.1:8000/storage/";
 
   constructor(private adminExamenesService: AdminExamenesService,
@@ -25,18 +28,50 @@ export class ResultadosComponent implements OnInit {
     this.examenID = localStorage.getItem('ExamenID');
     this.adminExamenesService.resultadosExamen(this.examenID).subscribe((resp: any) => {
       this.resultados = resp.body.pivote;
+      this.arrayRespuestas = resp.body.respuestas;
       console.log(resp.body);
       }, error => {
       console.log(error);
     })
+    this.adminExamenesService.verExamen(this.examenID).subscribe((resp: any) => {
+      this.incisosExamen = resp.body.preguntas;
+      console.log(resp.body);
+    })
+  }
+
+  respuestasCorrectasYUsuario(idRespuesta: string, numPregunta: any){
+    let stringRespCorrecta: any;
+    let stringRespUsuario: any;
+    let i: any;
+    
+    for(i = 0; i < this.incisosExamen[numPregunta].opcions.length; i++){
+      if (this.incisosExamen[numPregunta].opcions[i].id == idRespuesta[0]){
+        stringRespCorrecta = "La respuesta correcta era: "+this.incisosExamen[numPregunta].opcions[i].opcion;
+        stringRespUsuario = "Tu respuesta fue: "+this.incisosExamen[numPregunta].opcions[i].opcion;
+      }
+    }
+    
+    if(idRespuesta.split(',')[0] != idRespuesta.split(',')[1]){
+      for(i = 0; i < this.incisosExamen[numPregunta].opcions.length; i++){
+        if (this.incisosExamen[numPregunta].opcions[i].id == idRespuesta.split(',')[0]){
+          stringRespCorrecta = "La respuesta correcta era: "+this.incisosExamen[numPregunta].opcions[i].opcion;
+        }
+        
+        if (this.incisosExamen[numPregunta].opcions[i].id == idRespuesta.split(',')[1]){
+          stringRespUsuario = "Tu respuesta fue: "+this.incisosExamen[numPregunta].opcions[i].opcion;
+        }
+      }
+    }
+    
+    this.retroalimentacion = stringRespCorrecta+" "+stringRespUsuario;
   }
 
 
   mostrarImagen(imagen: any){
     this.dialog.open(ModalResultadoComponent, {
-      height: '100%',
-      width: '100%',
-      data: {imagePath: this.imagenesURL + imagen},
+      height: '90%',
+      width: '50%',
+      data: {retro: this.retroalimentacion, imagePath: this.imagenesURL + imagen},
       autoFocus: false
     })
   }
