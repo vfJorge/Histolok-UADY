@@ -6,44 +6,16 @@
     <p>Tiempo de finalización del examen (Fecha y horario del servidor): {{resultados.end_time}}</p>
 </div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-3 mt-4" *ngFor="let respuesta of respuestas">
-        <div>
-
-            <img class="imgPrincipal" src= {{imagenesURL}}{{respuesta.filename}}
-            (click)="mostrarImagen(respuesta)">
-                
-            <div class="card-body" id="cardInfo">
-                <h5 class="card-title text-center">{{respuesta.title}}</h5>
-                <div class="text-center" id="imgOpciones">
-                </div>
-            </div>
-        </div>
-    <br>
-    </div>
-</div>
-
 <!-- Apartado designado para la retro cuando esté lista-->
 <ol class="container container-small list-group px-0"> 
-    <div *ngFor="let respuesta of respuestas">
+    <div *ngFor="let inciso of incisosExamen; let i = index">
       <li class="list-group-item d-flex justify-content-between" >
         <div class="ms-2 me-auto">
-          <div class="fw-bold">{{respuesta.title}}</div>
-          {{respuesta.question}}
-        </div>
-        <div class="with-icon">
-          <button class="btn btn-link" mat-icon-button (click)="mostrarImagen(respuesta)">
-              <mat-icon>visibility</mat-icon>
-          </button>
-          &nbsp;&nbsp;
-          <button class="btn btn-link btn-edit" mat-icon-button  data-bs-target="#editarPregunta"
-              data-bs-toggle="modal">
-              <mat-icon>Tu escogiste</mat-icon>
-          </button>
-          &nbsp;&nbsp;
-          <button class="btn btn-link" mat-icon-button color="warn">
-              <mat-icon>La correcta era</mat-icon>
-          </button>
+          <div class="fw-bold">{{inciso.title}}</div>
+          {{inciso.question}}
+          <div (click)="respuestasCorrectasYUsuario(arrayRespuestas[i],i)" (click)="mostrarImagen(inciso.foto.filename)">
+            Ver solución del inciso
+          </div>
         </div>
       </li>
     </div>
