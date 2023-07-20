@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->id);
 
-        if(Gate::allows('crudAll-users') || $user->type!="A"){
+        if($user->type!="E"){
             return $user;
         }
         else{
@@ -91,5 +91,16 @@ class UserController extends Controller
         Gate::authorize('delete-user',$user);
         $user->grupos()->detach();
         $user->delete();
+    }
+
+    public function results(Request $request)
+    {
+        $user = User::with(['examenes:title'])->findOrFail($request->id);
+        $arr=array();
+        foreach ($user->examenes as $examen) {
+            $arry=[];
+            array_push($arr,$arry);
+        }
+        return response(array_reverse($arr),200);
     }
 }

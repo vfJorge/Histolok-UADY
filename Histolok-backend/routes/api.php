@@ -35,6 +35,7 @@ Route::group([
         Route::get('{id}', 'App\Http\Controllers\UserController@show');     //ver otro perfil
         Route::put('{id}', 'App\Http\Controllers\UserController@update');   //actualizar la info de mi perfil o si soy admin la de cualquiera
         Route::delete('{id}', 'App\Http\Controllers\UserController@destroy')->middleware('is_superuser');//borrar perfil de estudiante (solo admins y profesores)
+        Route::get('{id}/results', 'App\Http\Controllers\UserController@results')->middleware('is_superuser');
     });
 
     Route::group([

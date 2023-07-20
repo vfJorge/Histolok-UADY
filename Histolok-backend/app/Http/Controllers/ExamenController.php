@@ -475,8 +475,4 @@ class ExamenController extends Controller
             ->where('id', $id)
             ->update(['n_answered' => $n_answered,'n_correct' => $n_correct,'end_time' => $end_time]);
     }
-
-
-
-    
-}
+} 
