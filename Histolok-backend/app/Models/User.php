@@ -61,6 +61,6 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Examen::class);
     }
     public function examenes(){//presenta o presento examenes
-        return $this->belongsToMany(\App\Models\Examen::class);
+        return $this->belongsToMany(\App\Models\Examen::class)->withPivot('n_answered','n_correct','start_time', 'end_time');
     }
 }
