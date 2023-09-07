@@ -95,10 +95,30 @@ class UserController extends Controller
 
     public function results(Request $request)
     {
-        $user = User::with(['examenes:title'])->findOrFail($request->id);
+        $user = User::with(['examenes:title,n_questions'])->findOrFail($request->id);
         $arr=array();
+
+        
         foreach ($user->examenes as $examen) {
-            $arry=[];
+            $pivot=$examen->pivot;
+            $n_preguntas=$examen->n_questions;
+            $contestadas = $pivot->n_answered;
+            $correctas  = $pivot->n_correct;
+            $calif=$correctas*100/$n_preguntas;
+            $completado = $n_preguntas==$contestadas ? true : false;
+            if($completado) $duration = strtotime($pivot->end_time) - strtotime($pivot->start_time);
+            else $duration = 0;
+            
+            $arry=[
+            'titulo'=>$examen->title,
+            'completado'=>$completado,
+            'calificacion'=>$calif,
+            'correctas'=>$correctas,
+            'n_preguntas'=>$n_preguntas,
+            'duracion'=>date('H:i:s',$duration),
+            'fecha'=>date('d-m-Y',strtotime($pivot->start_time))
+            ];
+            
             array_push($arr,$arry);
         }
         return response(array_reverse($arr),200);
