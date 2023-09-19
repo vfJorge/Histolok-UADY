@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-12 col-sm-4 col-lg-3 mb-2" >
+            <input type="text" class="form-control" 
+            [(ngModel)]="busqueda" 
+            (input)="buscarGrupo()"
+            placeholder="Buscar" 
+            aria-label="Buscar" >
+        </div>
+        <div class="col-12 col-sm-4 col-lg-2 mb-2 btn-group">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle px-4" data-bs-toggle="dropdown" aria-expanded="false">
+                Ordenar por
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" >Por título</a></li>
+                <li><a class="dropdown-item" >Por pregunta</a></li>
+            </ul>
+        </div>     
+    </div>
+  
+    <ol class="container container-small list-group px-0">
+        <div *ngFor="let grupo of misGrupos">
+            <li class="list-group-item d-flex justify-content-between" >
+                <div class="ms-2 me-auto pt-2">
+                    <div class="fw-bold">{{grupo.title}}</div>
+                </div> 
+            </li>
+        </div>
+    </ol>
+  </div>
