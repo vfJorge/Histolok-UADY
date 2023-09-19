@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
+
 use App\Models\Examen;
 use App\Models\Pregunta;
 use App\Models\Opcion;
@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+define("TIMEZONE", "America/Belize");
+
 class ExamenController extends Controller
 {
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -260,7 +264,7 @@ class ExamenController extends Controller
         
         $examen = Examen::findOrFail($request->id);
         
-        $mytime = Carbon::now('America/Belize')->toDateTimeString();
+        $mytime = Carbon::now(TIMEZONE)->toDateTimeString();
         $now = strtotime($mytime);
 
         $user_id = auth()->user()->id;
@@ -301,7 +305,7 @@ class ExamenController extends Controller
     public function current(Request $request)
     {
         $examen = Examen::findOrFail($request->id);
-        $mytime = Carbon::now('America/Belize')->toDateTimeString();
+        $mytime = Carbon::now(TIMEZONE)->toDateTimeString();
         $user_id = auth()->user()->id;
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
@@ -334,7 +338,7 @@ class ExamenController extends Controller
             
         ]);
         $examen = Examen::findOrFail($request->id);
-        $mytime = Carbon::now('America/Belize')->toDateTimeString();
+        $mytime = Carbon::now(TIMEZONE)->toDateTimeString();
         $user_id = auth()->user()->id;
         //si existe un examen iniciado anterior
         if($examen->users()->where('user_id',$user_id)->exists()){
