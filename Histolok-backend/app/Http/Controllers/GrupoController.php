@@ -14,7 +14,7 @@ class GrupoController extends Controller
      */
     public function index()
     {
-        $grupos = Grupos::with(['users','users:id,name'])->get();
+        $grupos = Grupo::with(['users','users:id,name'])->get();
         return $grupos;
     }
 
@@ -49,6 +49,7 @@ class GrupoController extends Controller
     public function show(Request $request)
     {
         $grupos = Grupo::with('user:id,name','users:id,name')->findOrFail($request->id);
+        return response($grupos,200);
     }
 
     /**
