@@ -9,7 +9,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ExamenComponent } from './components/examen/examen.component';
 import { ListaExamenesComponent } from './components/lista-examenes/lista-examenes.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
-import { ListaGruposComponent } from './components/lista-grupos/lista-grupos/lista-grupos.component';
+import { ListaGruposComponent } from './components/lista-grupos/lista-grupos.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},

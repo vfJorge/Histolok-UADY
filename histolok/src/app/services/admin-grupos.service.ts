@@ -10,7 +10,7 @@ export class AdminGruposService {
   URL: string = 'http://127.0.0.1:8000/api/';
 
   getMisGrupos(){
-    var _url = this.URL + 'grupos/me'
+    var _url = this.URL + 'grupos/owned'
     var bearerToken = localStorage.getItem('bearerToken');
     let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
     return this.http.get(_url, {headers: header, observe:'response'});

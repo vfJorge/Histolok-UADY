@@ -1,0 +1,72 @@
+<div class="modal fade" id="crearGrupo">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-center">
+                <h5 class="modal-title" id="registroLabel">Crear grupo</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form [formGroup] = "datosGrupo" class="login-form" (ngSubmit)="crearGrupo(datosGrupo.value)">
+            <div class="modal-body">
+                 
+                <div class="form-group">
+                    <label><b>Nombre del grupo</b></label>
+                    <input type="text"  class="form-control" placeholder="Histología Grupo D-AgoDic23" formControlName=name>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label><b>Descripción</b></label>
+                    <input type="text"  class="form-control" placeholder="Descripción del grupo" formControlName=desc>
+                </div>
+                <br>
+                
+                <br>
+                <div class="form-group">
+                    <div class="text-center">
+                        <a class="btn btn-link px-4" data-bs-target="#escogerUsuarios" data-bs-toggle="modal"><span>Seleccionar usuarios</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Crear grupo</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="escogerUsuarios">
+    <div class="container" id="tarjetasImag">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header  justify-content-between">
+                    <div class="return-button">
+                        <button mat-icon-button data-bs-target="#crearGrupo" data-bs-toggle="modal" data-bs-dismiss="modal"> <mat-icon>arrow_back</mat-icon></button> 
+                    </div>
+                    <div class="text-center">
+                        <h5 class="modal-title" id="registroLabel">Seleccionar Usuarios</h5>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-success" data-bs-target="#crearGrupo" data-bs-toggle="modal" data-bs-dismiss="modal">Seleccionar</button> 
+                    </div>   
+                </div>
+                <div class="row pt-4">
+                    <ol class="container container-small list-group px-4">
+                        <div *ngFor="let usuario of misUsuarios">
+                        <li class="list-group-item d-flex justify-content-between" *ngIf="usuario.type == 'E'">
+                            <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{usuario.name}}</div>
+                            {{usuario.email}}
+                            </div>
+                            <div class="d-flex align-items-center pe-2">
+                                <input  class="form-check-input" type="checkbox" (change)="escogerUsuarios($event, usuario.id)" id="checkboxNoLabel" value="">
+                            </div>
+                        </li>
+                        </div>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

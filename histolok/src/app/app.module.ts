@@ -29,7 +29,8 @@ import { ListaExamenesComponent } from './components/lista-examenes/lista-examen
 import { ResultadosComponent } from './components/resultados/resultados.component';
 import { ModalImagenPreguntaComponent } from './components/pregunta/modal-imagen-pregunta/modal-imagen-pregunta.component';
 import { ModalResultadoComponent } from './components/resultados/modal-resultado/modal-resultado.component';
-import { ListaGruposComponent } from './components/lista-grupos/lista-grupos/lista-grupos.component';
+import { ListaGruposComponent } from './components/lista-grupos/lista-grupos.component';
+import { AgregarGrupoComponent } from './components/agregar-grupo/agregar-grupo.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { ListaGruposComponent } from './components/lista-grupos/lista-grupos/lis
     ResultadosComponent,
     ModalImagenPreguntaComponent,
     ModalResultadoComponent,
-    ListaGruposComponent
+    ListaGruposComponent,
+    AgregarGrupoComponent
   ],
   imports: [
     BrowserModule,

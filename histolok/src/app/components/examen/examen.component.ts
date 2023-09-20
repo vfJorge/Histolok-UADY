@@ -126,12 +126,12 @@ export class ExamenComponent implements OnInit {
     
     this.adminExamenesService.editarExamen(this.datosExamen.value, this.examenID).subscribe((resp: any) => {
       if(resp.status == 200){
-        alert("Pregunta editada de manera exitosa");
+        alert("Examen editado de manera exitosa");
         window.location.reload();
       }
     }, error => {
       console.log(error);
-      alert("No se pudo editar la pregunta, inténtalo de nuevo");
+      alert("No se pudo editar el examen, inténtalo de nuevo");
     })
       
   }
