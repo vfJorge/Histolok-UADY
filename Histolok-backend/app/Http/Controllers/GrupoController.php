@@ -48,7 +48,7 @@ class GrupoController extends Controller
      */
     public function show(Request $request)
     {
-        $grupo = Grupo::with('user:id,name','users:id,name')->findOrFail($request->id);
+        $grupo = Grupo::with('user:id,name','users:id,email,name')->findOrFail($request->id);
         if(auth()->user()->id!=$grupo->user_id) return response(['message'=>'Este grupo no te pertenece'],403);
         return response($grupo,200);
     }

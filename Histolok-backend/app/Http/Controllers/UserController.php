@@ -121,6 +121,7 @@ class UserController extends Controller
             
             array_push($arr,$arry);
         }
-        return response(array_reverse($arr),200);
+        $reversed = array_reverse($arr);
+        return response(["resultados"=>$reversed],200);
     }
 }
