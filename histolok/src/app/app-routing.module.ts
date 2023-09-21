@@ -10,6 +10,7 @@ import { ExamenComponent } from './components/examen/examen.component';
 import { ListaExamenesComponent } from './components/lista-examenes/lista-examenes.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
 import { ListaGruposComponent } from './components/lista-grupos/lista-grupos.component';
+import { GrupoComponent } from './components/grupo/grupo.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'listaExamenes', component:ListaExamenesComponent},
   {path: 'resultados', component:ResultadosComponent},
   {path: 'listaGrupos', component:ListaGruposComponent},
+  {path: 'grupo', component:GrupoComponent},
   {path: '**', redirectTo:'/home', pathMatch: 'full'},
   {path: '', redirectTo:'/', pathMatch: 'full'}
 ];
