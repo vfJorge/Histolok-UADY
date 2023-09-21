@@ -31,6 +31,8 @@ import { ModalImagenPreguntaComponent } from './components/pregunta/modal-imagen
 import { ModalResultadoComponent } from './components/resultados/modal-resultado/modal-resultado.component';
 import { ListaGruposComponent } from './components/lista-grupos/lista-grupos.component';
 import { AgregarGrupoComponent } from './components/agregar-grupo/agregar-grupo.component';
+import { GrupoComponent } from './components/grupo/grupo.component';
+import { ModalResultadosAlumnoComponent } from './components/grupo/modal-resultados-alumno/modal-resultados-alumno.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { AgregarGrupoComponent } from './components/agregar-grupo/agregar-grupo.
     ModalImagenPreguntaComponent,
     ModalResultadoComponent,
     ListaGruposComponent,
-    AgregarGrupoComponent
+    AgregarGrupoComponent,
+    GrupoComponent,
+    ModalResultadosAlumnoComponent
   ],
   imports: [
     BrowserModule,

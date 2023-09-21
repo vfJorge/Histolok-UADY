@@ -31,7 +31,7 @@
                     <div >{{grupo.desc}}</div>
                 </div> 
                 <div class="with-icon">
-                    <button class="btn btn-link" mat-icon-button > <!-- AQUI BOTON PARA REDIRECCIONAR A LA VISTA DE GRUPO-->
+                    <button class="btn btn-link" routerLink="/grupo" mat-icon-button (click)="verGrupo(grupo.id)"> <!-- AQUI BOTON PARA REDIRECCIONAR A LA VISTA DE GRUPO-->
                         <mat-icon>visibility</mat-icon>
                     </button>
                     &nbsp;&nbsp;

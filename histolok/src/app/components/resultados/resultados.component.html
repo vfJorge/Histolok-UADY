@@ -13,8 +13,8 @@
         <div class="ms-2 me-auto">
           <div class="fw-bold">{{inciso.title}}</div>
           {{inciso.question}}
-          <div (click)="respuestasCorrectasYUsuario(arrayRespuestas[i],i)" (click)="mostrarImagen(inciso.foto.filename)">
-            Ver solución del inciso
+          <div >
+            <a id="botonResultado" (click)="respuestasCorrectasYUsuario(arrayRespuestas[i],i)" (click)="mostrarImagen(inciso.foto.filename)">Ver solución del inciso</a>
           </div>
         </div>
       </li>
