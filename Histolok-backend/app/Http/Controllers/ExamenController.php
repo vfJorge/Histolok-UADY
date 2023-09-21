@@ -261,17 +261,39 @@ class ExamenController extends Controller
 
     public function start(Request $request)
     {
-        
         $examen = Examen::findOrFail($request->id);
+        $user_id = auth()->user()->id;
+        $directorio = $this->directorioLog($examen,$user_id);
         
-        $mytime = Carbon::now(TIMEZONE)->toDateTimeString();
+        $mytime = Carbon::now('America/Belize')->toDateTimeString();
         $now = strtotime($mytime);
 
+        $this->manejarIntentoAnterior($examen,$now);
+        $primeraPregunta = $this->crearNuevoIntento($examen);
+        $this->escribirLog($directorio,$examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration);
+        
+        return $this->revolverOpciones($primeraPregunta);
+    }
+    function revolverOpciones(Pregunta $pregunta){
+        $pregunta = $pregunta->toArray();
+        shuffle($pregunta["opcions"]);
+        return $pregunta;
+    }
+    function crearNuevoIntento(Examen $examen){
         $user_id = auth()->user()->id;
-            //Log
-            $directorio = 'logs/'.$user_id.'/';
-            $nombre = $user_id."_".$examen->id.".txt";
-        //si existe un examen iniciado anterior
+        $examen->users()->attach($user_id);
+        
+            //Cache
+            Cache::forget('results-'.$examen->id."-".$user_id);
+            $resultados=[];
+            Cache::put('results-'.$examen->id."-".$user_id, $resultados);
+
+        return $examen->preguntas()->with(['opcions:id,opcion'])->first()->makeHidden(['answer_id','user_id','access']);
+   
+    }
+    function manejarIntentoAnterior(Examen $examen, int $now){
+        $user_id = auth()->user()->id;
+
         if($examen->users()->where('user_id',$user_id)->exists()){
             $pivot = $examen->users()->where('user_id',$user_id)->latest('start_time')->firstOrFail()->pivot;
             $start_time = strtotime($pivot->start_time);
@@ -284,22 +306,18 @@ class ExamenController extends Controller
             }
             //o ya expiro (lo guarda)
             elseif($end_time < $now && $pivot->end_time==NULL){
-                $linea = $mytime." ".$pivot->n_correct;
-                Storage::disk('local')->append($directorio.$nombre, $linea);
+                escribirLog($directorio,$mytime." ".$pivot->n_correct);
                 $query = DB::table('examen_user')->where('id', $pivot->id)->update(['end_time' => $mytime]);
             }
         }
-        //Nuevo examen
-        $examen->users()->attach(auth()->user()->id);
-        
-            //Cache
-            Cache::forget('results-'.$examen->id."-".$user_id);
-            $resultados=[];
-            Cache::put('results-'.$examen->id."-".$user_id, $resultados);
-            //Log
-            $primeraLinea = $examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration;
-            Storage::disk('local')->append($directorio.$nombre, $primeraLinea);
-        return $examen->preguntas()->with(['opcions:id,opcion'])->first()->makeHidden(['answer_id','user_id','access']);
+    }
+    function directorioLog(Examen $examen,String $userId){
+        $directorio = 'logs/'.$userId.'/';
+        $nombre = $userId."_".$examen->id.".txt";
+        return $directorio.$nombre;
+    }
+    function escribirLog(String $directorio,String $linea){
+        Storage::disk('local')->append($directorio, $linea);
     }
 
     public function current(Request $request)
