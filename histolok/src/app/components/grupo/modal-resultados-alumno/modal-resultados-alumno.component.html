@@ -1,0 +1,36 @@
+<div class="position-relative w-100 h-100">
+    <button mat-icon-button class="position-absolute top-0 end-0" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div *ngFor="let i of data">
+        <h2 class="py-2 fs-3 flex-grow-1 text-center fw-semibold">{{i.titulo}}</h2>
+        <div class="mt-2" *ngIf="i.completado">
+            El alumno completó el examen
+        </div>
+        <div class="mt-2" *ngIf="!i.completado">
+            El alumno no completó el examen
+        </div>
+        <br>
+        <div class="mt-2" >
+            El número de preguntas era de {{i.n_preguntas}}
+        </div>
+        <br>
+        <div class="mt-2" >
+            El número de aciertos fue {{i.correctas}}
+        </div>
+        <br>
+        <div class="mt-2" >
+            La calificacion fue de {{i.calificacion}}
+        </div>
+        <br>
+        <div class="mt-2" >
+            Duración del intento: {{i.duracion}}
+        </div>
+        <br>
+        <div class="mt-2" >
+            Fecha del intento: {{i.fecha}}
+        </div>
+        <br>
+    </div>
+</div>
+  

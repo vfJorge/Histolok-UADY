@@ -44,4 +44,10 @@ export class AdminGruposService {
     return this.http.post(_url, grupoDatos, {headers: header, observe:'response'});
   }
   
+  getResultadosAlumno(alumnoID: any){
+    var _url = this.URL + 'users/' + alumnoID + '/results'
+    var bearerToken = localStorage.getItem('bearerToken');
+    let header= new HttpHeaders().set('Authorization','Bearer '+bearerToken);
+    return this.http.get(_url, {headers: header, observe:'response'});
+  }
 }

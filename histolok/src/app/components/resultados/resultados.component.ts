@@ -15,7 +15,8 @@ export class ResultadosComponent implements OnInit {
   resultados: any;
   incisosExamen: any;
   arrayRespuestas: any[];
-  retroalimentacion: any;
+  retroalimentacionRCorrecta: any;
+  retroalimentacionRUser: any;
   arrayRetros: any[];
   imagenesURL = "http://127.0.0.1:8000/storage/";
 
@@ -63,7 +64,8 @@ export class ResultadosComponent implements OnInit {
       }
     }
     
-    this.retroalimentacion = stringRespCorrecta+" "+stringRespUsuario;
+    this.retroalimentacionRCorrecta = stringRespCorrecta;
+    this.retroalimentacionRUser = stringRespUsuario;
   }
 
 
@@ -71,7 +73,7 @@ export class ResultadosComponent implements OnInit {
     this.dialog.open(ModalResultadoComponent, {
       height: '90%',
       width: '50%',
-      data: {retro: this.retroalimentacion, imagePath: this.imagenesURL + imagen},
+      data: {retroRCorrecta: this.retroalimentacionRCorrecta, retroRUser: this.retroalimentacionRUser, imagePath: this.imagenesURL + imagen},
       autoFocus: false
     })
   }

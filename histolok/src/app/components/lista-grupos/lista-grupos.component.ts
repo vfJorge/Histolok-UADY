@@ -115,4 +115,8 @@ export class ListaGruposComponent implements OnInit {
         this.usuariosSeleccionados.splice(index, 1);
       }
     }
+
+    verGrupo(grupoID: any){
+      localStorage.setItem('grupoID', grupoID);
+    }
 }
