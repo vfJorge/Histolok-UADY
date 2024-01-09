@@ -70,12 +70,12 @@ export class ListaGruposComponent implements OnInit {
   }
 
   editarGrupoVista(grupoID: any, grupoNAME: any, grupoDESCRIPTION: any){
+    this.grupoID = grupoID;
     this.datosGrupo.controls['name'].setValue(grupoNAME);
     this.datosGrupo.controls['desc'].setValue(grupoDESCRIPTION);
     this.usuariosSeleccionados = [];
   
       this.adminGruposService.getGrupo(grupoID).subscribe((resp: any) => {
-        console.log(resp.body)
         this.groupUsers = resp.body.users;
         for (let i = 0; i < this.groupUsers.length; i++) {
           if (this.usuariosSeleccionados.indexOf((this.groupUsers[i].id).toString())==-1) {
@@ -86,6 +86,7 @@ export class ListaGruposComponent implements OnInit {
         console.log(error);
       });
       
+      console.log(this.usuariosSeleccionados)
     }
   
     enviarEdicion(){
@@ -109,11 +110,12 @@ export class ListaGruposComponent implements OnInit {
 
     escogerUsuarios(event: any, usuarioID: number){
       if (event.target.checked) {
-        this.usuariosSeleccionados.push(usuarioID);
+        this.usuariosSeleccionados.push(usuarioID.toString());
       } else{
-        const index = this.usuariosSeleccionados.indexOf(usuarioID);
-        this.usuariosSeleccionados.splice(index, 1);
+        const index = this.usuariosSeleccionados.indexOf(""+usuarioID+"", 0);
+        if(index != -1) this.usuariosSeleccionados.splice(index, 1);
       }
+      console.log(this.usuariosSeleccionados)
     }
 
     verGrupo(grupoID: any){
