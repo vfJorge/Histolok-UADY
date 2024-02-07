@@ -6,6 +6,7 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalQuestionsComponent } from './modal-questions/modal-questions.component';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { ModalQuestionsComponent } from './modal-questions/modal-questions.compo
 export class QuestionsComponent implements OnInit {
   public misPreguntas: Array<any> = [];
   public misImagenes: Array<any> = [];
-  imagenesURL = "http://127.0.0.1:8000/storage/";
+  imagenesURL = PATH_SERVER_IMGS;
   perfilUsuario: string = "";
   esEstudiante: boolean;
   datosPreguntas!: FormGroup;

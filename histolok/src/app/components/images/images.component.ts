@@ -5,6 +5,7 @@ import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 
 @Component({
@@ -14,7 +15,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 })
 export class ImagesComponent implements OnInit {
   public misImagenes: Array<any> = [];
-  imagenesURL = "http://127.0.0.1:8000/storage/";
+  imagenesURL = PATH_SERVER_IMGS;
   archivoCapturado: any;
   imgID: any;
   imgPrivacy: boolean;

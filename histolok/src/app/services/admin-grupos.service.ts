@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PATH_SERVER } from '../serverconfig';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
 export class AdminGruposService {
 
   constructor(private http: HttpClient) { }
-  URL: string = 'http://127.0.0.1:8000/api/';
+  URL: string = PATH_SERVER;
 
   getMisGrupos(){
     var _url = this.URL + 'grupos/owned'
