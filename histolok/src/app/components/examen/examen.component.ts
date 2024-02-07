@@ -7,6 +7,7 @@ import { AdminExamenesService } from 'src/app/services/admin-examenes.service';
 import { AdminQuestionsService } from 'src/app/services/admin-questions.service';
 import { ModalExamenComponent } from './modal-examen/modal-examen.component';
 import { AdminImagesService } from '../../services/admin-images.service';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 @Component({
   selector: 'app-examen',
@@ -26,7 +27,7 @@ export class ExamenComponent implements OnInit {
   selectedQuestion = false;
   examenQuestions : Array<any> = [];
   datosExamenModal: Array<any> = [];
-  imagenesURL = "http://127.0.0.1:8000/storage/";
+  imagenesURL = PATH_SERVER_IMGS
   imgFilename : string = "";
 
   constructor(private fb: FormBuilder, private adminExamenesService: AdminExamenesService,

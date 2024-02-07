@@ -4,6 +4,7 @@ import { AdminQuestionsService } from 'src/app/services/admin-questions.service'
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalImagenPreguntaComponent } from './modal-imagen-pregunta/modal-imagen-pregunta.component';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 @Component({
   selector: 'app-pregunta',
@@ -11,7 +12,7 @@ import { ModalImagenPreguntaComponent } from './modal-imagen-pregunta/modal-imag
   styleUrls: ['./pregunta.component.css']
 })
 export class PreguntaComponent implements OnInit {
-  ImagenesURL = "http://127.0.0.1:8000/storage/";
+  ImagenesURL = PATH_SERVER_IMGS;
   respuestaID: any;
   examenID: any; //La debe otorgar el clickear en iniciar examen
   misDatosExamen: any;

@@ -5,27 +5,32 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navbarOptions">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" routerLink="/pregunta">Examen actual</a>
+                    <a class="nav-link active" aria-current="page" routerLink="/pregunta" *ngIf="tipoUsuario == 'E'">Reanudar examen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/listaExamenes">Lista de exámenes</a>
+                    <a class="nav-link active" aria-current="page" routerLink="/resultados" *ngIf="tipoUsuario == 'E'">Ver último examen</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Creación de exámenes
+                <li class="nav-item">
+                    <a class="nav-link active" routerLink="/listaExamenes" *ngIf="tipoUsuario == 'E'">Lista de exámenes</a>
+                </li>
+                <li class="nav-item dropdown" *ngIf="tipoUsuario == 'A'">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Creación de exámenes y grupos
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" routerLink="/userProfile">Mi perfil</a></li>
-                        <li><a class="dropdown-item" routerLink="/userList">Ver lista de usuarios</a></li>                        
+                    <ul class="dropdown-menu">                  
                         <li><a class="dropdown-item" routerLink="/images">Gestionar mis imágenes</a></li>
                         <li><a class="dropdown-item" routerLink="/questions">Gestionar mis preguntas</a></li>
                         <li><a class="dropdown-item" routerLink="/examenes">Gestionar mis exámenes</a></li>
+                        <li><a class="dropdown-item" routerLink="/listaGrupos">Gestionar mis grupos</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/listaGrupos">Gestionar mis grupos</a>
+                    <a class="nav-link active" aria-current="page"  routerLink="/userProfile" *ngIf="tipoUsuario != ''">Mi perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page"  routerLink="/userList" *ngIf="tipoUsuario != ''">Ver lista de usuarios</a>
                 </li>
             </ul>
                 <ul class="navbar-nav ms-auto">

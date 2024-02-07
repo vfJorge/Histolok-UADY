@@ -4,6 +4,7 @@ import { AdminQuestionsService } from 'src/app/services/admin-questions.service'
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalResultadoComponent } from './modal-resultado/modal-resultado.component';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 @Component({
   selector: 'app-resultados',
@@ -18,7 +19,7 @@ export class ResultadosComponent implements OnInit {
   retroalimentacionRCorrecta: any;
   retroalimentacionRUser: any;
   arrayRetros: any[];
-  imagenesURL = "http://127.0.0.1:8000/storage/";
+  imagenesURL = PATH_SERVER_IMGS;
 
   constructor(private adminExamenesService: AdminExamenesService,
     private adminQuestionsService: AdminQuestionsService,

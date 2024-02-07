@@ -4,6 +4,7 @@ import { AdminQuestionsService } from 'src/app/services/admin-questions.service'
 import { AdminImagesService } from 'src/app/services/admin-images.service';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { PATH_SERVER_IMGS } from 'src/app/serverconfig';
 
 @Component({
   selector: 'app-agregar-question',
@@ -12,7 +13,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 })
 export class AgregarQuestionComponent implements OnInit {
   public misImagenes: Array<any> = [];
-  imagenesURL = "http://127.0.0.1:8000/storage/";
+  imagenesURL = PATH_SERVER_IMGS;
   datosPreguntaAgregar!: FormGroup;
   keywords: Array<string> = [];
   existeImg: boolean = false;

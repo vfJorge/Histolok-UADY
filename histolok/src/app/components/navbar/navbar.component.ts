@@ -7,10 +7,16 @@ import { LoginRegisterService } from 'src/app/services/login-register.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  tipoUsuario: any = '';
 
   constructor(private loginRegisterService: LoginRegisterService) { }
 
   ngOnInit(): void {
+    this.loginRegisterService.getPerfilUsuario().subscribe((resp: any) => {
+      this.tipoUsuario = resp.body.type
+    }, error => {
+      console.log(error);
+    })
   }
 
 
