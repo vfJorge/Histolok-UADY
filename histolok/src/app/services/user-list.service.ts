@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { PATH_SERVER } from '../serverconfig';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 export class UserListService {
 
   constructor(private http: HttpClient) { }
-  URL: string = 'http://127.0.0.1:8000/api/';
+  URL: string = PATH_SERVER;
 
   getPerfilesUsuarios(){
     var _url = this.URL + 'users';
