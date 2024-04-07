@@ -45,16 +45,16 @@ Route::group([
         Route::get('',        'App\Http\Controllers\GrupoController@index')->middleware('is_admin');//ver todos los grupos (solo admin)
         Route::get('owned',   'App\Http\Controllers\GrupoController@owned');                   //ver los grupos que soy propietario (Maestro)
         Route::get('me',      'App\Http\Controllers\GrupoController@me');                         //ver los grupos a los que pertenezco (Alumno)
-        Route::post('',       'App\Http\Controllers\GrupoController@store');                       //crear nuevo grupo   
-        Route::get('{id}',    'App\Http\Controllers\GrupoController@show');                     //ver informacion de un grupo   
-        Route::put('{id}',    'App\Http\Controllers\GrupoController@update');                   //actualizar info e integrantes de grupo   
+        Route::post('',       'App\Http\Controllers\GrupoController@store');                       //crear nuevo grupo
+        Route::get('{id}',    'App\Http\Controllers\GrupoController@show');                     //ver informacion de un grupo
+        Route::put('{id}',    'App\Http\Controllers\GrupoController@update');                   //actualizar info e integrantes de grupo
         Route::delete('{id}', 'App\Http\Controllers\GrupoController@destroy');               //borrar grupo
- 
+
 
 
     });
 
-   
+
 
     Route::group([
         'prefix' => 'fotos',
@@ -68,7 +68,7 @@ Route::group([
         Route::put('{id}', 'App\Http\Controllers\FotoController@update');       //cambiar una foto (solo mias)
         Route::delete('{id}', 'App\Http\Controllers\FotoController@destroy');   //borrar una foto (solo mias)
     });
-    
+
     Route::group([
         'prefix' => 'preguntas',
         'middleware'=>'is_superuser'
@@ -87,10 +87,10 @@ Route::group([
         'middleware'=>'is_superuser'
     ], function () {
         Route::get('','App\Http\Controllers\ExamenController@index')->middleware('is_admin');//ver todas los examenes
-        
+
         Route::get('me', 'App\Http\Controllers\ExamenController@owned');         //ver mis examenes
         Route::post('', 'App\Http\Controllers\ExamenController@store');          //crear examen
-        
+
         Route::put('{id}', 'App\Http\Controllers\ExamenController@update');   //editar examen
         Route::delete('{id}', 'App\Http\Controllers\ExamenController@destroy');//borrar un examen
     });
@@ -99,14 +99,16 @@ Route::group([
         'prefix' => 'examenes'
     ], function () {
         Route::get('public','App\Http\Controllers\ExamenController@public');  //ver los examenes publicas //SE CAMBIO  CHEKAR PERMISOS
+        Route::get('medallero', 'App\Http\Controllers\ExamenController@medallero');
+        Route::get('medallero/{id}', 'App\Http\Controllers\ExamenController@medalleroExamen');
         Route::post('generate', 'App\Http\Controllers\ExamenController@generarExamen');          //generar examen
         Route::get('{id}/start', 'App\Http\Controllers\ExamenController@start');
         Route::get('{id}/current', 'App\Http\Controllers\ExamenController@current');
         Route::get('{id}/results', 'App\Http\Controllers\ExamenController@results');
         Route::post('{id}/next', 'App\Http\Controllers\ExamenController@next');
         Route::get('{id}', 'App\Http\Controllers\ExamenController@show');     //ver un examen           //SE CAMBIO  CHEKAR PERMISOS
-        Route::get('{id}/medallero', 'App\Http\Controllers\ExamenController@medallero');
-        
+
+
     });
     //Auth
     Route::group([
@@ -115,6 +117,6 @@ Route::group([
         Route::post('logout','App\Http\Controllers\AuthController@logout');
         Route::get('type', 'App\Http\Controllers\AuthController@type');
     });
-    
-   
+
+
 });

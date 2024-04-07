@@ -21,7 +21,7 @@ $directorio;
 $now;
 class ExamenController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +32,7 @@ class ExamenController extends Controller
         $examen = Examen::with(['palabclvs','user:id,name'])->get();
         return $examen;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -65,7 +65,7 @@ class ExamenController extends Controller
             'difficulty'=>'required|integer|between:1,5',
             'duration'=>'required',
             'access'=>['required',Rule::in(['private','public'])]
-            
+
         ]);
 
 
@@ -78,7 +78,7 @@ class ExamenController extends Controller
         $examen->duration = $request->duration;
         $examen->n_questions=0;
         $examen->mode="batalla";
-        
+
         $examen->save();
 
         //palabras clave
@@ -87,7 +87,7 @@ class ExamenController extends Controller
         if(!is_array($array)){
             $examen->delete();
             return response(["message"=>"Error en las palabras clave"],400);
-        } 
+        }
         foreach($array as $keyword){
             $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
             $examen->palabclvs()->attach($palabraclv);
@@ -99,7 +99,7 @@ class ExamenController extends Controller
                 $examen->palabclvs()->detach();
                 $examen->delete();
                 return response(["message"=>"Error al agregar las preguntas"],400);
-            } 
+            }
             $npreguntas=0;
             foreach($preguntas_arr as $preguntaid){
                 $pregunta = Pregunta::findOrFail($preguntaid);
@@ -107,12 +107,12 @@ class ExamenController extends Controller
                     $examen->preguntas()->attach($pregunta);
                     $npreguntas++;
                 }
-                
+
             }
             $examen->n_questions=$npreguntas;
         }
-        
-            
+
+
         $examen->push();
         $examen=Examen::with(['palabclvs','user:id,name',"preguntas:id,question"])->findOrFail($examen->id);
         return response($examen,201);
@@ -125,7 +125,7 @@ class ExamenController extends Controller
             'n_questions'=>'required|integer',
             'difficulty'=>'required|integer|between:1,5',
             'duration'=>'required'
-            
+
         ]);
 
         $examen = new Examen();
@@ -137,7 +137,7 @@ class ExamenController extends Controller
         $examen->n_questions=$request->n_questions;
         $examen->mode="entrenamiento";
         $examen->description = "Examen de practica ".(Examen::where('user_id',auth()->user()->id)->where('mode','entrenamiento')->count()+1)." Dificultad ".$request->difficulty;
-        
+
         $examen->save();
 
         //palabras clave
@@ -146,7 +146,7 @@ class ExamenController extends Controller
         if(!is_array($array)){
             $examen->delete();
             return response(["message"=>"Error en las palabras clave"],400);
-            } 
+            }
             foreach($array as $keyword){
             $palabraclv = Palabclv::firstOrCreate(['keyword'=>mb_strtolower($keyword)]);
             $examen->palabclvs()->attach($palabraclv);
@@ -154,9 +154,9 @@ class ExamenController extends Controller
 
         if(is_array($array) && count($array)>0){
             $preguntas = Pregunta::where('access','public')->where('difficulty', $request->difficulty)->whereHas('palabclvs',function ($query) use ($array) {
-            
+
                 $query->whereIn('keyword', $array);
-                             
+
             })
             ->select('id')->inRandomOrder()->limit($request->n_questions)->get();
         }
@@ -196,7 +196,7 @@ class ExamenController extends Controller
             'difficulty'=>'required|integer|between:1,5',
             'duration'=>'required',
             'access'=>['required',Rule::in(['private','public'])]
-            
+
         ]);
         if($request->filled('title')) $examen->title = $request->title;
         if($request->filled('description')) $examen->description = $request->description;
@@ -225,7 +225,7 @@ class ExamenController extends Controller
             $preguntas_arr = json_decode($request->questions);
             if(!is_array($preguntas_arr)){
                 return response(["message"=>"Error al cambiar las preguntas"],400);
-            } 
+            }
             $examen->preguntas()->detach();
             $npreguntas=0;
             foreach($preguntas_arr as $preguntaid){
@@ -234,12 +234,12 @@ class ExamenController extends Controller
                     $examen->preguntas()->attach($pregunta);
                     $npreguntas++;
                 }
-                
+
             }
             $examen->n_questions=$npreguntas;
         }
-        
-            
+
+
         $examen->push();
         $examen=Examen::with(['palabclvs','user:id,name',"preguntas:id,question"])->findOrFail($examen->id);
         return response($examen,200);
@@ -277,7 +277,7 @@ class ExamenController extends Controller
 
         $primeraPregunta = $this->crearNuevoIntento($examen);
         $this->escribirLog($examen->id." ".$mytime." ".$examen->n_questions." ".$examen->duration);
-        
+
         return $this->revolverOpciones($primeraPregunta);
     }
 
@@ -327,7 +327,7 @@ class ExamenController extends Controller
             $start_time = strtotime($pivot->start_time);
             $dur = $this->addTime($examen->duration);
             $end_time = $start_time+$dur;
-            
+
             //echo date('Y-m-d H:i:s', $now)."  ".date('Y-m-d H:i:s', $end_time);
             //y sigue estando activo
             if($end_time > $now && $pivot->end_time==NULL){
@@ -352,7 +352,7 @@ class ExamenController extends Controller
             'tiempo_inicio'=> 'date',
             'tiempo_selec'=> 'date',
             'tiempo_sig'=> 'date'
-            
+
         ]);
         global $mytime,$directorio,$user_id,$now;
 
@@ -374,9 +374,9 @@ class ExamenController extends Controller
             $start_time = strtotime($pivot->start_time);
             $dur = $this->addTime($examen->duration);
             $end_time = $start_time+$dur;
-            
 
-        
+
+
 
             //SI YA ACABO EL TIEMPO del examen
             if($end_time < $now){
@@ -388,7 +388,7 @@ class ExamenController extends Controller
             //Si el examen sigue activo
             else{
                 $i = $pivot->n_answered;
-                
+
                 //si ya se contestaron todas (inalcanzable?)
                 if($i >= $examen->n_questions){
                     return response(["error"=>"Este examen ya acabó"],400);
@@ -415,7 +415,7 @@ class ExamenController extends Controller
                 }
                 //Cache
                 Cache::put('results-'.$examen->id."-".$user_id, $resultados);
-                
+
 
                 $this->escribirLog($linea);
 
@@ -431,7 +431,7 @@ class ExamenController extends Controller
                 } else {
                     $llave ='siguiente';
                     $respuesta =  $preguntas[$i+1]->makeHidden(['answer_id','user_id','access']);
-                    
+
                     $respuesta = $this->revolverOpciones($respuesta);
                 }
                 $this->updateExamen($pivot->id,$pivot->n_answered+1,$nCorrect,$tiempo);
@@ -441,9 +441,9 @@ class ExamenController extends Controller
         else{
             return response(["error"=>"Este examen no se encuentra iniciado"],400);
         }
-        
+
     }
-    
+
     public function results(Request $request)
     {
         $examen = Examen::findOrFail($request->id);
@@ -464,10 +464,8 @@ class ExamenController extends Controller
             return response(["error"=>"No se ha contesado ningun examen"],400);
         }
     }
-
-    public function medallero(Request $request){
-
-        $query = DB::table('examen_user')
+    /* OLD MEDALLERO
+    $query = DB::table('examen_user')
             ->join('users', 'examen_user.user_id', '=', 'users.id')
             ->where('examen_id', $request->id)
             ->where('end_time','!=', null)
@@ -479,13 +477,71 @@ class ExamenController extends Controller
 
         foreach($query as $user){
             $user->duracion = strtotime($user->end_time)-strtotime($user->start_time);
-            
+
         }
         $sorted = $query->sortBy([
             ['n_correct', 'desc'],
             ['duracion', 'asc'],
         ]);
-        return $sorted;
+        return $sorted->values()->all();
+     */
+    public function medallero(Request $request){
+
+        $users = DB::select('WITH ExamenMasAntiguo AS (
+                                SELECT user_id, examen_id,MIN(end_time) as fecha_examen_mas_antiguo
+                                FROM examen_user
+                                WHERE examen_user.end_time is not null
+                                GROUP BY user_id, examen_id
+                            ), PromedioRestantes AS (
+                                SELECT examen_user.user_id, examen_user.examen_id,
+                                    AVG(examen_user.n_correct/examen_user.n_answered) AS promedio_restantes
+                                FROM examen_user
+                                LEFT JOIN ExamenMasAntiguo ema ON examen_user.user_id = ema.user_id and examen_user.examen_id = ema.examen_id
+                                WHERE examen_user.end_time > ema.fecha_examen_mas_antiguo and examen_user.end_time is not null
+                                GROUP BY examen_user.user_id,examen_user.examen_id
+                            ), CalificacionMasAntigua AS (
+                                SELECT examen_user.user_id,examen_user.examen_id,  examen_user.n_correct/examen_user.n_answered AS calificacion_mas_antigua
+                                FROM examen_user
+                                INNER JOIN ExamenMasAntiguo ema ON examen_user.user_id = ema.user_id AND examen_user.end_time = ema.fecha_examen_mas_antiguo and examen_user.examen_id = ema.examen_id
+                            )
+                            SELECT cma.user_id, users.name,users.email,
+                                (AVG(cma.calificacion_mas_antigua) * 0.8) + (COALESCE(AVG(pr.promedio_restantes), AVG(cma.calificacion_mas_antigua)) * 0.2) AS puntaje
+                            FROM CalificacionMasAntigua cma
+                            LEFT JOIN PromedioRestantes pr ON cma.user_id = pr.user_id
+                            JOIN users ON users.id=cma.user_id
+                            GROUP BY cma.user_id,users.name,users.email
+                            ORDER BY puntaje DESC;
+        ');
+        return $users;
+    }
+    public function medalleroExamen(Request $request){
+
+        $users = DB::select('WITH ExamenMasAntiguo AS (
+                                SELECT user_id, MIN(end_time) as fecha_examen_mas_antiguo
+                                FROM examen_user
+                                WHERE examen_user.end_time is not null and examen_user.examen_id = ?
+                                GROUP BY user_id
+                            ), PromedioRestantes AS (
+                                SELECT examen_user.user_id,
+                                    AVG(examen_user.n_correct/examen_user.n_answered) AS promedio_restantes
+                                FROM examen_user
+                                LEFT JOIN ExamenMasAntiguo ema ON examen_user.user_id = ema.user_id
+                                WHERE examen_user.end_time > ema.fecha_examen_mas_antiguo and examen_user.examen_id = ? and examen_user.end_time is not null
+                                GROUP BY examen_user.user_id
+                            ), CalificacionMasAntigua AS (
+                                SELECT examen_user.user_id,examen_user.examen_id, examen_user.n_correct/examen_user.n_answered AS calificacion_mas_antigua
+                                FROM examen_user
+                                INNER JOIN ExamenMasAntiguo ema ON examen_user.user_id = ema.user_id AND examen_user.end_time = ema.fecha_examen_mas_antiguo
+                            )
+                            SELECT cma.user_id,cma.examen_id, users.name,users.email,
+                                ((cma.calificacion_mas_antigua * 0.8) + (COALESCE(AVG(pr.promedio_restantes), cma.calificacion_mas_antigua) * 0.2)) AS puntaje
+                            FROM CalificacionMasAntigua cma
+                            LEFT JOIN PromedioRestantes pr ON cma.user_id = pr.user_id
+                            JOIN users ON users.id=cma.user_id
+                            GROUP BY cma.user_id,users.name,users.email
+                            ORDER BY puntaje DESC;
+        ',[$request->id,$request->id]);
+        return $users;
     }
 
     public function directorioLog(Examen $examen){
@@ -519,4 +575,4 @@ class ExamenController extends Controller
             ->where('id', $id)
             ->update(['n_answered' => $n_answered,'n_correct' => $n_correct,'end_time' => $end_time]);
     }
-} 
+}
